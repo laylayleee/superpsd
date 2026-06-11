@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Arcade Platformer</title>
+    <style>
+        /* Retro Arcade Styling */
+        body { margin: 0; background: #0b0b10; display: flex; justify-content: center; align-items: center; height: 100vh; color: white; font-family: 'Courier New', Courier, monospace; font-weight: bold; overflow: hidden; }
+        #game-container { text-align: center; position: relative; }
+        canvas { border: 4px solid #fff; background: #000; display: none; image-rendering: pixelated; box-shadow: 0px 0px 30px rgba(241, 196, 15, 0.3); }
+        
+        .menu-panel { background: rgba(15, 15, 25, 0.95); padding: 40px; border-radius: 0px; border: 4px solid #fff; max-width: 600px; box-shadow: inset 0 0 20px rgba(255,255,255,0.2); }
+        h1 { margin-top: 0; color: #f1c40f; text-transform: uppercase; letter-spacing: 2px; text-shadow: 3px 3px #c0392b; font-size: 28px; }
+        p { font-size: 14px; color: #bdc3c7; margin-bottom: 25px; }
+        
+        button { padding: 14px 28px; margin: 12px; font-family: 'Courier New', Courier, monospace; font-size: 16px; font-weight: bold; cursor: pointer; border: 3px solid #fff; background: #222; color: white; border-radius: 0px; box-shadow: 4px 4px 0px #fff; transition: 0.1s; text-transform: uppercase; }
+        button:hover { background: #f1c40f; color: #000; box-shadow: 2px 2px 0px #fff; transform: translate(2px, 2px); }
+        button:active { box-shadow: 0px 0px 0px #fff; transform: translate(4px, 4px); }
+        
+        .hidden { display: none; }
+        #bilgi { margin-top: 15px; font-size: 14px; color: #f1c40f; text-transform: uppercase; letter-spacing: 1px; }
+        
+        /* Mute Button Corner Placement */
+        #muteBtn { position: absolute; top: -50px; right: 0; padding: 8px 16px; font-size: 12px; background: #c0392b; border-color: #fff; box-shadow: 2px 2px 0px #fff; }
+        
+        /* RETRO TICKET DESIGN WITH CHARACTER BOX */
+        .ticket { background: #f1c40f; color: #000; padding: 25px; border: 4px dashed #000; max-width: 440px; margin: 20px auto; position: relative; box-shadow: 8px 8px 0px #e67e22; text-align: left; }
+        .ticket-header { text-align: center; font-size: 20px; border-bottom: 3px double #000; padding-bottom: 10px; margin-bottom: 15px; letter-spacing: 2px; }
+        .ticket-row { margin: 10px 0; font-size: 15px; }
+        .ticket-label { color: #555; }
+        .ticket-value { font-weight: bold; float: right; text-transform: uppercase; }
+        .barcode { text-align: center; letter-spacing: 4px; font-size: 24px; margin-top: 20px; border-top: 2px solid #000; padding-top: 10px; font-weight: normal; }
+        
+        .screenshot-note { font-size: 13px; color: #f1c40f; margin: 15px 0 5px 0; letter-spacing: 1px; text-transform: uppercase; }
+        .twitter-btn { background: #1da1f2; color: white; border-color: #fff; box-shadow: 4px 4px 0px #000; }
+        .twitter-btn:hover { background: #fff; color: #1da1f2; border-color: #1da1f2; }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <button id="muteBtn" class="hidden" onclick="toggleMute()">SOUND: ON</button>
+
+    <div id="girisEkrani" class="menu-panel">
+        <h1>PIXEL ARCADE</h1>
+        <h2 style="color: #e74c3c; font-size: 18px; margin-bottom: 30px;">CHOOSE YOUR DESTINY</h2>
+        <button onclick="giristenTemaya()">START GAME</button>
+    </div>
+
+    <div id="temaMenu" class="menu-panel hidden">
+        <h1>SELECT WORLD</h1>
+        <p>Each world has unique characters and hidden paths!</p>
+        <button onclick="temaSec(1)">1. Perfect 10 Liners</button>
+        <button onclick="temaSec(2)">2. Love You Teacher</button>
+        <button onclick="temaSec(3)">3. Me and Thee</button>
+        <button onclick="temaSec(4)">4. Real Life</button>
+    </div>
+
+    <div id="karakterMenu" class="menu-panel hidden">
+        <h1 id="temaBaslik">SELECT CHARACTER</h1>
+        <p>Your path and traps will change based on your hero!</p>
+        <div id="karakterButonlari"></div>
+        <br>
+        <button onclick="backToWorlds()" style="background:#c0392b; box-shadow: 4px 4px 0px #962d22;">BACK</button>
+    </div>
+
+    <div id="endScreen" class="menu-panel hidden">
+        <h1>STAGE CLEAR!</h1>
+        
+        <div class="ticket">
+            <div class="ticket-header">ARCADE ADMISSION</div>
+            
+            <img id="tktCharImg" src="" style="float: right; width: 60px; height: 75px; border: 3px solid #000; background: rgba(0,0,0,0.05); image-rendering: pixelated; margin-left: 15px;" alt="Hero">
+            
+            <div class="ticket-row"><span class="ticket-label">WORLD:</span> <span class="ticket-value" id="tktWorld">-</span></div>
+            <div class="ticket-row"><span class="ticket-label">HERO:</span> <span class="ticket-value" id="tktHero">-</span></div>
+            <div class="ticket-row"><span class="ticket-label">TIME RESULT:</span> <span class="ticket-value" id="tktTime">-</span></div>
+            <div class="ticket-row"><span class="ticket-label">STATUS:</span> <span class="ticket-value" style="color:#27ae60;">VERIFIED ✔</span></div>
+            <div style="clear: both;"></div>
+            <div class="barcode">||| | || |||| | ||| |</div>
+        </div>
+
+        <div class="screenshot-note">📸 Take a screenshot of your ticket & add it to your Tweet! 📸</div>
+        <button class="twitter-btn" onclick="shareOnTwitter()">🎟️ TWEET MY TIME 🎟️</button>
+        <br>
+        <button onclick="backToMenuFromEnd()" style="background:#2c3e50; margin-top:15px; font-size:12px; padding:8px 16px;">PLAY AGAIN</button>
+    </div>
+
+    <canvas id="gameCanvas" width="900" height="500"></canvas>
+    <div id="bilgi" class="hidden">CONTROLS: ARROW KEYS = MOVE | SPACEBAR = JUMP</div>
+</div>
+
+<script>
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+
+let secilenTema = 1;
+let secilenKarakter = 0;
+let oyunAktif = false;
+let startTime = 0;
+let finalTime = 0;
+let isMuted = false;
+
+const temaIsimleri = { 1: "Perfect 10 Liners", 2: "Love You Teacher", 3: "Me and Thee", 4: "Real Life" };
+const karakterIsimleri = {
+    1: ["Yotha", "Gun"],
+    2: ["Pobmek", "Solar"],
+    3: ["Tawan", "Aran"],
+    4: ["Perth", "Santa", "Domiia"]
+};
+
+// --- AUDIO CONTROLS ---
+const bgMusic = new Audio("arcade_music.mp3");
+bgMusic.loop = true;
+const jumpSound = new Audio("jump_effect.mp3");
+
+function toggleMute() {
+    isMuted = !isMuted;
+    bgMusic.muted = isMuted;
+    jumpSound.muted = isMuted;
+    document.getElementById("muteBtn").innerText = isMuted ? "SOUND: OFF" : "SOUND: ON";
+    document.getElementById("muteBtn").style.background = isMuted ? "#7f8c8d" : "#c0392b";
+}
+
+// --- IMAGE PRELOADER ---
+const gorselYukleyici = {
+    girisArkaPlan: new Image(),
+    arkaplanlar: {},
+    karakterler: {
+        1: [ { yuru: new Image(), zipla: new Image() }, { yuru: new Image(), zipla: new Image() } ],
+        2: [ { yuru: new Image(), zipla: new Image() }, { yuru: new Image(), zipla: new Image() } ],
+        3: [ { yuru: new Image(), zipla: new Image() }, { yuru: new Image(), zipla: new Image() } ],
+        4: [ { yuru: new Image(), zipla: new Image() }, { yuru: new Image(), zipla: new Image() }, { yuru: new Image(), zipla: new Image() } ]
+    }
+};
+
+gorselYukleyici.girisArkaPlan.src = "start_bg.png";
+for(let t=1; t<=4; t++) {
+    gorselYukleyici.arkaplanlar[t] = new Image();
+    gorselYukleyici.arkaplanlar[t].src = `tema${t}_arka.png`;
+    let kSayisi = t === 4 ? 3 : 2;
+    for(let k=0; k<kSayisi; k++) {
+        let kAd = karakterIsimleri[t][k].toLowerCase();
+        gorselYukleyici.karakterler[t][k].yuru.src = `${kAd}_yuru.png`;
+        gorselYukleyici.karakterler[t][k].zipla.src = `${kAd}_zipla.png`;
+    }
+}
+
+let oyuncu = { x: 50, y: 300, w: 45, h: 60, vy: 0, vx: 0, yerde: false, bakisYonu: "sag" };
+const yercekimi = 0.6;
+
+// MAP LAYOUTS (Each has entirely unique layouts)
+const haritalar = {
+    "1_0": { zeminler: [{x: 0, y: 450, w: 250, h: 50}, {x: 350, y: 450, w: 200, h: 50}, {x: 650, y: 450, w: 250, h: 50}, {x: 400, y: 320, w: 120, h: 20}], engeller: [{x: 420, y: 430, w: 30, h: 20}, {x: 720, y: 430, w: 30, h: 20}], bitis: {x: 850, y: 390, w: 40, h: 60} },
+    "1_1": { zeminler: [{x: 0, y: 450, w: 150, h: 50}, {x: 200, y: 380, w: 150, h: 30}, {x: 400, y: 310, w: 150, h: 30}, {x: 600, y: 240, w: 150, h: 30}, {x: 780, y: 450, w: 150, h: 50}], engeller: [{x: 250, y: 360, w: 30, h: 20}, {x: 650, y: 220, w: 30, h: 20}], bitis: {x: 850, y: 390, w: 40, h: 60} },
+    "2_0": { zeminler: [{x: 0, y: 450, w: 900, h: 50}, {x: 250, y: 330, w: 80, h: 120}, {x: 550, y: 280, w: 80, h: 170}], engeller: [{x: 150, y: 430, w: 30, h: 20}, {x: 400, y: 430, w: 40, h: 20}, {x: 700, y: 430, w: 30, h: 20}], bitis: {x: 850, y: 390, w: 40, h: 60} },
+    "2_1": { zeminler: [{x: 0, y: 450, w: 120, h: 50}, {x: 180, y: 400, w: 120, h: 20}, {x: 360, y: 350, w: 120, h: 20}, {x: 540, y: 400, w: 120, h: 20}, {x: 720, y: 450, w: 180, h: 50}], engeller: [{x: 220, y: 380, w: 30, h: 20}, {x: 580, y: 380, w: 30, h: 20}], bitis: {x: 850, y: 390, w: 40, h: 60} },
+    "3_0": { zeminler: [{x: 0, y: 450, w: 900, h: 50}, {x: 200, y: 300, w: 500, h: 30}], engeller: [{x: 300, y: 430, w: 30, h: 20}, {x: 450, y: 280, w: 30, h: 20}, {x: 600, y: 430, w: 30, h: 20}], bitis: {x: 850, y: 390, w: 40, h: 60} },
+    "3_1": { zeminler: [{x: 0, y: 450, w: 100, h: 50}, {x: 150, y: 350, w: 80, h: 20}, {x: 300, y: 250, w: 80, h: 20}, {x: 450, y: 350, w: 80, h: 20}, {x: 600, y: 250, w: 80, h: 20}, {x: 750, y: 450, w: 150, h: 50}], engeller: [{x: 320, y: 230, w: 30, h: 20}, {x: 620, y: 230, w: 30, h: 20}], bitis: {x: 850, y: 390, w: 40, h: 60} },
+    "4_0": { zeminler: [{x: 0, y: 450, w: 150, h: 50}, {x: 250, y: 400, w: 50, h: 100}, {x: 400, y: 350, w: 50, h: 150}, {x: 550, y: 400, w: 50, h: 100}, {x: 700, y: 450, w: 200, h: 50}], engeller: [{x: 410, y: 330, w: 30, h: 20}, {x: 750, y: 430, w: 30, h: 20}], bitis: {x: 850, y: 390, w: 40, h: 60} },
+    "4_1": { zeminler: [{x: 0, y: 450, w: 300, h: 50}, {x: 420, y: 380, w: 70, h: 20}, {x: 600, y: 450, w: 300, h: 50}], engeller: [{x: 150, y: 430, w: 35, h: 20}, {x: 680, y: 430, w: 35, h: 20}], bitis: {x: 850, y: 390, w: 40, h: 60} },
+    "4_2": { zeminler: [{x: 0, y: 450, w: 200, h: 50}, {x: 200, y: 400, w: 100, h: 100}, {x: 300, y: 350, w: 100, h: 150}, {x: 400, y: 300, w: 100, h: 200}, {x: 550, y: 450, w: 350, h: 50}], engeller: [{x: 220, y: 380, w: 30, h: 20}, {x: 650, y: 430, w: 35, h: 20}], bitis: {x: 850, y: 390, w: 40, h: 60} }
+};
+
+function giristenTemaya() { 
+    document.getElementById("girisEkrani").classList.add("hidden"); 
+    document.getElementById("temaMenu").classList.remove("hidden");
+    bgMusic.play().catch(e => console.log("Audio waiting for user interaction"));
+}
+
+function backToWorlds() { document.getElementById("karakterMenu").classList.add("hidden"); document.getElementById("temaMenu").classList.remove("hidden"); }
+
+function temaSec(temaNo) {
+    secilenTema = temaNo;
+    document.getElementById("temaMenu").classList.add("hidden");
+    const kButonAlani = document.getElementById("karakterButonlari");
+    kButonAlani.innerHTML = "";
+    document.getElementById("temaBaslik").innerText = `${temaIsimleri[temaNo].toUpperCase()}`;
+    let kListesi = karakterIsimleri[temaNo];
+    for(let i = 0; i < kListesi.length; i++) {
+        kButonAlani.innerHTML += `<button onclick="oyunuBaslat(${i})">${kListesi[i]}</button>`;
+    }
+    document.getElementById("karakterMenu").classList.remove("hidden");
+}
+
+function oyunuBaslat(karakterNo) {
+    secilenKarakter = karakterNo;
+    document.getElementById("karakterMenu").classList.add("hidden");
+    canvas.style.display = "block";
+    document.getElementById("bilgi").classList.remove("hidden");
+    document.getElementById("muteBtn").classList.remove("hidden");
+    oyunAktif = true;
+    startTime = Date.now();
+    oyuncu.x = 50; oyuncu.y = 200; oyuncu.vy = 0; oyuncu.vx = 0;
+    oyunDongusu();
+}
+
+let tuslar = {};
+window.addEventListener("keydown", e => { tuslar[e.code] = true; });
+window.addEventListener("keyup", e => { tuslar[e.code] = false; });
+function carpismaVarMi(k1, k2) { return k1.x < k2.x + k2.w && k1.x + k1.w > k2.x && k1.y < k2.y + k2.h && k1.y + k1.h > k2.y; }
+
+function oyunDongusu() {
+    if (!oyunAktif) return;
+    
+    // Movement Logic
+    oyuncu.vx = 0;
+    if (tuslar["ArrowRight"]) { oyuncu.vx = 4; oyuncu.bakisYonu = "sag"; }
+    if (tuslar["ArrowLeft"]) { oyuncu.vx = -4; oyuncu.bakisYonu = "sol"; }
+    if ((tuslar["Space"] || tuslar["ArrowUp"]) && oyuncu.yerde) { 
+        oyuncu.vy = -12; oyuncu.yerde = false; 
+        jumpSound.currentTime = 0;
+        jumpSound.play().catch(e => {}); 
+    }
+
+    oyuncu.vy += yercekimi; oyuncu.x += oyuncu.vx; oyuncu.y += oyuncu.vy;
+    if (oyuncu.x < 0) oyuncu.x = 0;
+    if (oyuncu.x + oyuncu.w > canvas.width) oyuncu.x = canvas.width - oyuncu.w;
+
+    let harita = haritalar[`${secilenTema}_${secilenKarakter}`];
+    oyuncu.yerde = false;
+    harita.zeminler.forEach(zemin => {
+        if (carpismaVarMi(oyuncu, zemin) && oyuncu.vy > 0 && (oyuncu.y + oyuncu.h - oyuncu.vy) <= zemin.y) {
+            oyuncu.y = zemin.y - oyuncu.h; oyuncu.vy = 0; oyuncu.yerde = true;
+        }
+    });
+
+    harita.engeller.forEach(engel => {
+        if (carpismaVarMi(oyuncu, engel)) { alert("GAME OVER! Try again."); oyuncu.x = 50; oyuncu.y = 200; oyuncu.vy = 0; }
+    });
+
+    if (oyuncu.y > canvas.height) { alert("YOU FELL! Try again."); oyuncu.x = 50; oyuncu.y = 200; oyuncu.vy = 0; }
+
+    // --- STAGE CLEAR ---
+    if (carpismaVarMi(oyuncu, harita.bitis)) {
+        finalTime = ((Date.now() - startTime) / 1000).toFixed(2);
+        oyunAktif = false;
+        canvas.style.display = "none";
+        document.getElementById("bilgi").classList.add("hidden");
+        document.getElementById("muteBtn").classList.add("hidden");
+        
+        // Fill out Ticket text elements
+        document.getElementById("tktWorld").innerText = temaIsimleri[secilenTema];
+        document.getElementById("tktHero").innerText = karakterIsimleri[secilenTema][secilenKarakter];
+        document.getElementById("tktTime").innerText = `${finalTime} SEC`;
+        
+        // Put the character image onto the end ticket
+        document.getElementById("tktCharImg").src = gorselYukleyici.karakterler[secilenTema][secilenKarakter].yuru.src;
+        
+        document.getElementById("endScreen").classList.remove("hidden");
+        return;
+    }
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Background Drawing
+    let bg = gorselYukleyici.arkaplanlar[secilenTema];
+    if (bg.complete && bg.naturalWidth !== 0) ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
+    else { ctx.fillStyle = ["#2c3e50", "#27ae60", "#2c3e50", "#d35400"][secilenTema-1]; ctx.fillRect(0, 0, canvas.width, canvas.height); }
+
+    // Draw Platforms, Obstacles & Goal
+    harita.zeminler.forEach(zemin => { ctx.fillStyle = "#111116"; ctx.fillRect(zemin.x, zemin.y, zemin.w, zemin.h); ctx.strokeStyle = "#fff"; ctx.strokeRect(zemin.x, zemin.y, zemin.w, zemin.h); });
+    harita.engeller.forEach(engel => { ctx.fillStyle = "#e74c3c"; ctx.beginPath(); ctx.moveTo(engel.x, engel.y + engel.h); ctx.lineTo(engel.x + (engel.w/2), engel.y); ctx.lineTo(engel.x + engel.w, engel.y + engel.h); ctx.closePath(); ctx.fill(); });
+    ctx.fillStyle = "#f1c40f"; ctx.fillRect(harita.bitis.x, harita.bitis.y, harita.bitis.w, harita.bitis.h);
+
+    // Draw Character
+    let aktifGorsel = oyuncu.yerde ? gorselYukleyici.karakterler[secilenTema][secilenKarakter].yuru : gorselYukleyici.karakterler[secilenTema][secilenKarakter].zipla;
+    if (aktifGorsel.complete && aktifGorsel.naturalWidth !== 0) {
+        ctx.save(); ctx.imageSmoothingEnabled = false;
+        if (oyuncu.bakisYonu === "sol") { ctx.translate(oyuncu.x + oyuncu.w, oyuncu.y); ctx.scale(-1, 1); ctx.drawImage(aktifGorsel, 0, 0, oyuncu.w, oyuncu.h); }
+        else { ctx.drawImage(aktifGorsel, oyuncu.x, oyuncu.y, oyuncu.w, oyuncu.h); }
+        ctx.restore();
+    } else { ctx.fillStyle = "#f1c40f"; ctx.fillRect(oyuncu.x, oyuncu.y, oyuncu.w, oyuncu.h); }
+
+    requestAnimationFrame(oyunDongusu);
+}
+
+// COORDINAL TWEET CHALLENGE TEXT
+function shareOnTwitter() {
+    let tName = temaIsimleri[secilenTema];
+    let cName = karakterIsimleri[secilenTema][secilenKarakter];
+    let currentUrl = window.location.href; 
+    
+    let challengeText = `🎮 MISSION ACCOMPLISHED! 🎮\n\ni just cleared the "${tName}" world with ${cName} in exactly ${finalTime} seconds! ✨\n\nif you think you can do better than this, do you want to give it a try? let's see your time! 👇\n${currentUrl}`;
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(challengeText)}`, '_blank');
+}
+
+function backToMenuFromEnd() { document.getElementById("endScreen").classList.add("hidden"); document.getElementById("temaMenu").classList.remove("hidden"); }
+</script>
+</body>
+</html>
