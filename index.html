@@ -11,7 +11,7 @@
         #game-container { position: relative; width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; flex-direction: column; }
         
         /* AUTOMATIC SOFT BLUR BACKDROP */
-        #bg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('start_bg.png'); background-size: cover; background-position: center; filter: blur(5px); transform: scale(1.05); z-index: 1; transition: 0.5s; }
+        #bg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('start_bg.jpg'); background-size: cover; background-position: center; filter: blur(5px); transform: scale(1.05); z-index: 1; transition: 0.5s; }
         
         canvas { border: 4px solid #fff; background: #000; display: none; image-rendering: pixelated; max-width: 95vw; max-height: 70vh; box-shadow: 0px 0px 30px rgba(241, 196, 15, 0.3); z-index: 2; }
         
@@ -39,13 +39,12 @@
         .screenshot-note { font-size: 11px; color: #f1c40f; margin: 10px 0 5px 0; text-transform: uppercase; }
         .twitter-btn { background: #1da1f2; color: white; border-color: #fff; box-shadow: 4px 4px 0px #000; }
 
-        /* ON-SCREEN MOBILE CONTROLS (Only visible on touch devices) */
+        /* MOBILE CONTROLS OVERLAY */
         #mobile-controls { position: absolute; bottom: 15px; left: 0; width: 100%; display: none; justify-content: space-between; padding: 0 20px; box-sizing: border-box; z-index: 5; pointer-events: none; }
         .dpad-btn, .action-btn { width: 65px; height: 65px; background: rgba(255, 255, 255, 0.15); border: 3px solid rgba(255, 255, 255, 0.6); color: white; font-size: 24px; font-family: monospace; display: flex; justify-content: center; align-items: center; border-radius: 50%; pointer-events: auto; user-select: none; -webkit-user-select: none; }
         .dpad-btn:active, .action-btn:active { background: rgba(241, 196, 15, 0.6); border-color: #fff; }
         .dpad-group { display: flex; gap: 15px; }
 
-        /* Detect touch device to show buttons */
         @media (pointer: coarse) {
             #mobile-controls.active { display: flex; }
         }
@@ -58,12 +57,14 @@
 
     <button id="muteBtn" class="hidden" onclick="toggleMute()">SOUND: ON</button>
 
+    <!-- 1. START SCREEN -->
     <div id="girisEkrani" class="menu-panel">
         <h1>PIXEL ARCADE</h1>
         <h2 style="color: #e74c3c; font-size: 15px; margin-bottom: 25px;">CHOOSE YOUR DESTINY</h2>
         <button onclick="giristenTemaya()">START GAME</button>
     </div>
 
+    <!-- 2. WORLD SELECT MENU -->
     <div id="temaMenu" class="menu-panel hidden">
         <h1>SELECT WORLD</h1>
         <p>Each world has unique characters and hidden paths!</p>
@@ -73,6 +74,7 @@
         <button onclick="temaSec(4)">4. Real Life</button>
     </div>
 
+    <!-- 3. CHARACTER SELECT MENU -->
     <div id="karakterMenu" class="menu-panel hidden">
         <h1 id="temaBaslik">SELECT CHARACTER</h1>
         <p>Your path and traps will change based on your hero!</p>
@@ -81,6 +83,7 @@
         <button onclick="backToWorlds()" style="background:#c0392b; box-shadow: 4px 4px 0px #962d22;">BACK</button>
     </div>
 
+    <!-- 4. TICKET AND SCORE SCREEN -->
     <div id="endScreen" class="menu-panel hidden">
         <h1>STAGE CLEAR!</h1>
         
@@ -102,9 +105,11 @@
         <button onclick="backToMenuFromEnd()" style="background:#2c3e50; margin-top:12px; font-size:11px; padding:6px 12px;">PLAY AGAIN</button>
     </div>
 
+    <!-- GAME CANVAS -->
     <canvas id="gameCanvas" width="900" height="500"></canvas>
     <div id="bilgi" class="hidden">CONTROLS: ARROW KEYS = MOVE | SPACE = JUMP</div>
 
+    <!-- MOBILE OVERLAY CONTROLS -->
     <div id="mobile-controls">
         <div class="dpad-group">
             <div class="dpad-btn" id="btn-left">◀</div>
@@ -133,10 +138,10 @@ const karakterIsimleri = {
     4: ["Perth", "Santa", "Domiia"]
 };
 
-// --- AUDIO ---
+// --- UPDATED AUDIO FORMATS ---
 const bgMusic = new Audio("arcade_music.mp3");
 bgMusic.loop = true;
-const jumpSound = new Audio("jump_effect.mp3");
+const jumpSound = new Audio("jump_effect.mov"); // Updated to MOV format
 
 function toggleMute() {
     isMuted = !isMuted;
@@ -144,7 +149,7 @@ function toggleMute() {
     document.getElementById("muteBtn").innerText = isMuted ? "SOUND: OFF" : "SOUND: ON";
 }
 
-// --- IMAGES ---
+// --- UPDATED IMAGE FORMATS (JPG) ---
 const gorselYukleyici = {
     arkaplanlar: {},
     karakterler: {
@@ -156,12 +161,14 @@ const gorselYukleyici = {
 };
 
 for(let t=1; t<=4; t++) {
-    gorselYukleyici.arkaplanlar[t] = new Image(); gorselYukleyici.arkaplanlar[t].src = `tema${t}_arka.png`;
+    gorselYukleyici.arkaplanlar[t] = new Image(); 
+    gorselYukleyici.arkaplanlar[t].src = `tema${t}_arka.jpg`; // Updated to JPG
+    
     let kSayisi = t === 4 ? 3 : 2;
     for(let k=0; k<kSayisi; k++) {
         let kAd = karakterIsimleri[t][k].toLowerCase();
-        gorselYukleyici.karakterler[t][k].yuru.src = `${kAd}_yuru.png`;
-        gorselYukleyici.karakterler[t][k].zipla.src = `${kAd}_zipla.png`;
+        gorselYukleyici.karakterler[t][k].yuru.src = `${kAd}_yuru.jpg`;   // Updated to JPG
+        gorselYukleyici.karakterler[t][k].zipla.src = `${kAd}_zipla.jpg`; // Updated to JPG
     }
 }
 
@@ -198,20 +205,19 @@ function temaSec(temaNo) {
 
 function oyunuBaslat(karakterNo) {
     secilenKarakter = karakterNo; document.getElementById("karakterMenu").classList.add("hidden");
-    document.getElementById("bg-overlay").style.filter = "none"; // Clear background during gameplay
+    document.getElementById("bg-overlay").style.filter = "none";
     canvas.style.display = "block"; document.getElementById("bilgi").classList.remove("hidden"); document.getElementById("muteBtn").classList.remove("hidden");
-    document.getElementById("mobile-controls").classList.add("active"); // Activate on-screen buttons
+    document.getElementById("mobile-controls").classList.add("active");
     oyunAktif = true; startTime = Date.now();
     oyuncu.x = 50; oyuncu.y = 200; oyuncu.vy = 0; oyuncu.vx = 0;
     oyunDongusu();
 }
 
-// --- CONTROLS DISPATCHER ---
+// --- KEYBOARD & MOBILE TOUCH COUPLING ---
 let tuslar = {};
 window.addEventListener("keydown", e => { tuslar[e.code] = true; });
 window.addEventListener("keyup", e => { tuslar[e.code] = false; });
 
-// Mobile Virtual D-Pad Event Binding
 const bindMobileBtn = (id, targetKey) => {
     const el = document.getElementById(id);
     el.addEventListener("touchstart", (e) => { e.preventDefault(); tuslar[targetKey] = true; });
@@ -228,7 +234,11 @@ function oyunDongusu() {
     oyuncu.vx = 0;
     if (tuslar["ArrowRight"]) { oyuncu.vx = 4; oyuncu.bakisYonu = "sag"; }
     if (tuslar["ArrowLeft"]) { oyuncu.vx = -4; oyuncu.bakisYonu = "sol"; }
-    if ((tuslar["Space"] || tuslar["ArrowUp"]) && oyuncu.yerde) { oyuncu.vy = -12; oyuncu.yerde = false; jumpSound.currentTime = 0; jumpSound.play().catch(e=>{}); }
+    if ((tuslar["Space"] || tuslar["ArrowUp"]) && oyuncu.yerde) { 
+        oyuncu.vy = -12; oyuncu.yerde = false; 
+        jumpSound.currentTime = 0;
+        jumpSound.play().catch(e=>{}); 
+    }
 
     oyuncu.vy += yercekimi; oyuncu.x += oyuncu.vx; oyuncu.y += oyuncu.vy;
     if (oyuncu.x < 0) oyuncu.x = 0; if (oyuncu.x + oyuncu.w > canvas.width) oyuncu.x = canvas.width - oyuncu.w;
@@ -246,9 +256,9 @@ function oyunDongusu() {
     if (carpismaVarMi(oyuncu, harita.bitis)) {
         finalTime = ((Date.now() - startTime) / 1000).toFixed(2); oyunAktif = false; canvas.style.display = "none";
         document.getElementById("bilgi").classList.add("hidden"); document.getElementById("muteBtn").classList.add("hidden");
-        document.getElementById("mobile-controls").classList.remove("active"); // Hide mobile layout
+        document.getElementById("mobile-controls").classList.remove("active");
         
-        document.getElementById("bg-overlay").style.filter = "blur(5px)"; // Refocus background blur
+        document.getElementById("bg-overlay").style.filter = "blur(5px)";
         
         document.getElementById("tktWorld").innerText = temaIsimleri[secilenTema];
         document.getElementById("tktHero").innerText = karakterIsimleri[secilenTema][secilenKarakter];
