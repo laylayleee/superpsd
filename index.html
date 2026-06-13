@@ -10,8 +10,8 @@
         
         #bg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('start_bg.jpg'); background-size: cover; background-position: center; filter: blur(5px); transform: scale(1.05); z-index: 1; transition: 0.5s; }
         
-        /* FULLSCREEN RESPONSIVE CANVAS */
-        canvas { border: 4px solid #fff; background: #2c3e50; display: none; image-rendering: pixelated; width: 95vw; height: 80vh; max-width: 1000px; max-height: 550px; box-shadow: 0px 0px 30px rgba(241, 196, 15, 0.3); z-index: 2; position: relative; }
+        /* FULLSCREEN MARIO VIEWPORT */
+        canvas { border: 4px solid #fff; background: #2c3e50; display: none; image-rendering: pixelated; width: 95vw; height: 85vh; max-width: 1100px; max-height: 600px; box-shadow: 0px 0px 30px rgba(241, 196, 15, 0.3); z-index: 2; position: relative; }
         
         .menu-panel { background: rgba(15, 15, 25, 0.95); padding: 25px; border: 4px solid #fff; width: 90vw; max-width: 450px; box-shadow: inset 0 0 20px rgba(255,255,255,0.2); z-index: 5; box-sizing: border-box; text-align: center; }
         h1 { margin-top: 0; color: #f1c40f; text-transform: uppercase; letter-spacing: 1px; text-shadow: 2px 2px #c0392b; font-size: 24px; }
@@ -30,11 +30,11 @@
         .screenshot-note { font-size: 11px; color: #f1c40f; margin: 10px 0 5px 0; text-transform: uppercase; }
         .twitter-btn { background: #1da1f2; color: white; border-color: #fff; box-shadow: 4px 4px 0px #000; }
 
-        /* FIXED ON-SCREEN TOUCH CONTROLS FOR IPAD & PHONES */
-        #mobile-controls { position: absolute; bottom: 12vh; left: 5vw; width: 90vw; max-width: 1000px; display: none; justify-content: space-between; box-sizing: border-box; z-index: 99; pointer-events: none; margin: 0 auto; }
-        .dpad-btn, .action-btn { width: 70px; height: 70px; background: rgba(255, 255, 255, 0.2); border: 4px solid #fff; color: white; font-size: 26px; display: flex; justify-content: center; align-items: center; border-radius: 50%; pointer-events: auto; cursor: pointer; box-shadow: 0px 4px 10px rgba(0,0,0,0.5); font-family: monospace; user-select: none; -webkit-user-select: none; }
+        /* PERFECTLY POSITIONED ARCADE BUTTONS FOR IPAD & MOBILE */
+        #mobile-controls { position: absolute; bottom: 10vh; left: 6vw; width: 88vw; max-width: 1100px; display: none; justify-content: space-between; box-sizing: border-box; z-index: 99; pointer-events: none; }
+        .dpad-btn, .action-btn { width: 75px; height: 75px; background: rgba(255, 255, 255, 0.25); border: 4px solid #fff; color: white; font-size: 28px; display: flex; justify-content: center; align-items: center; border-radius: 50%; pointer-events: auto; cursor: pointer; box-shadow: 0px 4px 10px rgba(0,0,0,0.5); font-family: monospace; user-select: none; -webkit-user-select: none; }
         .dpad-btn:active, .action-btn:active { background: #f1c40f; color: #000; transform: scale(0.9); }
-        .dpad-group { display: flex; gap: 15px; pointer-events: auto; }
+        .dpad-group { display: flex; gap: 20px; pointer-events: auto; }
 
         @media (pointer: coarse) {
             #mobile-controls.active { display: flex; }
@@ -140,17 +140,17 @@ for(let t=1; t<=4; t++) {
 let oyuncu = { x: 50, y: 300, w: 45, h: 60, vy: 0, vx: 0, yerde: false, bakisYonu: "sag" };
 const yercekimi = 0.6;
 
-// HUGE 5X EXTENDED RETRO MAPS (5500px LENGTH - LASTS OVER 1 MINUTE)
+// SUPER MARIO STYLE 5X LONG MAP ARCHITECTURE (5500px LENGTH)
 const haritalar = {
-    "1_0": { zeminler: [{x: 0, y: 450, w: 500, h: 50}, {x: 650, y: 450, w: 400, h: 50}, {x: 1200, y: 400, w: 500, h: 100}, {x: 1850, y: 450, w: 500, h: 50}, {x: 2500, y: 450, w: 600, h: 50}, {x: 3250, y: 380, w: 400, h: 120}, {x: 3800, y: 450, w: 600, h: 50}, {x: 4600, y: 450, w: 900, h: 50}, {x: 1400, y: 260, w: 150, h: 20}, {x: 2800, y: 300, w: 200, h: 20}, {x: 4100, y: 320, w: 200, h: 20}], engeller: [{x: 350, y: 430, w: 30, h: 20}, {x: 850, y: 430, w: 30, h: 20}, {x: 1350, y: 380, w: 40, h: 20}, {x: 2100, y: 430, w: 30, h: 20}, {x: 2700, y: 430, w: 30, h: 20}, {x: 3400, y: 360, w: 30, h: 20}, {x: 4200, y: 430, w: 30, h: 20}, {x: 4900, y: 430, w: 30, h: 20}], bitis: {x: 5400, y: 390, w: 40, h: 60} },
-    "1_1": { zeminler: [{x: 0, y: 450, w: 400, h: 50}, {x: 550, y: 380, w: 250, h: 30}, {x: 950, y: 310, w: 250, h: 30}, {x: 1350, y: 240, w: 250, h: 30}, {x: 1750, y: 350, w: 400, h: 150}, {x: 2300, y: 420, w: 400, h: 80}, {x: 2850, y: 450, w: 500, h: 50}, {x: 3500, y: 380, w: 400, h: 20}, {x: 4100, y: 450, w: 500, h: 50}, {x: 4800, y: 450, w: 700, h: 50}], engeller: [{x: 650, y: 360, w: 30, h: 20}, {x: 1100, y: 290, w: 30, h: 20}, {x: 1900, y: 330, w: 30, h: 20}, {x: 2500, y: 400, w: 30, h: 20}, {x: 3100, y: 430, w: 30, h: 20}, {x: 3700, y: 360, w: 30, h: 20}, {x: 4400, y: 430, w: 30, h: 20}, {x: 5000, y: 430, w: 30, h: 20}], bitis: {x: 5400, y: 390, w: 40, h: 60} },
-    "2_0": { zeminler: [{x: 0, y: 450, w: 800, h: 50}, {x: 950, y: 450, w: 600, h: 50}, {x: 1700, y: 400, w: 500, h: 100}, {x: 2350, y: 450, w: 700, h: 50}, {x: 3200, y: 410, w: 400, h: 90}, {x: 3800, y: 450, w: 600, h: 50}, {x: 4650, y: 450, w: 850, h: 50}, {x: 1200, y: 320, w: 120, h: 20}, {x: 2600, y: 300, w: 150, h: 20}], engeller: [{x: 450, y: 430, w: 30, h: 20}, {x: 1100, y: 430, w: 30, h: 20}, {x: 1900, y: 380, w: 40, h: 20}, {x: 2550, y: 430, w: 30, h: 20}, {x: 3400, y: 390, w: 30, h: 20}, {x: 4100, y: 430, w: 30, h: 20}, {x: 4900, y: 430, w: 30, h: 20}], bitis: {x: 5400, y: 390, w: 40, h: 60} },
-    "2_1": { zeminler: [{x: 0, y: 450, w: 300, h: 50}, {x: 450, y: 400, w: 200, h: 20}, {x: 750, y: 350, w: 200, h: 20}, {x: 1050, y: 300, w: 200, h: 20}, {x: 1350, y: 350, w: 250, h: 20}, {x: 1700, y: 400, w: 250, h: 20}, {x: 2100, y: 450, w: 800, h: 50}, {x: 3050, y: 400, w: 300, h: 20}, {x: 3500, y: 350, w: 300, h: 20}, {x: 3950, y: 450, w: 1550, h: 50}], engeller: [{x: 520, y: 380, w: 30, h: 20}, {x: 1150, y: 280, w: 30, h: 20}, {x: 1450, y: 330, w: 30, h: 20}, {x: 2300, y: 430, w: 30, h: 20}, {x: 2600, y: 430, w: 30, h: 20}, {x: 3200, y: 380, w: 30, h: 20}, {x: 3700, y: 330, w: 30, h: 20}, {x: 4400, y: 430, w: 30, h: 20}, {x: 4900, y: 430, w: 30, h: 20}], bitis: {x: 5400, y: 390, w: 40, h: 60} },
-    "3_0": { zeminler: [{x: 0, y: 450, w: 1000, h: 50}, {x: 550, y: 300, w: 500, h: 30}, {x: 1200, y: 450, w: 900, h: 50}, {x: 1500, y: 320, w: 400, h: 20}, {x: 2300, y: 450, w: 1000, h: 50}, {x: 3500, y: 400, w: 500, h: 100}, {x: 4200, y: 450, w: 1300, h: 50}], engeller: [{x: 400, y: 430, w: 30, h: 20}, {x: 700, y: 280, w: 30, h: 20}, {x: 1400, y: 430, w: 30, h: 20}, {x: 1700, y: 300, w: 30, h: 20}, {x: 2600, y: 430, w: 30, h: 20}, {x: 3700, y: 380, w: 30, h: 20}, {x: 4500, y: 430, w: 30, h: 20}, {x: 5000, y: 430, w: 30, h: 20}], bitis: {x: 5400, y: 390, w: 40, h: 60} },
-    "3_1": { zeminler: [{x: 0, y: 450, w: 300, h: 50}, {x: 450, y: 360, w: 150, h: 20}, {x: 700, y: 280, w: 150, h: 20}, {x: 950, y: 200, w: 150, h: 20}, {x: 1250, y: 280, w: 150, h: 20}, {x: 1550, y: 360, w: 150, h: 20}, {x: 1850, y: 450, w: 1000, h: 50}, {x: 3000, y: 380, w: 200, h: 20}, {x: 3400, y: 300, w: 200, h: 20}, {x: 3800, y: 380, w: 200, h: 20}, {x: 4200, y: 450, w: 1300, h: 50}], engeller: [{x: 500, y: 340, w: 30, h: 20}, {x: 1000, y: 180, w: 30, h: 20}, {x: 1300, y: 260, w: 30, h: 20}, {x: 2100, y: 430, w: 30, h: 20}, {x: 2500, y: 430, w: 30, h: 20}, {x: 3100, y: 360, w: 30, h: 20}, {x: 3500, y: 280, w: 30, h: 20}, {x: 4500, y: 430, w: 30, h: 20}, {x: 4900, y: 430, w: 30, h: 20}], bitis: {x: 5400, y: 390, w: 40, h: 60} },
-    "4_0": { zeminler: [{x: 0, y: 450, w: 400, h: 50}, {x: 600, y: 400, w: 100, h: 100}, {x: 850, y: 350, w: 100, h: 150}, {x: 1100, y: 300, w: 100, h: 200}, {x: 1400, y: 450, w: 800, h: 50}, {x: 2400, y: 400, w: 200, h: 100}, {x: 2800, y: 450, w: 800, h: 50}, {x: 3800, y: 350, w: 150, h: 150}, {x: 4200, y: 450, w: 1300, h: 50}], engeller: [{x: 900, y: 330, w: 30, h: 20}, {x: 1600, y: 430, w: 30, h: 20}, {x: 1900, y: 430, w: 30, h: 20}, {x: 2500, y: 380, w: 30, h: 20}, {x: 3100, y: 430, w: 30, h: 20}, {x: 3900, y: 330, w: 30, h: 20}, {x: 4600, y: 430, w: 30, h: 20}, {x: 5000, y: 430, w: 30, h: 20}], bitis: {x: 5400, y: 390, w: 40, h: 60} },
-    "4_1": { zeminler: [{x: 0, y: 450, w: 500, h: 50}, {x: 700, y: 380, w: 150, h: 20}, {x: 1000, y: 450, w: 600, h: 50}, {x: 1800, y: 350, w: 150, h: 20}, {x: 2100, y: 450, w: 1000, h: 50}, {x: 3300, y: 380, w: 200, h: 20}, {x: 3700, y: 450, w: 600, h: 50}, {x: 4500, y: 450, w: 1000, h: 50}], engeller: [{x: 300, y: 430, w: 30, h: 20}, {x: 1200, y: 430, w: 30, h: 20}, {x: 1500, y: 430, w: 30, h: 20}, {x: 2400, y: 430, w: 30, h: 20}, {x: 2800, y: 430, w: 30, h: 20}, {x: 3900, y: 430, w: 30, h: 20}, {x: 4800, y: 430, w: 30, h: 20}], bitis: {x: 5400, y: 390, w: 40, h: 60} },
-    "4_2": { zeminler: [{x: 0, y: 450, w: 400, h: 50}, {x: 600, y: 410, w: 200, h: 90}, {x: 950, y: 370, w: 200, h: 130}, {x: 1300, y: 330, w: 200, h: 170}, {x: 1650, y: 290, w: 200, h: 210}, {x: 2000, y: 450, w: 1000, h: 50}, {x: 3200, y: 380, w: 300, h: 20}, {x: 3700, y: 450, w: 500, h: 50}, {x: 4400, y: 450, w: 1100, h: 50}], engeller: [{x: 700, y: 390, w: 30, h: 20}, {x: 1400, y: 310, w: 30, h: 20}, {x: 2300, y: 430, w: 30, h: 20}, {x: 2700, y: 430, w: 30, h: 20}, {x: 3300, y: 360, w: 30, h: 20}, {x: 3900, y: 430, w: 30, h: 20}, {x: 4700, y: 430, w: 30, h: 20}], bitis: {x: 5400, y: 390, w: 40, h: 60} }
+    "1_0": { zeminler: [{x: 0, y: 450, w: 600, h: 50}, {x: 750, y: 450, w: 500, h: 50}, {x: 1400, y: 400, w: 600, h: 100}, {x: 2150, y: 450, w: 500, h: 50}, {x: 2800, y: 450, w: 700, h: 50}, {x: 3650, y: 380, w: 400, h: 120}, {x: 4200, y: 450, w: 600, h: 50}, {x: 4900, y: 450, w: 600, h: 50}, {x: 1600, y: 260, w: 150, h: 20}, {x: 3000, y: 300, w: 200, h: 20}, {x: 4400, y: 320, w: 200, h: 20}], engeller: [{x: 400, y: 430, w: 30, h: 20}, {x: 950, y: 430, w: 30, h: 20}, {x: 1550, y: 380, w: 40, h: 20}, {x: 2300, y: 430, w: 30, h: 20}, {x: 2900, y: 430, w: 30, h: 20}, {x: 3800, y: 360, w: 30, h: 20}, {x: 4500, y: 430, w: 30, h: 20}, {x: 5100, y: 430, w: 30, h: 20}], bitis: {x: 5400, y: 390, w: 40, h: 60} },
+    "1_1": { zeminler: [{x: 0, y: 450, w: 500, h: 50}, {x: 650, y: 380, w: 300, h: 30}, {x: 1050, y: 310, w: 300, h: 30}, {x: 1450, y: 240, w: 300, h: 30}, {x: 1850, y: 350, w: 500, h: 150}, {x: 2500, y: 420, w: 400, h: 80}, {x: 3050, y: 450, w: 600, h: 50}, {x: 3800, y: 380, w: 400, h: 20}, {x: 4400, y: 450, w: 500, h: 50}, {x: 5000, y: 450, w: 500, h: 50}], engeller: [{x: 750, y: 360, w: 30, h: 20}, {x: 1200, y: 290, w: 30, h: 20}, {x: 2000, y: 330, w: 30, h: 20}, {x: 2700, y: 400, w: 30, h: 20}, {x: 3300, y: 430, w: 30, h: 20}, {x: 3900, y: 360, w: 30, h: 20}, {x: 4600, y: 430, w: 30, h: 20}, {x: 5200, y: 430, w: 30, h: 20}], bitis: {x: 5400, y: 390, w: 40, h: 60} },
+    "2_0": { zeminler: [{x: 0, y: 450, w: 900, h: 50}, {x: 1050, y: 450, w: 700, h: 50}, {x: 1900, y: 400, w: 500, h: 100}, {x: 2550, y: 450, w: 800, h: 50}, {x: 3500, y: 410, w: 400, h: 90}, {x: 4100, y: 450, w: 600, h: 50}, {x: 4850, y: 450, w: 650, h: 50}, {x: 1300, y: 320, w: 120, h: 20}, {x: 2800, y: 300, w: 150, h: 20}], engeller: [{x: 550, y: 430, w: 30, h: 20}, {x: 1200, y: 430, w: 30, h: 20}, {x: 2100, y: 380, w: 40, h: 20}, {x: 2750, y: 430, w: 30, h: 20}, {x: 3600, y: 390, w: 30, h: 20}, {x: 4300, y: 430, w: 30, h: 20}, {x: 5050, y: 430, w: 30, h: 20}], bitis: {x: 5400, y: 390, w: 40, h: 60} },
+    "2_1": { zeminler: [{x: 0, y: 450, w: 400, h: 50}, {x: 550, y: 400, w: 200, h: 20}, {x: 850, y: 350, w: 200, h: 20}, {x: 1150, y: 300, w: 200, h: 20}, {x: 1450, y: 350, w: 250, h: 20}, {x: 1800, y: 400, w: 250, h: 20}, {x: 2200, y: 450, w: 900, h: 50}, {x: 3250, y: 400, w: 300, h: 20}, {x: 3700, y: 350, w: 300, h: 20}, {x: 4150, y: 450, w: 1350, h: 50}], engeller: [{x: 620, y: 380, w: 30, h: 20}, {x: 1250, y: 280, w: 30, h: 20}, {x: 1550, y: 330, w: 30, h: 20}, {x: 2400, y: 430, w: 30, h: 20}, {x: 2700, y: 430, w: 30, h: 20}, {x: 3400, y: 380, w: 30, h: 20}, {x: 3900, y: 330, w: 30, h: 20}, {x: 4600, y: 430, w: 30, h: 20}, {x: 5000, y: 430, w: 30, h: 20}], bitis: {x: 5400, y: 390, w: 40, h: 60} },
+    "3_0": { zeminler: [{x: 0, y: 450, w: 1100, h: 50}, {x: 650, y: 300, w: 500, h: 30}, {x: 1300, y: 450, w: 1000, h: 50}, {x: 1600, y: 320, w: 400, h: 20}, {x: 2500, y: 450, w: 1100, h: 50}, {x: 3800, y: 400, w: 500, h: 100}, {x: 4500, y: 450, w: 1000, h: 50}], engeller: [{x: 500, y: 430, w: 30, h: 20}, {x: 800, y: 280, w: 30, h: 20}, {x: 1500, y: 430, w: 30, h: 20}, {x: 1800, y: 300, w: 30, h: 20}, {x: 2800, y: 430, w: 30, h: 20}, {x: 4000, y: 380, w: 30, h: 20}, {x: 4700, y: 430, w: 30, h: 20}, {x: 5100, y: 430, w: 30, h: 20}], bitis: {x: 5400, y: 390, w: 40, h: 60} },
+    "3_1": { zeminler: [{x: 0, y: 450, w: 400, h: 50}, {x: 550, y: 360, w: 150, h: 20}, {x: 800, y: 280, w: 150, h: 20}, {x: 1050, y: 200, w: 150, h: 20}, {x: 1350, y: 280, w: 150, h: 20}, {x: 1650, y: 360, w: 150, h: 20}, {x: 1950, y: 450, w: 1100, h: 50}, {x: 3200, y: 380, w: 200, h: 20}, {x: 3600, y: 300, w: 200, h: 20}, {x: 4000, y: 380, w: 200, h: 20}, {x: 4400, y: 450, w: 1100, h: 50}], engeller: [{x: 600, y: 340, w: 30, h: 20}, {x: 1100, y: 180, w: 30, h: 20}, {x: 1400, y: 260, w: 30, h: 20}, {x: 2200, y: 430, w: 30, h: 20}, {x: 2600, y: 430, w: 30, h: 20}, {x: 3300, y: 360, w: 30, h: 20}, {x: 3700, y: 280, w: 30, h: 20}, {x: 4600, y: 430, w: 30, h: 20}, {x: 5000, y: 430, w: 30, h: 20}], bitis: {x: 5400, y: 390, w: 40, h: 60} },
+    "4_0": { zeminler: [{x: 0, y: 450, w: 500, h: 50}, {x: 700, y: 400, w: 100, h: 100}, {x: 950, y: 350, w: 100, h: 150}, {x: 1200, y: 300, w: 100, h: 200}, {x: 1500, y: 450, w: 900, h: 50}, {x: 2600, y: 400, w: 200, h: 100}, {x: 3000, y: 450, w: 900, h: 50}, {x: 4000, y: 350, w: 150, h: 150}, {x: 4400, y: 450, w: 1100, h: 50}], engeller: [{x: 1000, y: 330, w: 30, h: 20}, {x: 1700, y: 430, w: 30, h: 20}, {x: 2000, y: 430, w: 30, h: 20}, {x: 2700, y: 380, w: 30, h: 20}, {x: 3300, y: 430, w: 30, h: 20}, {x: 4100, y: 330, w: 30, h: 20}, {x: 4700, y: 430, w: 30, h: 20}, {x: 5100, y: 430, w: 30, h: 20}], bitis: {x: 5400, y: 390, w: 40, h: 60} },
+    "4_1": { zeminler: [{x: 0, y: 450, w: 600, h: 50}, {x: 800, y: 380, w: 150, h: 20}, {x: 1100, y: 450, w: 700, h: 50}, {x: 2000, y: 350, w: 150, h: 20}, {x: 2300, y: 450, w: 1100, h: 50}, {x: 3600, y: 380, w: 200, h: 20}, {x: 4000, y: 450, w: 700, h: 50}, {x: 4900, y: 450, w: 600, h: 50}], engeller: [{x: 400, y: 430, w: 30, h: 20}, {x: 1300, y: 430, w: 30, h: 20}, {x: 1600, y: 430, w: 30, h: 20}, {x: 2600, y: 430, w: 30, h: 20}, {x: 3000, y: 430, w: 30, h: 20}, {x: 4200, y: 430, w: 30, h: 20}, {x: 5100, y: 430, w: 30, h: 20}], bitis: {x: 5400, y: 390, w: 40, h: 60} },
+    "4_2": { zeminler: [{x: 0, y: 450, w: 500, h: 50}, {x: 700, y: 410, w: 200, h: 90}, {x: 1100, y: 370, w: 200, h: 130}, {x: 1500, y: 330, w: 200, h: 170}, {x: 1900, y: 290, w: 200, h: 210}, {x: 2300, y: 450, w: 1100, h: 50}, {x: 3600, y: 380, w: 300, h: 20}, {x: 4100, y: 450, w: 600, h: 50}, {x: 4900, y: 450, w: 600, h: 50}], engeller: [{x: 800, y: 390, w: 30, h: 20}, {x: 1600, y: 310, w: 30, h: 20}, {x: 2500, y: 430, w: 30, h: 20}, {x: 2900, y: 430, w: 30, h: 20}, {x: 3700, y: 360, w: 30, h: 20}, {x: 4300, y: 430, w: 30, h: 20}, {x: 5100, y: 430, w: 30, h: 20}], bitis: {x: 5400, y: 390, w: 40, h: 60} }
 };
 
 function giristenTemaya() { document.getElementById("girisEkrani").classList.add("hidden"); document.getElementById("temaMenu").classList.remove("hidden"); bgMusic.play().catch(e => {}); }
@@ -200,8 +200,9 @@ function oyunDongusu() {
     oyuncu.vy += yercekimi; oyuncu.x += oyuncu.vx; oyuncu.y += oyuncu.vy;
     if (oyuncu.x < 0) oyuncu.x = 0;
 
-    // CENTERED CAMERA ENGINE
-    if (oyuncu.x > 450) { cameraX = oyuncu.x - 450; }
+    // REAL TIME SIDE-SCROLLING MARIO ENGINE
+    // Karakter ekranın sol yarısını (canvas genişliğinin yarısı) geçince kamera kaymaya başlar
+    if (oyuncu.x > (canvas.width / 2)) { cameraX = oyuncu.x - (canvas.width / 2); }
 
     let harita = haritalar[`${secilenTema}_${secilenKarakter}`];
     oyuncu.yerde = false;
@@ -229,15 +230,15 @@ function oyunDongusu() {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    // RENDER RETAINER FOR CAMERA
+    // BACKDROP BUFFER FIX
     ctx.save();
     ctx.translate(-cameraX, 0);
 
-    // FIXED VISUAL BUFFER ENGINE
+    // DYNAMIC BACKGROUND REPEAT RENDERER
     let bg = gorselYukleyici.arkaplanlar[secilenTema];
     if (bg.complete && bg.naturalWidth !== 0) {
-        // Tiles background image as the camera scrolls
-        for (let i = 0; i < 7; i++) {
+        // Tiles the background continuously as you run right
+        for (let i = 0; i < 10; i++) {
             ctx.drawImage(bg, i * canvas.width, 0, canvas.width, canvas.height);
         }
     } else {
