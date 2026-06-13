@@ -10,6 +10,7 @@
         
         #bg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('start_bg.jpg'); background-size: cover; background-position: center; filter: blur(5px); transform: scale(1.05); z-index: 1; transition: 0.3s; }
         
+        /* STRICT FULLSCREEN MODE: NO MORE BOXES, NO GREY MARGINS */
         canvas { display: none; width: 100vw; height: 100vh; z-index: 2; position: absolute; top: 0; left: 0; image-rendering: pixelated; }
         
         .menu-panel { background: rgba(15, 15, 25, 0.95); padding: 25px; border: 4px solid #fff; width: 90vw; max-width: 450px; box-shadow: inset 0 0 20px rgba(255,255,255,0.2); z-index: 5; box-sizing: border-box; text-align: center; }
@@ -19,6 +20,10 @@
         button { padding: 12px 20px; margin: 8px; font-family: 'Courier New', Courier, monospace; font-size: 14px; font-weight: bold; cursor: pointer; border: 3px solid #fff; background: #222; color: white; border-radius: 0px; box-shadow: 4px 4px 0px #fff; transition: 0.1s; text-transform: uppercase; }
         button:hover { background: #f1c40f; color: #000; box-shadow: 2px 2px 0px #fff; transform: translate(2px, 2px); }
         
+        /* CHAR SELECT WITH SPRITE IMAGES INSIDE THE BUTTONS */
+        .char-select-btn { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; width: 110px; height: 130px; padding: 10px; margin: 8px; text-align: center; }
+        .char-select-btn img { width: 40px; height: 55px; margin-bottom: 8px; border: 2px solid #fff; background: rgba(0,0,0,0.3); image-rendering: pixelated; }
+
         .hidden { display: none !important; }
         #muteBtn { position: absolute; top: 20px; right: 20px; padding: 6px 12px; font-size: 11px; background: #c0392b; border-color: #fff; box-shadow: 2px 2px 0px #fff; z-index: 10; }
         
@@ -77,6 +82,7 @@
             <img id="tktCharImg" src="" style="float: right; width: 50px; height: 65px; border: 3px solid #000; background: rgba(0,0,0,0.05); image-rendering: pixelated; margin-left: 10px;" alt="Hero">
             <div class="ticket-row"><span>WORLD:</span> <span id="tktWorld" style="float:right; font-weight:bold;">-</span></div>
             <div class="ticket-row"><span>HERO:</span> <span id="tktHero" style="float:right; font-weight:bold;">-</span></div>
+            <div class="ticket-row"><span>COINS COLLECTED:</span> <span id="tktCoins" style="float:right; font-weight:bold; color:#f1c40f;">0 🪙</span></div>
             <div class="ticket-row"><span>TIME RESULT:</span> <span id="tktTime" style="float:right; font-weight:bold;">-</span></div>
             <div class="ticket-row"><span>STATUS:</span> <span style="color:#27ae60; float:right; font-weight:bold;">VERIFIED ✔</span></div>
             <div style="clear: both;"></div>
@@ -106,7 +112,7 @@ const ctx = canvas.getContext("2d");
 let secilenTema = 1; let secilenKarakter = 0; let oyunAktif = false;
 let startTime = 0; let finalTime = 0; let isMuted = false;
 let cameraX = 0;
-let oyuncuCan = 3;
+let oyuncuCan = 3; let toplananPara = 0; // SCORE SYSTEMS
 
 const temaIsimleri = { 1: "Perfect 10 Liners", 2: "Love You Teacher", 3: "Me and Thee", 4: "Real Life" };
 const karakterIsimleri = {
@@ -144,6 +150,7 @@ const yercekimi = 0.5;
 function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
 window.addEventListener('resize', resizeCanvas);
 
+// STEP-BY-STEP BACK BUTTONS FIX
 function giristenTemaya() { document.getElementById("girisEkrani").classList.add("hidden"); document.getElementById("temaMenu").classList.remove("hidden"); bgMusic.play().catch(e => {}); }
 function backToStart() { document.getElementById("temaMenu").classList.add("hidden"); document.getElementById("girisEkrani").classList.remove("hidden"); }
 function backToWorlds() { document.getElementById("karakterMenu").classList.add("hidden"); document.getElementById("temaMenu").classList.remove("hidden"); }
@@ -153,7 +160,12 @@ function temaSec(temaNo) {
     const kButonAlani = document.getElementById("karakterButonlari"); kButonAlani.innerHTML = "";
     document.getElementById("temaBaslik").innerText = `${temaIsimleri[temaNo].toUpperCase()}`;
     let kListesi = karakterIsimleri[temaNo];
-    for(let i = 0; i < kListesi.length; i++) { kButonAlani.innerHTML += `<button onclick="oyunuBaslat(${i})">${kListesi[i]}</button>`; }
+    
+    // INJECTS BOTH IMAGES AND TEXT INSIDE CHARACTER SELECT SEAMLESSLY
+    for(let i = 0; i < kListesi.length; i++) { 
+        let imgPath = `${kListesi[i].toLowerCase()}_yuru.jpg`;
+        kButonAlani.innerHTML += `<button class="char-select-btn" onclick="oyunuBaslat(${i})"><img src="${imgPath}" alt="${kListesi[i]}"><span>${kListesi[i]}</span></button>`; 
+    }
     document.getElementById("karakterMenu").classList.remove("hidden");
 }
 
@@ -163,7 +175,7 @@ function oyunuBaslat(karakterNo) {
     resizeCanvas();
     canvas.style.display = "block"; document.getElementById("muteBtn").classList.remove("hidden");
     document.getElementById("mobile-controls").classList.add("active"); 
-    oyunAktif = true; startTime = Date.now(); oyuncuCan = 3;
+    oyunAktif = true; startTime = Date.now(); oyuncuCan = 3; toplananPara = 0;
     oyuncu.x = 50; oyuncu.y = canvas.height - 200; oyuncu.vy = 0; oyuncu.vx = 0; cameraX = 0;
     oyunDongusu();
 }
@@ -184,5 +196,146 @@ setupTouch("btn-jump", "Space");
 
 function carpismaVarMi(k1, k2) { return k1.x < k2.x + k2.w && k1.x + k1.w > k2.x && k1.y < k2.y + k2.h && k1.y + k1.h > k2.y; }
 
+// LONG AND BALANCED MARIO TRACKS WITH DEPLOYED COINS (🪙)
 const haritalar = {
-    "1_0": { zeminler: [{x: 0, y: 650, w: 800, h: 200}, {x: 950, y: 650, w: 600, h: 200}, {x: 1700, y: 550, w: 700, h: 300}, {x: 2550, y: 650, w: 600, h: 200}, {x: 3300, y: 650, w: 800, h: 200}, {x: 4250, y: 550, w: 500, h: 300}, {x: 4900, y: 650, w: 900, h: 200}], engeller: [{x: 500, y: 620, w: 40, h: 30}, {x: 1200, y: 620, w: 40, h: 30}, {x: 1900, y: 520, w: 40, h: 30}, {x: 2800, y: 620, w: 40, h: 30}, {x: 3600, y: 620, w: 40, h: 30}, {x: 4500, y: 520, w: 40, h: 30}], bitis: {x: 56
+    "1_0": { zeminler: [{x: 0, y: 650, w: 800, h: 200}, {x: 950, y: 650, w: 600, h: 200}, {x: 1700, y: 550, w: 700, h: 300}, {x: 2550, y: 650, w: 600, h: 200}, {x: 3300, y: 650, w: 800, h: 200}, {x: 4250, y: 550, w: 500, h: 300}, {x: 4900, y: 650, w: 900, h: 200}], engeller: [{x: 500, y: 620, w: 40, h: 30}, {x: 1200, y: 620, w: 40, h: 30}, {x: 1900, y: 520, w: 40, h: 30}, {x: 2800, y: 620, w: 40, h: 30}, {x: 3600, y: 620, w: 40, h: 30}, {x: 4500, y: 520, w: 40, h: 30}], paralar: [{x: 200, y: 550, w: 25, h: 25}, {x: 350, y: 550, w: 25, h: 25}, {x: 1100, y: 550, w: 25, h: 25}, {x: 1400, y: 550, w: 25, h: 25}, {x: 2100, y: 450, w: 25, h: 25}, {x: 3100, y: 550, w: 25, h: 25}, {x: 3800, y: 550, w: 25, h: 25}, {x: 4600, y: 450, w: 25, h: 25}], bitis: {x: 5600, y: 570, w: 50, h: 80} },
+    "1_1": { zeminler: [{x: 0, y: 650, w: 600, h: 200}, {x: 750, y: 550, w: 400, h: 100}, {x: 1300, y: 450, w: 400, h: 100}, {x: 1850, y: 550, w: 600, h: 200}, {x: 2600, y: 650, w: 800, h: 200}, {x: 3600, y: 550, w: 400, h: 100}, {x: 4200, y: 650, w: 1500, h: 200}], engeller: [{x: 900, y: 520, w: 40, h: 30}, {x: 1450, y: 420, w: 40, h: 30}, {x: 2100, y: 520, w: 40, h: 30}, {x: 2900, y: 620, w: 40, h: 30}, {x: 3800, y: 520, w: 40, h: 30}, {x: 4600, y: 620, w: 40, h: 30}], paralar: [{x: 300, y: 550, w: 25, h: 25}, {x: 850, y: 450, w: 25, h: 25}, {x: 1400, y: 350, w: 25, h: 25}, {x: 2000, y: 450, w: 25, h: 25}, {x: 2800, y: 550, w: 25, h: 25}, {x: 3700, y: 450, w: 25, h: 25}, {x: 4400, y: 550, w: 25, h: 25}], bitis: {x: 5500, y: 570, w: 50, h: 80} },
+    "2_0": { zeminler: [{x: 0, y: 650, w: 1200, h: 200}, {x: 1400, y: 650, w: 800, h: 200}, {x: 2400, y: 550, w: 600, h: 300}, {x: 3200, y: 650, w: 900, h: 200}, {x: 4300, y: 650, w: 1400, h: 200}], engeller: [{x: 600, y: 620, w: 40, h: 30}, {x: 1600, y: 620, w: 40, h: 30}, {x: 2600, y: 520, w: 40, h: 30}, {x: 3500, y: 620, w: 40, h: 30}, {x: 4600, y: 620, w: 40, h: 30}, {x: 5000, y: 620, w: 40, h: 30}], paralar: [{x: 400, y: 550, w: 25, h: 25}, {x: 800, y: 550, w: 25, h: 25}, {x: 1500, y: 550, w: 25, h: 25}, {x: 1800, y: 550, w: 25, h: 25}, {x: 2700, y: 450, w: 25, h: 25}, {x: 3600, y: 550, w: 25, h: 25}, {x: 4800, y: 550, w: 25, h: 25}], bitis: {x: 5500, y: 570, w: 50, h: 80} },
+    "2_1": { zeminler: [{x: 0, y: 650, w: 500, h: 200}, {x: 650, y: 580, w: 300, h: 50}, {x: 1100, y: 500, w: 300, h: 50}, {x: 1550, y: 420, w: 300, h: 50}, {x: 2000, y: 500, w: 400, h: 50}, {x: 2550, y: 580, w: 400, h: 50}, {x: 3100, y: 650, w: 2600, h: 200}], engeller: [{x: 800, y: 550, w: 40, h: 30}, {x: 1250, y: 470, w: 40, h: 30}, {x: 1700, y: 390, w: 40, h: 30}, {x: 2200, y: 470, w: 40, h: 30}, {x: 2700, y: 550, w: 40, h: 30}, {x: 3500, y: 620, w: 40, h: 30}, {x: 4200, y: 620, w: 40, h: 30}, {x: 4800, y: 620, w: 40, h: 30}], paralar: [{x: 750, y: 500, w: 25, h: 25}, {x: 1200, y: 420, w: 25, h: 25}, {x: 1650, y: 340, w: 25, h: 25}, {x: 2150, y: 420, w: 25, h: 25}, {x: 2650, y: 500, w: 25, h: 25}, {x: 3300, y: 550, w: 25, h: 25}], bitis: {x: 5500, y: 570, w: 50, h: 80} },
+    "3_0": { zeminler: [{x: 0, y: 650, w: 1500, h: 200}, {x: 700, y: 480, w: 600, h: 40}, {x: 1700, y: 650, w: 1200, h: 200}, {x: 2000, y: 480, w: 500, h: 40}, {x: 3100, y: 650, w: 2600, h: 200}], engeller: [{x: 500, y: 620, w: 40, h: 30}, {x: 950, y: 450, w: 40, h: 30}, {x: 1900, y: 620, w: 40, h: 30}, {x: 2200, y: 450, w: 40, h: 30}, {x: 3400, y: 620, w: 40, h: 30}, {x: 4100, y: 620, w: 40, h: 30}, {x: 4700, y: 620, w: 40, h: 30}], paralar: [{x: 300, y: 550, w: 25, h: 25}, {x: 800, y: 400, w: 25, h: 25}, {x: 1100, y: 550, w: 25, h: 25}, {x: 1800, y: 550, w: 25, h: 25}, {x: 2200, y: 400, w: 25, h: 25}, {x: 3600, y: 550, w: 25, h: 25}], bitis: {x: 5500, y: 570, w: 50, h: 80} },
+    "3_1": { zeminler: [{x: 0, y: 650, w: 500, h: 200}, {x: 650, y: 540, w: 200, h: 40}, {x: 1000, y: 440, w: 200, h: 40}, {x: 1350, y: 340, w: 200, h: 40}, {x: 1700, y: 440, w: 200, h: 40}, {x: 2050, y: 540, w: 200, h: 40}, {x: 2400, y: 650, w: 3300, h: 200}], engeller: [{x: 720, y: 500, w: 40, h: 30}, {x: 1420, y: 300, w: 40, h: 30}, {x: 2120, y: 500, w: 40, h: 30}, {x: 2800, y: 620, w: 40, h: 30}, {x: 3500, y: 620, w: 40, h: 30}, {x: 4200, y: 620, w: 40, h: 30}, {x: 4800, y: 620, w: 40, h: 30}], paralar: [{x: 750, y: 460, w: 25, h: 25}, {x: 1100, y: 360, w: 25, h: 25}, {x: 1450, y: 260, w: 25, h: 25}, {x: 1800, y: 360, w: 25, h: 25}, {x: 2150, y: 460, w: 25, h: 25}, {x: 3000, y: 550, w: 25, h: 25}], bitis: {x: 5500, y: 570, w: 50, h: 80} },
+    "4_0": { zeminler: [{x: 0, y: 650, w: 600, h: 200}, {x: 800, y: 550, w: 150, h: 150}, {x: 1100, y: 450, w: 150, h: 250}, {x: 1400, y: 350, w: 150, h: 350}, {x: 1700, y: 650, w: 1200, h: 200}, {x: 3100, y: 550, w: 300, h: 150}, {x: 3600, y: 650, w: 2100, h: 200}], engeller: [{x: 1150, y: 410, w: 40, h: 30}, {x: 1900, y: 620, w: 40, h: 30}, {x: 2300, y: 620, w: 40, h: 30}, {x: 3200, y: 510, w: 40, h: 30}, {x: 4000, y: 620, w: 40, h: 30}, {x: 4600, y: 620, w: 40, h: 30}], paralar: [{x: 400, y: 550, w: 25, h: 25}, {x: 870, y: 450, w: 25, h: 25}, {x: 1470, y: 250, w: 25, h: 25}, {x: 2000, y: 550, w: 25, h: 25}, {x: 3250, y: 450, w: 25, h: 25}, {x: 4200, y: 550, w: 25, h: 25}], bitis: {x: 5500, y: 570, w: 50, h: 80} },
+    "4_1": { zeminler: [{x: 0, y: 650, w: 800, h: 200}, {x: 1000, y: 550, w: 200, h: 40}, {x: 1400, y: 650, w: 900, h: 200}, {x: 2500, y: 500, w: 200, h: 40}, {x: 2900, y: 650, w: 1300, h: 200}, {x: 4400, y: 550, w: 300, h: 40}, {x: 4900, y: 650, w: 800, h: 200}], engeller: [{x: 500, y: 620, w: 40, h: 30}, {x: 1600, y: 620, w: 40, h: 30}, {x: 2000, y: 620, w: 40, h: 30}, {x: 3200, y: 620, w: 40, h: 30}, {x: 3700, y: 620, w: 40, h: 30}, {x: 5100, y: 620, w: 40, h: 30}], paralar: [{x: 300, y: 550, w: 25, h: 25}, {x: 1100, y: 460, w: 25, h: 25}, {x: 1800, y: 550, w: 25, h: 25}, {x: 2600, y: 420, w: 25, h: 25}, {x: 3400, y: 550, w: 25, h: 25}, {x: 4500, y: 460, w: 25, h: 25}], bitis: {x: 5500, y: 570, w: 50, h: 80} },
+    "4_2": { zeminler: [{x: 0, y: 650, w: 600, h: 200}, {x: 800, y: 580, w: 250, h: 120}, {x: 1200, y: 510, w: 250, h: 190}, {x: 1600, y: 440, w: 250, h: 260}, {x: 2000, y: 370, w: 250, h: 330}, {x: 2400, y: 650, w: 3300, h: 200}], engeller: [{x: 900, y: 540, w: 40, h: 30}, {x: 1700, y: 400, w: 40, h: 30}, {x: 2700, y: 620, w: 40, h: 30}, {x: 3300, y: 620, w: 40, h: 30}, {x: 4000, y: 620, w: 40, h: 30}, {x: 4700, y: 620, w: 40, h: 30}], paralar: [{x: 400, y: 550, w: 25, h: 25}, {x: 920, y: 480, w: 25, h: 25}, {x: 1320, y: 410, w: 25, h: 25}, {x: 1720, y: 340, w: 25, h: 25}, {x: 2800, y: 550, w: 25, h: 25}, {x: 3600, y: 550, w: 25, h: 25}], bitis: {x: 5400, y: 390, w: 40, h: 60} }
+};
+
+function oyunDongusu() {
+    if (!oyunAktif) return;
+    
+    oyuncu.vx = 0;
+    if (tuslar["ArrowRight"]) { oyuncu.vx = 5; oyuncu.bakisYonu = "sag"; }
+    if (tuslar["ArrowLeft"]) { oyuncu.vx = -5; oyuncu.bakisYonu = "sol"; }
+    if ((tuslar["Space"] || tuslar["ArrowUp"]) && oyuncu.yerde) { oyuncu.vy = -14; oyuncu.yerde = false; jumpSound.currentTime = 0; jumpSound.play().catch(e=>{}); }
+
+    oyuncu.vy += yercekimi; oyuncu.x += oyuncu.vx; oyuncu.y += oyuncu.vy;
+    if (oyuncu.x < 0) oyuncu.x = 0;
+
+    if (oyuncu.x > (canvas.width / 2)) { cameraX = oyuncu.x - (canvas.width / 2); }
+
+    let harita = haritalar[`${secilenTema}_${secilenKarakter}`];
+    
+    harita.zeminler.forEach(zemin => { zemin.y = canvas.height - (700 - zemin.y); });
+    harita.engeller.forEach(engel => { engel.y = canvas.height - (700 - (engel.y + 30)) - 30; });
+    if(harita.paralar) { harita.paralar.forEach(para => { if(!para.y_ayarlı) { para.y = canvas.height - (700 - para.y); para.y_ayarlı = true; } }); }
+    harita.bitis.y = canvas.height - (700 - (harita.bitis.y + 80)) - 80;
+
+    oyuncu.yerde = false;
+    harita.zeminler.forEach(zemin => {
+        if (carpismaVarMi(oyuncu, zemin) && oyuncu.vy > 0 && (oyuncu.y + oyuncu.h - oyuncu.vy) <= zemin.y) { oyuncu.y = zemin.y - oyuncu.h; oyuncu.vy = 0; oyuncu.yerde = true; }
+    });
+
+    // COIN COLLECTION ENGINE
+    if(harita.paralar) {
+        harita.paralar.forEach((para, index) => {
+            if (!para.collected && carpismaVarMi(oyuncu, para)) {
+                para.collected = true;
+                toplananPara++;
+            }
+        });
+    }
+
+    let hasDied = false;
+    harita.engeller.forEach(engel => { 
+        let fairHitbox = { x: engel.x + 6, y: engel.y + 6, w: engel.w - 12, h: engel.h - 6 };
+        if (carpismaVarMi(oyuncu, fairHitbox)) hasDied = true;
+    });
+    if (oyuncu.y > canvas.height) hasDied = true;
+
+    // THE ABSOLUTE FIX: SENT BACK TO THE START OF THE TRACK INSTEAD OF MENUS
+    if (hasDied) {
+        oyuncuCan--;
+        if (oyuncuCan > 0) {
+            alert(`❤️ Ouch! ${oyuncuCan} LIVES LEFT. Respawning...`);
+            oyuncu.x = cameraX + 60; oyuncu.y = canvas.height - 300; oyuncu.vy = 0;
+        } else {
+            alert("❌ GAME OVER! Sending you back to the START OF THIS STAGE! Keep trying!");
+            oyuncuCan = 3;
+            oyuncu.x = 50; oyuncu.y = canvas.height - 300; oyuncu.vy = 0; cameraX = 0;
+            if(harita.paralar) harita.paralar.forEach(p => p.collected = false); // Respawn coins
+        }
+    }
+
+    if (carpismaVarMi(oyuncu, harita.bitis)) {
+        finalTime = ((Date.now() - startTime) / 1000).toFixed(2); oyunAktif = false; canvas.style.display = "none";
+        document.getElementById("muteBtn").classList.add("hidden");
+        document.getElementById("mobile-controls").classList.remove("active");
+        document.getElementById("bg-overlay").style.filter = "blur(5px)";
+        
+        document.getElementById("tktWorld").innerText = temaIsimleri[secilenTema];
+        document.getElementById("tktHero").innerText = karakterIsimleri[secilenTema][secilenKarakter];
+        document.getElementById("tktCoins").innerText = `${toplananPara} 🪙`;
+        document.getElementById("tktTime").innerText = `${finalTime} SEC`;
+        document.getElementById("tktCharImg").src = gorselYukleyici.karakterler[secilenTema][secilenKarakter].yuru.src;
+        
+        document.getElementById("endScreen").classList.remove("hidden");
+        return;
+    }
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.save();
+    ctx.translate(-cameraX, 0);
+
+    // PERFECT FULLSCREEN RENDERING ENGINE
+    let bg = gorselYukleyici.arkaplanlar[secilenTema];
+    ctx.imageSmoothingEnabled = false;
+    if (bg.complete && bg.naturalWidth !== 0) {
+        let totalTiles = Math.ceil(6000 / canvas.width);
+        for (let i = 0; i < totalTiles; i++) {
+            ctx.drawImage(bg, i * canvas.width, 0, canvas.width, canvas.height);
+        }
+    } else {
+        ctx.fillStyle = ["#2c3e50", "#27ae60", "#2c3e50", "#d35400"][secilenTema-1];
+        ctx.fillRect(cameraX, 0, canvas.width, canvas.height);
+    }
+
+    harita.zeminler.forEach(zemin => { ctx.fillStyle = "#111116"; ctx.fillRect(zemin.x, zemin.y, zemin.w, zemin.h); ctx.strokeStyle = "#fff"; ctx.strokeRect(zemin.x, zemin.y, zemin.w, zemin.h); });
+    harita.engeller.forEach(engel => { ctx.fillStyle = "#e74c3c"; ctx.beginPath(); ctx.moveTo(engel.x, engel.y + engel.h); ctx.lineTo(engel.x + (engel.w/2), engel.y); ctx.lineTo(engel.x + engel.w, engel.y + engel.h); ctx.closePath(); ctx.fill(); });
+    
+    // RENDER COINS (🪙)
+    if(harita.paralar) {
+        harita.paralar.forEach(para => {
+            if(!para.collected) {
+                ctx.fillStyle = "#f1c40f"; ctx.beginPath(); ctx.arc(para.x + 12, para.y + 12, 12, 0, Math.PI * 2); ctx.fill();
+                ctx.strokeStyle = "#fff"; ctx.lineWidth = 2; ctx.stroke();
+                ctx.fillStyle = "#fff"; ctx.font = "12px monospace"; ctx.fillText("$", para.x + 8, para.y + 16);
+            }
+        });
+    }
+
+    ctx.fillStyle = "#f1c40f"; ctx.fillRect(harita.bitis.x, harita.bitis.y, harita.bitis.w, harita.bitis.h);
+
+    // LIVE HUD IN-GAME OVERLAY
+    ctx.fillStyle = "#e74c3c"; ctx.font = "24px monospace"; ctx.fillText("❤️".repeat(oyuncuCan), cameraX + 30, 45);
+    ctx.fillStyle = "#f1c40f"; ctx.font = "20px monospace"; ctx.fillText(`🪙 ${toplananPara}`, cameraX + 30, 80);
+
+    let aktifGorsel = oyuncu.yerde ? gorselYukleyici.karakterler[secilenTema][secilenKarakter].yuru : gorselYukleyici.karakterler[secilenTema][secilenKarakter].zipla;
+    if (aktifGorsel.complete && aktifGorsel.naturalWidth !== 0) {
+        ctx.save();
+        if (oyuncu.bakisYonu === "sol") { ctx.translate(oyuncu.x + oyuncu.w, oyuncu.y); ctx.scale(-1, 1); ctx.drawImage(aktifGorsel, 0, 0, oyuncu.w, oyuncu.h); }
+        else { ctx.drawImage(aktifGorsel, oyuncu.x, oyuncu.y, oyuncu.w, oyuncu.h); }
+        ctx.restore();
+    } else { ctx.fillStyle = "#f1c40f"; ctx.fillRect(oyuncu.x, oyuncu.y, oyuncu.w, oyuncu.h); }
+
+    ctx.restore();
+    requestAnimationFrame(oyunDongusu);
+}
+
+function shareOnTwitter() {
+    let tName = temaIsimleri[secilenTema]; let cName = karakterIsimleri[secilenTema][secilenKarakter]; let currentUrl = window.location.href; 
+    let challengeText = `🎮 MISSION ACCOMPLISHED! 🎮\n\ni just cleared the "${tName}" world with ${cName} and collected ${toplananPara} coins in exactly ${finalTime} seconds! ✨\n\nif you think you can do better than this, do you want to give it a try? let's see your time! 👇\n${currentUrl}`;
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(challengeText)}`, '_blank');
+}
+function backToMenuFromEnd() { document.getElementById("endScreen").classList.add("hidden"); document.getElementById("temaMenu").classList.remove("hidden"); }
+</script>
+</body>
+</html>
