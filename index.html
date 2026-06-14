@@ -8,9 +8,10 @@
         body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; min-height: 100vh; color: white; font-family: 'Courier New', Courier, monospace; font-weight: bold; overflow: hidden; touch-action: none; -webkit-user-select: none; user-select: none; }
         #game-container { position: relative; width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; box-sizing: border-box; }
         
-        #bg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('start_bg.jpg'); background-size: cover; background-position: center; z-index: 1; transition: 0.2s; }
+        /* THE VISUAL VIBE MANAGER FOR THE ENTIRE SCREEN OUTSIDE THE VIEWPORT */
+        #bg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('start_bg.jpg'); background-size: cover; background-position: center; z-index: 1; transition: background 0.3s; }
         
-        /* INCE UZUN DIKDÖRTGEN RETRO CANVASES */
+        /* INDEPENDENT HIGH-QUALITY CRrisp VIEWPORT WITH ABSOLUTE IMAGE INTEGRITY */
         canvas { display: none; width: 95vw; height: 60vh; max-width: 1000px; max-height: 450px; border: 4px solid #fff; background: transparent; z-index: 3; position: relative; }
         
         .menu-panel { background: rgba(15, 15, 25, 0.95); padding: 25px; border: 4px solid #fff; width: 90vw; max-width: 450px; box-shadow: inset 0 0 20px rgba(255,255,255,0.2); z-index: 5; box-sizing: border-box; text-align: center; }
@@ -26,9 +27,6 @@
         .hidden { display: none !important; }
         #muteBtn { position: absolute; top: 20px; right: 20px; padding: 6px 12px; font-size: 11px; background: #c0392b; border-color: #fff; box-shadow: 2px 2px 0px #fff; z-index: 10; }
         
-        .name-input-group { margin: 15px 0; }
-        .name-input-group input { padding: 10px; font-family: monospace; font-weight: bold; font-size: 14px; border: 3px solid #fff; background: #111; color: #fff; text-align: center; width: 80%; max-width: 250px; }
-
         .ticket { background: #f1c40f; color: #000; padding: 15px; border: 4px dashed #000; width: 100%; max-width: 360px; margin: 15px auto; box-sizing: border-box; position: relative; text-align: left; }
         .ticket-header { text-align: center; font-size: 18px; border-bottom: 3px double #000; padding-bottom: 8px; margin-bottom: 12px; }
         .ticket-row { margin: 8px 0; font-size: 13px; }
@@ -89,16 +87,11 @@
 
     <div id="endScreen" class="menu-panel hidden">
         <h1>STAGE CLEAR!</h1>
-        <div class="name-input-group">
-            <p style="margin:0 0 8px 0; font-size:12px; color:#f1c40f;">ENTER YOUR NAME TO CUSTOMIZE TICKET:</p>
-            <input type="text" id="playerNameInput" placeholder="YOUR NAME" maxlength="12" oninput="updateTicketName()">
-        </div>
-
         <div class="ticket">
             <div class="ticket-header">ARCADE ADMISSION</div>
             <img id="tktCharImg" src="" style="float: right; width: 50px; height: 65px; border: 3px solid #000; background: rgba(0,0,0,0.05); image-rendering: pixelated; margin-left: 10px;" alt="Hero">
             <div class="ticket-row"><span>WORLD:</span> <span id="tktWorld" style="float:right; font-weight:bold;">-</span></div>
-            <div class="ticket-row"><span>HERO / NAME:</span> <span id="tktHero" style="float:right; font-weight:bold; color:#c0392b;">-</span></div>
+            <div class="ticket-row"><span>HERO:</span> <span id="tktHero" style="float:right; font-weight:bold; color:#c0392b;">-</span></div>
             <div class="ticket-row"><span>COINS COLLECTED:</span> <span id="tktCoins" style="float:right; font-weight:bold; color:#d35400;">0 🪙</span></div>
             <div class="ticket-row"><span>TIME RESULT:</span> <span id="tktTime" style="float:right; font-weight:bold;">-</span></div>
             <div class="ticket-row"><span>STATUS:</span> <span style="color:#27ae60; float:right; font-weight:bold;">VERIFIED ✔</span></div>
@@ -131,19 +124,19 @@ let cameraX = 0;
 let oyuncuCan = 3; let toplananPara = 0;
 let baseCharacterName = "";
 
-// THEME CONFIGURATION PALETTES TO MATCH THE UPLOADED IMAGES EXACTLY
+// SPECIFIC DESIGN BALANCES CUSTOM TAILORED FOR EACH UNIQUE THEME ENVIRONMENT
 const temaAyarlari = {
-    1: { isim: "Love You Teacher", zeminRengi: "#5c3d2e", zeminCizgi: "#8a5a44", engelRengi: "#cc7a00" }, // School Classroom Wood
-    2: { isim: "Perfect 10 Liners", zeminRengi: "#4a4745", zeminCizgi: "#736f6e", engelRengi: "#2b2b2b" }, // Campus Brick Stone
-    3: { isim: "Real Life", zeminRengi: "#252830", zeminCizgi: "#434857", engelRengi: "#e67e22" },          // City Rail Tech Grey
-    4: { isim: "Me and Thee", zeminRengi: "#161920", zeminCizgi: "#2d323f", engelRengi: "#d4af37" }          // Dressing Room Luxury Gold
+    1: { isim: "Love You Teacher", zeminRengi: "#5c3d2e", zeminCizgi: "#8a5a44", screenBg: "#221915" },  // Classroom loş amber
+    2: { isim: "Perfect 10 Liners", zeminRengi: "#4a4745", zeminCizgi: "#736f6e", screenBg: "#1a1c23" }, // Campus loş mor/lacivert
+    3: { isim: "Real Life", zeminRengi: "#252830", zeminCizgi: "#434857", screenBg: "#111625" },          // City Vibe Gece Mavisi
+    4: { isim: "Me and Thee", zeminRengi: "#161920", zeminCizgi: "#2d323f", screenBg: "#0f0d1a" }          // Dressing Room Neon/Siyah
 };
 
 const karakterIsimleri = {
-    1: ["Pobmek", "Solar"],     // Love You Teacher Heroes
-    2: ["Yotha", "Gun"],       // Perfect 10 Liners Heroes
-    3: ["Perth", "Santa", "Domiia"], // Real Life Heroes
-    4: ["Tawan", "Aran"]       // Me and Thee Heroes
+    1: ["Pobmek", "Solar"],
+    2: ["Yotha", "Gun"],
+    3: ["Perth", "Santa", "Domiia"],
+    4: ["Tawan", "Aran"]
 };
 
 const bgMusic = new Audio("arcade_music.mp3"); bgMusic.loop = true;
@@ -175,7 +168,7 @@ let oyuncu = { x: 80, y: 250, w: 45, h: 60, vy: 0, vx: 0, yerde: false, bakisYon
 const yercekimi = 0.5;
 
 function giristenTemaya() { document.getElementById("girisEkrani").classList.add("hidden"); document.getElementById("temaMenu").classList.remove("hidden"); bgMusic.play().catch(e => {}); }
-function backToStart() { document.getElementById("temaMenu").classList.add("hidden"); document.getElementById("girisEkrani").classList.remove("hidden"); }
+function backToStart() { document.getElementById("temaMenu").classList.add("hidden"); document.getElementById("girisEkrani").classList.remove("hidden"); document.getElementById("bg-overlay").style.backgroundImage = "url('start_bg.jpg')"; }
 function backToWorlds() { document.getElementById("karakterMenu").classList.add("hidden"); document.getElementById("temaMenu").classList.remove("hidden"); document.getElementById("bg-overlay").style.backgroundImage = "url('start_bg.jpg')"; }
 
 function temaSec(temaNo) {
@@ -200,49 +193,21 @@ function oyunuBaslat(karakterNo) {
     oyunAktif = true; startTime = Date.now(); oyuncuCan = 3; toplananPara = 0;
     oyuncu.x = 80; oyuncu.y = 150; oyuncu.vy = 0; oyuncu.vx = 0; cameraX = 0;
     baseCharacterName = karakterIsimleri[secilenTema][secilenKarakter];
-    document.getElementById("playerNameInput").value = ""; 
     
-    // Reset all stages smoothly
-    Object.keys(haritalar).forEach(key => {
-        haritalar[key].paralar.forEach(p => p.collected = false);
-    });
-    
+    Object.keys(haritalar).forEach(key => { haritalar[key].paralar.forEach(p => p.collected = false); });
     oyunDongusu();
 }
 
-function updateTicketName() {
-    let enteredName = document.getElementById("playerNameInput").value.trim();
-    let displayField = document.getElementById("tktHero");
-    displayField.innerText = enteredName.length > 0 ? `${baseCharacterName} (${enteredName.toUpperCase()})` : baseCharacterName;
-}
-
-let tuslar = {};
-window.addEventListener("keydown", e => { tuslar[e.code] = true; });
-window.addEventListener("keyup", e => { tuslar[e.code] = false; });
-
-const setupTouch = (id, key) => {
-    const el = document.getElementById(id);
-    el.addEventListener("touchstart", (e) => { e.preventDefault(); tuslar[key] = true; });
-    el.addEventListener("touchend", (e) => { e.preventDefault(); tuslar[key] = false; });
-    el.addEventListener("touchcancel", (e) => { e.preventDefault(); tuslar[key] = false; });
-};
-setupTouch("btn-left", "ArrowLeft");
-setupTouch("btn-right", "ArrowRight");
-setupTouch("btn-jump", "Space");
-
-function carpismaVarMi(k1, k2) { return k1.x < k2.x + k2.w && k1.x + k1.w > k2.x && k1.y < k2.y + k2.h && k1.y + k1.h > k2.y; }
-
-// STABLE LONG MARIO TRACK INFRASTRUCTURE
 const haritalar = {
-    "1_0": { zeminler: [{x: 0, y: 360, w: 900, h: 60}, {x: 1050, y: 360, w: 800, h: 60}, {x: 2000, y: 300, w: 700, h: 120}, {x: 2850, y: 360, w: 800, h: 60}, {x: 3800, y: 360, w: 900, h: 60}, {x: 4850, y: 300, w: 750, h: 120}], engeller: [{x: 500, y: 335, w: 35, h: 25}, {x: 1300, y: 335, w: 35, h: 25}, {x: 2300, y: 275, w: 35, h: 25}, {x: 3200, y: 335, w: 35, h: 25}, {x: 4200, y: 335, w: 35, h: 25}], paralar: [{x: 300, y: 280, w: 22, h: 22}, {x: 650, y: 280, w: 22, h: 22}, {x: 1200, y: 280, w: 22, h: 22}, {x: 1600, y: 280, w: 22, h: 22}, {x: 2500, y: 200, w: 22, h: 22}, {x: 3500, y: 280, w: 22, h: 22}, {x: 4400, y: 280, w: 22, h: 22}], bitis: {x: 5450, y: 220, w: 45, h: 80} },
-    "1_1": { zeminler: [{x: 0, y: 360, w: 700, h: 60}, {x: 850, y: 300, w: 400, h: 40}, {x: 1400, y: 360, w: 900, h: 60}, {x: 2450, y: 300, w: 500, h: 40}, {x: 3100, y: 360, w: 1200, h: 60}, {x: 4450, y: 300, w: 1100, h: 60}], engeller: [{x: 400, y: 335, w: 35, h: 25}, {x: 1050, y: 275, w: 35, h: 25}, {x: 1700, y: 335, w: 35, h: 25}, {x: 2650, y: 275, w: 35, h: 25}, {x: 3600, y: 335, w: 35, h: 25}, {x: 4800, y: 275, w: 35, h: 25}], paralar: [{x: 250, y: 280, w: 22, h: 22}, {x: 950, y: 220, w: 22, h: 22}, {x: 1550, y: 280, w: 22, h: 22}, {x: 2550, y: 220, w: 22, h: 22}, {x: 3350, y: 280, w: 22, h: 22}, {x: 4700, y: 220, w: 22, h: 22}], bitis: {x: 5400, y: 220, w: 45, h: 80} },
-    "2_0": { zeminler: [{x: 0, y: 360, w: 1000, h: 60}, {x: 1150, y: 360, w: 800, h: 60}, {x: 2100, y: 360, w: 900, h: 60}, {x: 3150, y: 360, w: 700, h: 60}, {x: 4000, y: 360, w: 1600, h: 60}], engeller: [{x: 500, y: 335, w: 35, h: 25}, {x: 1450, y: 335, w: 35, h: 25}, {x: 2400, y: 335, w: 35, h: 25}, {x: 3400, y: 335, w: 35, h: 25}, {x: 4400, y: 335, w: 35, h: 25}, {x: 4900, y: 335, w: 35, h: 25}], paralar: [{x: 300, y: 280, w: 22, h: 22}, {x: 750, y: 280, w: 22, h: 22}, {x: 1300, y: 280, w: 22, h: 22}, {x: 1700, y: 280, w: 22, h: 22}, {x: 2600, y: 280, w: 22, h: 22}, {x: 3600, y: 280, w: 22, h: 22}, {x: 4600, y: 280, w: 22, h: 22}], bitis: {x: 5450, y: 280, w: 45, h: 80} },
-    "2_1": { zeminler: [{x: 0, y: 360, w: 600, h: 60}, {x: 700, y: 300, w: 300, h: 30}, {x: 1100, y: 240, w: 300, h: 30}, {x: 1500, y: 300, w: 400, h: 30}, {x: 2000, y: 360, w: 1000, h: 60}, {x: 3100, y: 300, w: 400, h: 30}, {x: 3600, y: 360, w: 2000, h: 60}], engeller: [{x: 450, y: 335, w: 35, h: 25}, {x: 800, y: 275, w: 35, h: 25}, {x: 1200, y: 215, w: 35, h: 25}, {x: 1650, y: 275, w: 35, h: 25}, {x: 2400, y: 335, w: 35, h: 25}, {x: 3300, y: 275, w: 35, h: 25}, {x: 4200, y: 335, w: 35, h: 25}, {x: 4800, y: 335, w: 35, h: 25}], paralar: [{x: 200, y: 280, w: 22, h: 22}, {x: 850, y: 220, w: 22, h: 22}, {x: 1250, y: 160, w: 22, h: 22}, {x: 1700, y: 220, w: 22, h: 22}, {x: 2500, y: 280, w: 22, h: 22}, {x: 3400, y: 220, w: 22, h: 22}], bitis: {x: 5450, y: 280, w: 45, h: 80} },
-    "3_0": { zeminler: [{x: 0, y: 360, w: 5500, h: 60}], engeller: [{x: 600, y: 335, w: 35, h: 25}, {x: 1200, y: 335, w: 35, h: 25}, {x: 1800, y: 335, w: 35, h: 25}, {x: 2400, y: 335, w: 35, h: 25}, {x: 3000, y: 335, w: 35, h: 25}, {x: 3600, y: 335, w: 35, h: 25}, {x: 4200, y: 335, w: 35, h: 25}, {x: 4800, y: 335, w: 35, h: 25}], paralar: [{x: 400, y: 280, w: 22, h: 22}, {x: 900, y: 280, w: 22, h: 22}, {x: 1500, y: 280, w: 22, h: 22}, {x: 2100, y: 280, w: 22, h: 22}, {x: 2700, y: 280, w: 22, h: 22}, {x: 3300, y: 280, w: 22, h: 22}, {x: 3900, y: 280, w: 22, h: 22}, {x: 4500, y: 280, w: 22, h: 22}], bitis: {x: 5400, y: 280, w: 45, h: 80} },
-    "3_1": { zeminler: [{x: 0, y: 360, w: 5500, h: 60}], engeller: [{x: 700, y: 335, w: 35, h: 25}, {x: 1400, y: 335, w: 35, h: 25}, {x: 2100, y: 335, w: 35, h: 25}, {x: 2800, y: 335, w: 35, h: 25}, {x: 3500, y: 335, w: 35, h: 25}, {x: 4200, y: 335, w: 35, h: 25}, {x: 4900, y: 335, w: 35, h: 25}], paralar: [{x: 500, y: 280, w: 22, h: 22}, {x: 1000, y: 280, w: 22, h: 22}, {x: 1700, y: 280, w: 22, h: 22}, {x: 2400, y: 280, w: 22, h: 22}, {x: 3100, y: 280, w: 22, h: 22}, {x: 3800, y: 280, w: 22, h: 22}, {x: 4500, y: 280, w: 22, h: 22}], bitis: {x: 5400, y: 280, w: 45, h: 80} },
-    "4_0": { zeminler: [{x: 0, y: 360, w: 5500, h: 60}], engeller: [{x: 800, y: 335, w: 35, h: 25}, {x: 1600, y: 335, w: 35, h: 25}, {x: 2400, y: 335, w: 35, h: 25}, {x: 3200, y: 335, w: 35, h: 25}, {x: 4000, y: 335, w: 35, h: 25}, {x: 4800, y: 335, w: 35, h: 25}], paralar: [{x: 400, y: 280, w: 22, h: 22}, {x: 1200, y: 280, w: 22, h: 22}, {x: 2000, y: 280, w: 22, h: 22}, {x: 2800, y: 280, w: 22, h: 22}, {x: 3600, y: 280, w: 22, h: 22}, {x: 4400, y: 280, w: 22, h: 22}], bitis: {x: 5400, y: 280, w: 45, h: 80} },
-    "4_1": { zeminler: [{x: 0, y: 360, w: 5500, h: 60}], engeller: [{x: 900, y: 335, w: 35, h: 25}, {x: 1800, y: 335, w: 35, h: 25}, {x: 2700, y: 335, w: 35, h: 25}, {x: 3600, y: 335, w: 35, h: 25}, {x: 4500, y: 335, w: 35, h: 25}], paralar: [{x: 500, y: 280, w: 22, h: 22}, {x: 1300, y: 280, w: 22, h: 22}, {x: 2200, y: 280, w: 22, h: 22}, {x: 3100, y: 280, w: 22, h: 22}, {x: 4000, y: 280, w: 22, h: 22}], bitis: {x: 5400, y: 280, w: 45, h: 80} },
-    "4_2": { zeminler: [{x: 0, y: 360, w: 5500, h: 60}], engeller: [{x: 1000, y: 335, w: 35, h: 25}, {x: 2000, y: 335, w: 35, h: 25}, {x: 3000, y: 335, w: 35, h: 25}, {x: 4000, y: 335, w: 35, h: 25}], paralar: [{x: 600, y: 280, w: 22, h: 22}, {x: 1500, y: 280, w: 22, h: 22}, {x: 2500, y: 280, w: 22, h: 22}, {x: 3500, y: 280, w: 22, h: 22}], bitis: {x: 5400, y: 280, w: 45, h: 80} }
+    "1_0": { zeminler: [{x: 0, y: 360, w: 900, h: 60}, {x: 1050, y: 360, w: 800, h: 60}, {x: 2000, y: 300, w: 700, h: 120}, {x: 2850, y: 360, w: 800, h: 60}, {x: 3800, y: 360, w: 900, h: 60}, {x: 4850, y: 300, w: 750, h: 120}], engeller: [{x: 500, y: 320, w: 40, h: 40}, {x: 1300, y: 320, w: 40, h: 40}, {x: 2300, y: 260, w: 40, h: 40}, {x: 3200, y: 320, w: 40, h: 40}, {x: 4200, y: 320, w: 40, h: 40}], paralar: [{x: 300, y: 280, w: 22, h: 22}, {x: 650, y: 280, w: 22, h: 22}, {x: 1200, y: 280, w: 22, h: 22}, {x: 1600, y: 280, w: 22, h: 22}, {x: 2500, y: 200, w: 22, h: 22}, {x: 3500, y: 280, w: 22, h: 22}, {x: 4400, y: 280, w: 22, h: 22}], bitis: {x: 5450, y: 220, w: 45, h: 80} },
+    "1_1": { zeminler: [{x: 0, y: 360, w: 700, h: 60}, {x: 850, y: 300, w: 400, h: 40}, {x: 1400, y: 360, w: 900, h: 60}, {x: 2450, y: 300, w: 500, h: 40}, {x: 3100, y: 360, w: 1200, h: 60}, {x: 4450, y: 300, w: 1100, h: 60}], engeller: [{x: 400, y: 320, w: 40, h: 40}, {x: 1050, y: 260, w: 40, h: 40}, {x: 1700, y: 320, w: 40, h: 40}, {x: 2650, y: 260, w: 40, h: 40}, {x: 3600, y: 320, w: 40, h: 40}, {x: 4800, y: 260, w: 40, h: 40}], paralar: [{x: 250, y: 280, w: 22, h: 22}, {x: 950, y: 220, w: 22, h: 22}, {x: 1550, y: 280, w: 22, h: 22}, {x: 2550, y: 220, w: 22, h: 22}, {x: 3350, y: 280, w: 22, h: 22}, {x: 4700, y: 220, w: 22, h: 22}], bitis: {x: 5400, y: 220, w: 45, h: 80} },
+    "2_0": { zeminler: [{x: 0, y: 360, w: 1000, h: 60}, {x: 1150, y: 360, w: 800, h: 60}, {x: 2100, y: 360, w: 900, h: 60}, {x: 3150, y: 360, w: 700, h: 60}, {x: 4000, y: 360, w: 1600, h: 60}], engeller: [{x: 500, y: 320, w: 40, h: 40}, {x: 1450, y: 320, w: 40, h: 40}, {x: 2400, y: 320, w: 40, h: 40}, {x: 3400, y: 320, w: 40, h: 40}, {x: 4400, y: 320, w: 40, h: 40}, {x: 4900, y: 320, w: 40, h: 40}], paralar: [{x: 300, y: 280, w: 22, h: 22}, {x: 750, y: 280, w: 22, h: 22}, {x: 1300, y: 280, w: 22, h: 22}, {x: 1700, y: 280, w: 22, h: 22}, {x: 2600, y: 280, w: 22, h: 22}, {x: 3600, y: 280, w: 22, h: 22}, {x: 4600, y: 280, w: 22, h: 22}], bitis: {x: 5450, y: 280, w: 45, h: 80} },
+    "2_1": { zeminler: [{x: 0, y: 360, w: 600, h: 60}, {x: 700, y: 300, w: 300, h: 30}, {x: 1100, y: 240, w: 300, h: 30}, {x: 1500, y: 300, w: 400, h: 30}, {x: 2000, y: 360, w: 1000, h: 60}, {x: 3100, y: 300, w: 400, h: 30}, {x: 3600, y: 360, w: 2000, h: 60}], engeller: [{x: 450, y: 320, w: 40, h: 40}, {x: 800, y: 260, w: 40, h: 40}, {x: 1200, y: 200, w: 40, h: 40}, {x: 1650, y: 260, w: 40, h: 40}, {x: 2400, y: 320, w: 40, h: 40}, {x: 3300, y: 260, w: 40, h: 40}, {x: 4200, y: 320, w: 40, h: 40}, {x: 4800, y: 320, w: 40, h: 40}], paralar: [{x: 200, y: 280, w: 22, h: 22}, {x: 850, y: 220, w: 22, h: 22}, {x: 1250, y: 160, w: 22, h: 22}, {x: 1700, y: 220, w: 22, h: 22}, {x: 2500, y: 280, w: 22, h: 22}, {x: 3400, y: 220, w: 22, h: 22}], bitis: {x: 5450, y: 280, w: 45, h: 80} },
+    "3_0": { zeminler: [{x: 0, y: 360, w: 5500, h: 60}], engeller: [{x: 600, y: 320, w: 40, h: 40}, {x: 1200, y: 320, w: 40, h: 40}, {x: 1800, y: 320, w: 40, h: 40}, {x: 2400, y: 320, w: 40, h: 40}, {x: 3000, y: 320, w: 40, h: 40}, {x: 3600, y: 320, w: 40, h: 40}, {x: 4200, y: 320, w: 40, h: 40}, {x: 4800, y: 320, w: 40, h: 40}], paralar: [{x: 400, y: 280, w: 22, h: 22}, {x: 900, y: 280, w: 22, h: 22}, {x: 1500, y: 280, w: 22, h: 22}, {x: 2100, y: 280, w: 22, h: 22}, {x: 2700, y: 280, w: 22, h: 22}, {x: 3300, y: 280, w: 22, h: 22}, {x: 3900, y: 280, w: 22, h: 22}, {x: 4500, y: 280, w: 22, h: 22}], bitis: {x: 5400, y: 280, w: 45, h: 80} },
+    "3_1": { zeminler: [{x: 0, y: 360, w: 5500, h: 60}], engeller: [{x: 700, y: 320, w: 40, h: 40}, {x: 1400, y: 320, w: 40, h: 40}, {x: 2100, y: 320, w: 40, h: 40}, {x: 2800, y: 320, w: 40, h: 40}, {x: 3500, y: 320, w: 40, h: 40}, {x: 4200, y: 320, w: 40, h: 40}, {x: 4900, y: 320, w: 40, h: 40}], paralar: [{x: 500, y: 280, w: 22, h: 22}, {x: 1000, y: 280, w: 22, h: 22}, {x: 1700, y: 280, w: 22, h: 22}, {x: 2400, y: 280, w: 22, h: 22}, {x: 3100, y: 280, w: 22, h: 22}, {x: 3800, y: 280, w: 22, h: 22}, {x: 4500, y: 280, w: 22, h: 22}], bitis: {x: 5400, y: 280, w: 45, h: 80} },
+    "4_0": { zeminler: [{x: 0, y: 360, w: 5500, h: 60}], engeller: [{x: 800, y: 320, w: 40, h: 40}, {x: 1600, y: 320, w: 40, h: 40}, {x: 2400, y: 320, w: 40, h: 40}, {x: 3200, y: 320, w: 40, h: 40}, {x: 4000, y: 320, w: 40, h: 40}, {x: 4800, y: 320, w: 40, h: 40}], paralar: [{x: 400, y: 280, w: 22, h: 22}, {x: 1200, y: 280, w: 22, h: 22}, {x: 2000, y: 280, w: 22, h: 22}, {x: 2800, y: 280, w: 22, h: 22}, {x: 3600, y: 280, w: 22, h: 22}, {x: 4400, y: 280, w: 22, h: 22}], bitis: {x: 5400, y: 280, w: 45, h: 80} },
+    "4_1": { zeminler: [{x: 0, y: 360, w: 5500, h: 60}], engeller: [{x: 900, y: 320, w: 40, h: 40}, {x: 1800, y: 320, w: 40, h: 40}, {x: 2700, y: 320, w: 40, h: 40}, {x: 3600, y: 320, w: 40, h: 40}, {x: 4500, y: 320, w: 40, h: 40}], paralar: [{x: 500, y: 280, w: 22, h: 22}, {x: 1300, y: 280, w: 22, h: 22}, {x: 2200, y: 280, w: 22, h: 22}, {x: 3100, y: 280, w: 22, h: 22}, {x: 4000, y: 280, w: 22, h: 22}], bitis: {x: 5400, y: 280, w: 45, h: 80} },
+    "4_2": { zeminler: [{x: 0, y: 360, w: 5500, h: 60}], engeller: [{x: 1000, y: 320, w: 40, h: 40}, {x: 2000, y: 320, w: 40, h: 40}, {x: 3000, y: 320, w: 40, h: 40}, {x: 4000, y: 320, w: 40, h: 40}], paralar: [{x: 600, y: 280, w: 22, h: 22}, {x: 1500, y: 280, w: 22, h: 22}, {x: 2500, y: 280, w: 22, h: 22}, {x: 3500, y: 280, w: 22, h: 22}], bitis: {x: 5400, y: 280, w: 45, h: 80} }
 };
 
 function oyunDongusu() {
@@ -258,7 +223,6 @@ function oyunDongusu() {
 
     if (oyuncu.x > (canvas.width / 2)) { cameraX = oyuncu.x - (canvas.width / 2); }
 
-    // REAL PANORAMIC SYSTEM: TRACKS AND SHIFTS BACKDROP SMOOTHLY IN HD
     document.getElementById("bg-overlay").style.backgroundPosition = `-${cameraX * 0.4}px center`;
 
     let harita = haritalar[`${secilenTema}_${secilenKarakter}`];
@@ -312,36 +276,67 @@ function oyunDongusu() {
     }
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // FILL ONLY THE BLACK MARGINS OUTSIDE WINDOW TO FIX ASPECT BLURS
+    document.getElementById("game-container").style.background = temaAyarlari[secilenTema].screenBg;
+
     ctx.save();
     ctx.translate(-cameraX, 0);
 
-    // FETCH THE CURRENT DYNAMIC THEME SETTINGS FOR ON-THE-FLY THEME CUSTOMIZATION
     let currentStyle = temaAyarlari[secilenTema];
 
-    // DYNAMIC RETRO GROUND DESIGN GENERATOR
+    // GROUND RENDERING
     harita.zeminler.forEach(zemin => { 
         ctx.fillStyle = currentStyle.zeminRengi; 
         ctx.fillRect(zemin.x, zemin.y, zemin.w, zemin.h); 
-        
         ctx.strokeStyle = currentStyle.zeminCizgi; 
         ctx.lineWidth = 3; 
         ctx.strokeRect(zemin.x, zemin.y, zemin.w, zemin.h); 
     });
 
-    // DYNAMIC RETRO CUSTOM-COLORED OBSTACLES CONFIGURATION
+    // --- THE ULTIMATE OBS_ART ENGINE: DYNAMIC UNIQUE OBSTACLE VECTOR GENERATION ---
     harita.engeller.forEach(engel => { 
-        ctx.fillStyle = currentStyle.engelRengi; 
-        ctx.beginPath(); 
-        ctx.moveTo(engel.x, engel.y + engel.h); 
-        ctx.lineTo(engel.x + (engel.w/2), engel.y); 
-        ctx.lineTo(engel.x + engel.w, engel.y + engel.h); 
-        ctx.closePath(); 
-        ctx.fill(); 
+        ctx.save();
+        ctx.lineWidth = 2.5;
         
-        // Add a sleek highlighted pixel trim border
-        ctx.strokeStyle = "#fff";
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
+        if (secilenTema === 1) { 
+            // THEME 1: SCHOOL BLOCKS (Stacked retro geometric toy boxes)
+            ctx.fillStyle = currentStyle.engelRengi;
+            ctx.fillRect(engel.x, engel.y, engel.w, engel.h);
+            ctx.strokeStyle = "#fff";
+            ctx.strokeRect(engel.x, engel.y, engel.w, engel.h);
+            // Chalk board cross symbol inside block
+            ctx.beginPath(); ctx.moveTo(engel.x + 8, engel.y + 8); ctx.lineTo(engel.x + engel.w - 8, engel.y + engel.h - 8); ctx.stroke();
+        } 
+        else if (secilenTema === 2) { 
+            // THEME 2: CAMPUS STONE BRICK FENCES
+            ctx.fillStyle = currentStyle.engelRengi;
+            ctx.fillRect(engel.x, engel.y + 10, engel.w, engel.h - 10);
+            ctx.strokeStyle = "#fff";
+            ctx.strokeRect(engel.x, engel.y + 10, engel.w, engel.h - 10);
+            // Stone splits texture lines
+            ctx.beginPath(); ctx.moveTo(engel.x + 20, engel.y + 10); ctx.lineTo(engel.x + 20, engel.y + engel.h); ctx.stroke();
+        } 
+        else if (secilenTema === 3) { 
+            // THEME 3: URBAN NEON CONES (TRAFFIC OBSTACLES)
+            ctx.fillStyle = currentStyle.engelRengi;
+            ctx.fillRect(engel.x + 8, engel.y, engel.w - 16, engel.h);
+            ctx.strokeStyle = "#fff";
+            ctx.strokeRect(engel.x + 8, engel.y, engel.w - 16, engel.h);
+            // White neon reflective striping inside cone
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(engel.x + 8, engel.y + 12, engel.w - 16, 10);
+        } 
+        else if (secilenTema === 4) { 
+            // THEME 4: LUXURY METALLIC CLOTHES RACK SPIKES
+            ctx.strokeStyle = currentStyle.engelRengi;
+            ctx.lineWidth = 4;
+            ctx.strokeRect(engel.x + 10, engel.y, engel.w - 20, engel.h);
+            // Metal rod support details
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(engel.x, engel.y, engel.w, 6);
+        }
+        ctx.restore();
     });
     
     if(harita.paralar) {
@@ -371,11 +366,24 @@ function oyunDongusu() {
     requestAnimationFrame(oyunDongusu);
 }
 
+let tuslar = {};
+window.addEventListener("keydown", e => { tuslar[e.code] = true; });
+window.addEventListener("keyup", e => { tuslar[e.code] = false; });
+
+const setupTouch = (id, key) => {
+    const el = document.getElementById(id);
+    el.addEventListener("touchstart", (e) => { e.preventDefault(); tuslar[key] = true; });
+    el.addEventListener("touchend", (e) => { e.preventDefault(); tuslar[key] = false; });
+    el.addEventListener("touchcancel", (e) => { e.preventDefault(); tuslar[key] = false; });
+};
+setupTouch("btn-left", "ArrowLeft");
+setupTouch("btn-right", "ArrowRight");
+setupTouch("btn-jump", "Space");
+
 function shareOnTwitter() {
-    let tName = temaAyarlari[secilenTema].isim; let enteredName = document.getElementById("playerNameInput").value.trim();
-    let finalHeroString = enteredName.length > 0 ? `${baseCharacterName} (${enteredName.toUpperCase()})` : baseCharacterName;
+    let tName = temaAyarlari[secilenTema].isim;
     let currentUrl = window.location.href; 
-    let challengeText = `🎮 MISSION ACCOMPLISHED! 🎮\n\ni just cleared the "${tName}" world playing as ${finalHeroString} and collected ${toplananPara} coins! ✨\n\nthink you can beat me? take the challenge! 👇\n${currentUrl}`;
+    let challengeText = `🎮 MISSION ACCOMPLISHED! 🎮\n\ni just cleared the "${tName}" world playing as ${baseCharacterName} and collected ${toplananPara} coins! ✨\n\nthink you can beat me? take the challenge! 👇\n${currentUrl}`;
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(challengeText)}`, '_blank');
 }
 function backToMenuFromEnd() { document.getElementById("endScreen").classList.add("hidden"); document.getElementById("temaMenu").classList.remove("hidden"); }
