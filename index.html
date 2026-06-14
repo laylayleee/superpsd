@@ -5,24 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pixel Arcade Platformer</title>
     <style>
-        body { margin: 0; background: #030308; display: flex; justify-content: center; align-items: center; min-height: 100vh; color: white; font-family: 'Courier New', Courier, monospace; font-weight: bold; overflow: hidden; touch-action: none; -webkit-user-select: none; user-select: none; }
+        body { margin: 0; background: #05050a; display: flex; justify-content: center; align-items: center; min-height: 100vh; color: white; font-family: 'Courier New', Courier, monospace; font-weight: bold; overflow: hidden; touch-action: none; -webkit-user-select: none; user-select: none; }
         #game-container { position: relative; width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; box-sizing: border-box; }
         
-        /* SLEEK NEON AMBIENT SPACE */
-        #bg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, #11122b 0%, #05050f 100%); z-index: 1; }
+        /* BACKGROUND PANEL SYSTEM */
+        #bg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #0a0a16; z-index: 1; transition: background 0.3s; }
         
-        /* EXCLUSIVE TOP CONCERT ANNOUNCEMENT BAR */
+        /* INTEGRATED CONCERT ANNOUNCEMENT BAR */
         #promo-bar { position: absolute; top: 0; left: 0; width: 100%; background: linear-gradient(90deg, #9d17f7, #e74c3c); color: #fff; text-align: center; padding: 12px 10px; font-size: 13px; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(157, 23, 247, 0.4); z-index: 999; box-sizing: border-box; text-transform: uppercase; }
 
-        /* CRISP VIEWPORT BOX - NEVER COMPRESSED OR STRETCHED */
-        canvas { display: none; width: 95vw; height: 55vh; max-width: 1000px; max-height: 420px; border: 4px solid #fff; background: #0c0e17; z-index: 3; position: relative; margin-top: 40px; box-shadow: 0 0 30px rgba(255,255,255,0.1); }
+        /* CRISP RETRO INCE UZUN CANVAS BOX */
+        canvas { display: none; width: 95vw; height: 55vh; max-width: 1000px; max-height: 420px; border: 4px solid #00f0ff; background: #0c0e17; z-index: 3; position: relative; margin-top: 40px; box-shadow: 0 0 25px rgba(0,240,255,0.3); }
         
-        /* RE-DESIGNED ULTRA-MODERN GLOW UI PANELS */
-        .menu-panel { background: rgba(8, 8, 20, 0.95); padding: 35px; border: 3px solid #00f0ff; width: 92vw; max-width: 520px; border-radius: 12px; box-shadow: 0 0 35px rgba(0, 240, 255, 0.35), inset 0 0 20px rgba(0, 240, 255, 0.1); backdrop-filter: blur(10px); z-index: 5; box-sizing: border-box; text-align: center; margin-top: 40px; }
+        /* MODERN TRANSPARENT NEON GLOW UI PANELS */
+        .menu-panel { background: rgba(5, 5, 15, 0.95); padding: 35px; border: 3px solid #00f0ff; width: 92vw; max-width: 520px; border-radius: 12px; box-shadow: 0 0 35px rgba(0, 240, 255, 0.35), inset 0 0 20px rgba(0, 240, 255, 0.1); backdrop-filter: blur(10px); z-index: 5; box-sizing: border-box; text-align: center; margin-top: 40px; }
         h1 { margin-top: 0; color: #f1c40f; text-transform: uppercase; letter-spacing: 3px; text-shadow: 0 0 10px #f1c40f; font-size: 28px; margin-bottom: 25px; }
         p { font-size: 14px; color: #8a99ad; margin-bottom: 30px; }
         
-        /* HUGE ELEGANT WORLD SELECTION BUTTONS */
+        /* LARGE ARCADE MACHINE BUTTONS */
         .world-btn { display: block; width: 100%; max-width: 420px; padding: 18px 24px; margin: 16px auto; font-family: 'Courier New', Courier, monospace; font-size: 18px; font-weight: bold; cursor: pointer; border: 3px solid #9d17f7; background: rgba(157, 23, 247, 0.15); color: #fff; text-shadow: 0 0 5px #9d17f7; box-shadow: 0 0 15px rgba(157, 23, 247, 0.3); transition: 0.1s; text-transform: uppercase; border-radius: 6px; }
         .world-btn:hover { background: #9d17f7; color: #000; box-shadow: 0 0 30px #9d17f7; text-shadow: none; transform: translateY(-2px); }
         
@@ -95,6 +95,7 @@
         <h1>STAGE CLEAR!</h1>
         <div class="ticket">
             <div class="ticket-header">ARCADE ADMISSION</div>
+            <img id="tktCharImg" src="" style="float: right; width: 50px; height: 65px; border: 3px solid #000; background: rgba(0,0,0,0.05); image-rendering: pixelated; margin-left: 10px;" alt="Hero">
             <div class="ticket-row"><span>WORLD:</span> <span id="tktWorld" style="float:right; font-weight:bold;">-</span></div>
             <div class="ticket-row"><span>HERO:</span> <span id="tktHero" style="float:right; font-weight:bold; color:#c0392b;">-</span></div>
             <div class="ticket-row"><span>COINS COLLECTED:</span> <span id="tktCoins" style="float:right; font-weight:bold; color:#d35400;">0 🪙</span></div>
@@ -148,8 +149,31 @@ function toggleMute() { isMuted = !isMuted; bgMusic.muted = isMuted; jumpSound.m
 let oyuncu = { x: 80, y: 200, w: 40, h: 55, vy: 0, vx: 0, yerde: false, bakisYonu: "sag" };
 const yercekimi = 0.5;
 
+function drawMenuBackground() {
+    let overlay = document.getElementById("bg-overlay");
+    overlay.innerHTML = '<canvas id="bg-pattern-canvas" style="display:block; width:100%; height:100%; opacity:0.15; position:absolute;"></canvas>';
+    let patCanvas = document.getElementById("bg-pattern-canvas");
+    if(!patCanvas) return;
+    patCanvas.width = window.innerWidth; patCanvas.height = window.innerHeight;
+    let pCtx = patCanvas.getContext("2d");
+    
+    // Draw classic retro layout markings
+    pCtx.strokeStyle = "#00f0ff"; pCtx.lineWidth = 3;
+    for(let i=40; i<patCanvas.width; i+=160) {
+        pCtx.strokeRect(i, 60, 90, 70); pCtx.strokeRect(i, 240, 90, 70);
+    }
+    pCtx.fillStyle = "#9d17f7";
+    for(let x=20; x<patCanvas.width; x+=60) {
+        for(let y=20; y<patCanvas.height; y+=60) {
+            pCtx.fillRect(x, y, 6, 6);
+        }
+    }
+}
+window.addEventListener("load", drawMenuBackground);
+window.addEventListener("resize", drawMenuBackground);
+
 function giristenTemaya() { document.getElementById("girisEkrani").classList.add("hidden"); document.getElementById("temaMenu").classList.remove("hidden"); }
-function backToStart() { document.getElementById("temaMenu").classList.add("hidden"); document.getElementById("girisEkrani").classList.remove("hidden"); }
+function backToStart() { document.getElementById("temaMenu").classList.add("hidden"); document.getElementById("girisEkrani").classList.remove("hidden"); drawMenuBackground(); }
 function backToWorlds() { document.getElementById("karakterMenu").classList.add("hidden"); document.getElementById("temaMenu").classList.remove("hidden"); }
 
 // CRITICAL GAME OVER LIVE STAGE RETREAT TRIGGER
@@ -163,6 +187,7 @@ function backFromGame() {
 function temaSec(temaNo) {
     secilenTema = temaNo; document.getElementById("temaMenu").classList.add("hidden");
     let currentTheme = temaAyarlari[temaNo];
+    document.getElementById("bg-overlay").innerHTML = ""; 
     document.getElementById("bg-overlay").style.background = currentTheme.screenBg;
     
     let panels = document.querySelectorAll(".menu-panel");
@@ -225,6 +250,7 @@ const haritalar = {
 function oyunDongusu() {
     if (!oyunAktif) return;
     
+    oyContinuity = true;
     oyuncu.vx = 0;
     if (tuslar["ArrowRight"]) { oyuncu.vx = 4.8; oyuncu.bakisYonu = "sag"; }
     if (tuslar["ArrowLeft"]) { oyuncu.vx = -4.8; oyuncu.bakisYonu = "sol"; }
@@ -261,7 +287,7 @@ function oyunDongusu() {
             alert(`❤️ Ouch! ${oyuncuCan} LIVES LEFT.`);
             oyuncu.x = cameraX + 60; oyuncu.y = 150; oyuncu.vy = 0;
         } else {
-            alert("❌ GAME OVER! Reseting you back to the start of this stage track!");
+            alert("❌ GAME OVER! Sending you to the START OF THIS LEVEL!");
             oyuncuCan = 3;
             oyuncu.x = 80; oyuncu.y = 150; oyuncu.vy = 0; cameraX = 0;
             if(harita.paralar) harita.paralar.forEach(p => p.collected = false);
@@ -278,7 +304,6 @@ function oyunDongusu() {
         document.getElementById("tktHero").innerText = baseCharacterName;
         document.getElementById("tktCoins").innerText = `${toplananPara} 🪙`;
         document.getElementById("tktTime").innerText = `${finalTime} SEC`;
-        document.getElementById("tktCharImg").src = gorselYukleyici.karakterler[secilenTema][secilenKarakter].yuru.src;
         
         document.getElementById("endScreen").classList.remove("hidden");
         return;
@@ -303,20 +328,19 @@ function oyunDongusu() {
         ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, canvas.height); ctx.stroke();
     }
 
-    if (secilenTema === 1) { // Love You Teacher: Kinder Garden Artwork Drawings
+    if (secilenTema === 1) { // Love You Teacher
         ctx.fillStyle = "rgba(109,76,65,0.15)";
         ctx.fillRect(cameraX + 200, 80, 140, 100);
         ctx.fillStyle = "#ffb74d"; ctx.font = "24px monospace"; ctx.fillText("A B C", cameraX + 235, 140);
-        // Draw colorful hanging triangle flags vector lines
         ctx.strokeStyle = "#ffb74d"; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(cameraX, 40); ctx.lineTo(cameraX+canvas.width, 40); ctx.stroke();
-    } else if (secilenTema === 2) { // Perfect 10 Liners: Architecture Blueprint Drawing Table
+    } else if (secilenTema === 2) { // Perfect 10 Liners
         ctx.strokeStyle = "rgba(0,240,255,0.15)"; ctx.lineWidth = 3;
         ctx.strokeRect(cameraX + 150, 60, 300, 150);
         ctx.beginPath(); ctx.moveTo(cameraX + 150, 60); ctx.lineTo(cameraX + 450, 210); ctx.stroke();
-    } else if (secilenTema === 3) { // Real Life: City Bangkok Skyline Buildings
+    } else if (secilenTema === 3) { // Real Life
         ctx.fillStyle = "rgba(255,87,34,0.12)";
         for(let bi=0; bi<4; bi++) { ctx.fillRect(cameraX + 80 + (bi*240), 90, 110, 270); }
-    } else if (secilenTema === 4) { // Me and Thee: Studio Hangers Mirror Matrix
+    } else if (secilenTema === 4) { // Me and Thee
         ctx.strokeStyle = "rgba(255,213,79,0.15)"; ctx.lineWidth = 4;
         ctx.strokeRect(cameraX + 350, 50, 140, 260);
     }
