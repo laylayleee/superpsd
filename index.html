@@ -10,8 +10,8 @@
         
         #bg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('start_bg.jpg'); background-size: cover; background-position: center; z-index: 1; transition: 0.2s; }
         
-        /* RETRO SCREEN VIEWPORT (SCROLLS WITH CAMERA) */
-        canvas { display: none; width: 95vw; height: 60vh; max-width: 1000px; max-height: 450px; border: 4px solid #fff; background: transparent; image-rendering: pixelated; z-index: 3; position: relative; }
+        /* INCE UZUN DIKDÖRTGEN RETRO CANVASES */
+        canvas { display: none; width: 95vw; height: 60vh; max-width: 1000px; max-height: 450px; border: 4px solid #fff; background: transparent; z-index: 3; position: relative; }
         
         .menu-panel { background: rgba(15, 15, 25, 0.95); padding: 25px; border: 4px solid #fff; width: 90vw; max-width: 450px; box-shadow: inset 0 0 20px rgba(255,255,255,0.2); z-index: 5; box-sizing: border-box; text-align: center; }
         h1 { margin-top: 0; color: #f1c40f; text-transform: uppercase; letter-spacing: 1px; text-shadow: 2px 2px #c0392b; font-size: 24px; }
@@ -26,7 +26,6 @@
         .hidden { display: none !important; }
         #muteBtn { position: absolute; top: 20px; right: 20px; padding: 6px 12px; font-size: 11px; background: #c0392b; border-color: #fff; box-shadow: 2px 2px 0px #fff; z-index: 10; }
         
-        /* NAME INPUT FIELD FOR CUSTOM TICKET */
         .name-input-group { margin: 15px 0; }
         .name-input-group input { padding: 10px; font-family: monospace; font-weight: bold; font-size: 14px; border: 3px solid #fff; background: #111; color: #fff; text-align: center; width: 80%; max-width: 250px; }
 
@@ -40,7 +39,6 @@
         .dpad-btn:active, .action-btn:active { background: #f1c40f; color: #000; }
         .dpad-group { display: flex; gap: 20px; pointer-events: auto; }
 
-        /* ROTATE DEVICE WARNING SYSTEM */
         #rotate-warning { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #0b0b14; z-index: 9999; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; box-sizing: border-box; }
         #rotate-warning h2 { color: #f1c40f; text-shadow: 2px 2px #c0392b; font-size: 20px; }
 
@@ -73,10 +71,10 @@
     <div id="temaMenu" class="menu-panel hidden">
         <h1>SELECT WORLD</h1>
         <p>Each world has unique characters and hidden paths!</p>
-        <button onclick="temaSec(1)">1. Perfect 10 Liners</button>
-        <button onclick="temaSec(2)">2. Love You Teacher</button>
-        <button onclick="temaSec(3)">3. Me and Thee</button>
-        <button onclick="temaSec(4)">4. Real Life</button>
+        <button onclick="temaSec(1)">1. Love You Teacher</button>
+        <button onclick="temaSec(2)">2. Perfect 10 Liners</button>
+        <button onclick="temaSec(3)">3. Real Life</button>
+        <button onclick="temaSec(4)">4. Me and Thee</button>
         <br>
         <button onclick="backToStart()" style="background:#7f8c8d; font-size:12px; padding:6px 14px; margin-top:15px; box-shadow: 3px 3px 0px #fff;">BACK</button>
     </div>
@@ -91,7 +89,6 @@
 
     <div id="endScreen" class="menu-panel hidden">
         <h1>STAGE CLEAR!</h1>
-        
         <div class="name-input-group">
             <p style="margin:0 0 8px 0; font-size:12px; color:#f1c40f;">ENTER YOUR NAME TO CUSTOMIZE TICKET:</p>
             <input type="text" id="playerNameInput" placeholder="YOUR NAME" maxlength="12" oninput="updateTicketName()">
@@ -134,9 +131,19 @@ let cameraX = 0;
 let oyuncuCan = 3; let toplananPara = 0;
 let baseCharacterName = "";
 
-const temaIsimleri = { 1: "Perfect 10 Liners", 2: "Love You Teacher", 3: "Me and Thee", 4: "Real Life" };
+// THEME CONFIGURATION PALETTES TO MATCH THE UPLOADED IMAGES EXACTLY
+const temaAyarlari = {
+    1: { isim: "Love You Teacher", zeminRengi: "#5c3d2e", zeminCizgi: "#8a5a44", engelRengi: "#cc7a00" }, // School Classroom Wood
+    2: { isim: "Perfect 10 Liners", zeminRengi: "#4a4745", zeminCizgi: "#736f6e", engelRengi: "#2b2b2b" }, // Campus Brick Stone
+    3: { isim: "Real Life", zeminRengi: "#252830", zeminCizgi: "#434857", engelRengi: "#e67e22" },          // City Rail Tech Grey
+    4: { isim: "Me and Thee", zeminRengi: "#161920", zeminCizgi: "#2d323f", engelRengi: "#d4af37" }          // Dressing Room Luxury Gold
+};
+
 const karakterIsimleri = {
-    1: ["Yotha", "Gun"], 2: ["Pobmek", "Solar"], 3: ["Tawan", "Aran"], 4: ["Perth", "Santa", "Domiia"]
+    1: ["Pobmek", "Solar"],     // Love You Teacher Heroes
+    2: ["Yotha", "Gun"],       // Perfect 10 Liners Heroes
+    3: ["Perth", "Santa", "Domiia"], // Real Life Heroes
+    4: ["Tawan", "Aran"]       // Me and Thee Heroes
 };
 
 const bgMusic = new Audio("arcade_music.mp3"); bgMusic.loop = true;
@@ -149,14 +156,14 @@ const gorselYukleyici = {
     karakterler: {
         1: [ { yuru: new Image(), zipla: new Image() }, { yuru: new Image(), zipla: new Image() } ],
         2: [ { yuru: new Image(), zipla: new Image() }, { yuru: new Image(), zipla: new Image() } ],
-        3: [ { yuru: new Image(), zipla: new Image() }, { yuru: new Image(), zipla: new Image() } ],
-        4: [ { yuru: new Image(), zipla: new Image() }, { yuru: new Image(), zipla: new Image() }, { yuru: new Image(), zipla: new Image() } ]
+        3: [ { yuru: new Image(), zipla: new Image() }, { yuru: new Image(), zipla: new Image() }, { yuru: new Image(), zipla: new Image() } ],
+        4: [ { yuru: new Image(), zipla: new Image() }, { yuru: new Image(), zipla: new Image() } ]
     }
 };
 
 for(let t=1; t<=4; t++) {
     gorselYukleyici.arkaplanlar[t] = new Image(); gorselYukleyici.arkaplanlar[t].src = `tema${t}_arka.jpg`;
-    let kSayisi = t === 4 ? 3 : 2;
+    let kSayisi = t === 3 ? 3 : 2;
     for(let k=0; k<kSayisi; k++) {
         let kAd = karakterIsimleri[t][k].toLowerCase();
         gorselYukleyici.karakterler[t][k].yuru.src = `${kAd}_yuru.jpg`;
@@ -167,8 +174,6 @@ for(let t=1; t<=4; t++) {
 let oyuncu = { x: 80, y: 250, w: 45, h: 60, vy: 0, vx: 0, yerde: false, bakisYonu: "sag" };
 const yercekimi = 0.5;
 
-function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-
 function giristenTemaya() { document.getElementById("girisEkrani").classList.add("hidden"); document.getElementById("temaMenu").classList.remove("hidden"); bgMusic.play().catch(e => {}); }
 function backToStart() { document.getElementById("temaMenu").classList.add("hidden"); document.getElementById("girisEkrani").classList.remove("hidden"); }
 function backToWorlds() { document.getElementById("karakterMenu").classList.add("hidden"); document.getElementById("temaMenu").classList.remove("hidden"); document.getElementById("bg-overlay").style.backgroundImage = "url('start_bg.jpg')"; }
@@ -178,7 +183,7 @@ function temaSec(temaNo) {
     document.getElementById("bg-overlay").style.backgroundImage = `url('tema${temaNo}_arka.jpg')`;
     
     const kButonAlani = document.getElementById("karakterButonlari"); kButonAlani.innerHTML = "";
-    document.getElementById("temaBaslik").innerText = `${temaIsimleri[temaNo].toUpperCase()}`;
+    document.getElementById("temaBaslik").innerText = `${temaAyarlari[temaNo].isim.toUpperCase()}`;
     let kListesi = karakterIsimleri[temaNo];
     
     for(let i = 0; i < kListesi.length; i++) { 
@@ -190,31 +195,25 @@ function temaSec(temaNo) {
 
 function oyunuBaslat(karakterNo) {
     secilenKarakter = karakterNo; document.getElementById("karakterMenu").classList.add("hidden");
-    document.getElementById("bg-overlay").style.filter = "none";
     canvas.style.display = "block"; document.getElementById("muteBtn").classList.remove("hidden");
     document.getElementById("mobile-controls").classList.add("active"); 
     oyunAktif = true; startTime = Date.now(); oyuncuCan = 3; toplananPara = 0;
     oyuncu.x = 80; oyuncu.y = 150; oyuncu.vy = 0; oyuncu.vx = 0; cameraX = 0;
     baseCharacterName = karakterIsimleri[secilenTema][secilenKarakter];
-    document.getElementById("playerNameInput").value = ""; // Clear input field
+    document.getElementById("playerNameInput").value = ""; 
     
-    haritalar["1_0"].paralar.forEach(p => p.collected = false);
-    haritalar["1_1"].paralar.forEach(p => p.collected = false);
-    haritalar["2_0"].paralar.forEach(p => p.collected = false);
-    haritalar["2_1"].paralar.forEach(p => p.collected = false);
+    // Reset all stages smoothly
+    Object.keys(haritalar).forEach(key => {
+        haritalar[key].paralar.forEach(p => p.collected = false);
+    });
     
     oyunDongusu();
 }
 
-// REALTIME CUSTOM TICKET INITIALIZATION NAME INSERTER
 function updateTicketName() {
     let enteredName = document.getElementById("playerNameInput").value.trim();
     let displayField = document.getElementById("tktHero");
-    if(enteredName.length > 0) {
-        displayField.innerText = `${baseCharacterName} (${enteredName.toUpperCase()})`;
-    } else {
-        displayField.innerText = baseCharacterName;
-    }
+    displayField.innerText = enteredName.length > 0 ? `${baseCharacterName} (${enteredName.toUpperCase()})` : baseCharacterName;
 }
 
 let tuslar = {};
@@ -233,6 +232,7 @@ setupTouch("btn-jump", "Space");
 
 function carpismaVarMi(k1, k2) { return k1.x < k2.x + k2.w && k1.x + k1.w > k2.x && k1.y < k2.y + k2.h && k1.y + k1.h > k2.y; }
 
+// STABLE LONG MARIO TRACK INFRASTRUCTURE
 const haritalar = {
     "1_0": { zeminler: [{x: 0, y: 360, w: 900, h: 60}, {x: 1050, y: 360, w: 800, h: 60}, {x: 2000, y: 300, w: 700, h: 120}, {x: 2850, y: 360, w: 800, h: 60}, {x: 3800, y: 360, w: 900, h: 60}, {x: 4850, y: 300, w: 750, h: 120}], engeller: [{x: 500, y: 335, w: 35, h: 25}, {x: 1300, y: 335, w: 35, h: 25}, {x: 2300, y: 275, w: 35, h: 25}, {x: 3200, y: 335, w: 35, h: 25}, {x: 4200, y: 335, w: 35, h: 25}], paralar: [{x: 300, y: 280, w: 22, h: 22}, {x: 650, y: 280, w: 22, h: 22}, {x: 1200, y: 280, w: 22, h: 22}, {x: 1600, y: 280, w: 22, h: 22}, {x: 2500, y: 200, w: 22, h: 22}, {x: 3500, y: 280, w: 22, h: 22}, {x: 4400, y: 280, w: 22, h: 22}], bitis: {x: 5450, y: 220, w: 45, h: 80} },
     "1_1": { zeminler: [{x: 0, y: 360, w: 700, h: 60}, {x: 850, y: 300, w: 400, h: 40}, {x: 1400, y: 360, w: 900, h: 60}, {x: 2450, y: 300, w: 500, h: 40}, {x: 3100, y: 360, w: 1200, h: 60}, {x: 4450, y: 300, w: 1100, h: 60}], engeller: [{x: 400, y: 335, w: 35, h: 25}, {x: 1050, y: 275, w: 35, h: 25}, {x: 1700, y: 335, w: 35, h: 25}, {x: 2650, y: 275, w: 35, h: 25}, {x: 3600, y: 335, w: 35, h: 25}, {x: 4800, y: 275, w: 35, h: 25}], paralar: [{x: 250, y: 280, w: 22, h: 22}, {x: 950, y: 220, w: 22, h: 22}, {x: 1550, y: 280, w: 22, h: 22}, {x: 2550, y: 220, w: 22, h: 22}, {x: 3350, y: 280, w: 22, h: 22}, {x: 4700, y: 220, w: 22, h: 22}], bitis: {x: 5400, y: 220, w: 45, h: 80} },
@@ -256,8 +256,10 @@ function oyunDongusu() {
     oyuncu.vy += yercekimi; oyuncu.x += oyuncu.vx; oyuncu.y += oyuncu.vy;
     if (oyuncu.x < 0) oyuncu.x = 0;
 
-    // SCROLLING EFFECT: MOVING ONLY BASED ON PLAYER POSITION
     if (oyuncu.x > (canvas.width / 2)) { cameraX = oyuncu.x - (canvas.width / 2); }
+
+    // REAL PANORAMIC SYSTEM: TRACKS AND SHIFTS BACKDROP SMOOTHLY IN HD
+    document.getElementById("bg-overlay").style.backgroundPosition = `-${cameraX * 0.4}px center`;
 
     let harita = haritalar[`${secilenTema}_${secilenKarakter}`];
     oyuncu.yerde = false;
@@ -297,8 +299,9 @@ function oyunDongusu() {
         document.getElementById("muteBtn").classList.add("hidden");
         document.getElementById("mobile-controls").classList.remove("active");
         document.getElementById("bg-overlay").style.filter = "blur(5px)";
+        document.getElementById("bg-overlay").style.backgroundPosition = "center center";
         
-        document.getElementById("tktWorld").innerText = temaIsimleri[secilenTema];
+        document.getElementById("tktWorld").innerText = temaAyarlari[secilenTema].isim;
         document.getElementById("tktHero").innerText = baseCharacterName;
         document.getElementById("tktCoins").innerText = `${toplananPara} 🪙`;
         document.getElementById("tktTime").innerText = `${finalTime} SEC`;
@@ -312,9 +315,34 @@ function oyunDongusu() {
     ctx.save();
     ctx.translate(-cameraX, 0);
 
-    // DRAW THE MARIO WORLD ON TOP OF THE FULL BACKGROUND IMAGE EFFECT
-    harita.zeminler.forEach(zemin => { ctx.fillStyle = "#111116"; ctx.fillRect(zemin.x, zemin.y, zemin.w, zemin.h); ctx.strokeStyle = "#fff"; ctx.lineWidth = 3; ctx.strokeRect(zemin.x, zemin.y, zemin.w, zemin.h); });
-    harita.engeller.forEach(engel => { ctx.fillStyle = "#e74c3c"; ctx.beginPath(); ctx.moveTo(engel.x, engel.y + engel.h); ctx.lineTo(engel.x + (engel.w/2), engel.y); ctx.lineTo(engel.x + engel.w, engel.y + engel.h); ctx.closePath(); ctx.fill(); });
+    // FETCH THE CURRENT DYNAMIC THEME SETTINGS FOR ON-THE-FLY THEME CUSTOMIZATION
+    let currentStyle = temaAyarlari[secilenTema];
+
+    // DYNAMIC RETRO GROUND DESIGN GENERATOR
+    harita.zeminler.forEach(zemin => { 
+        ctx.fillStyle = currentStyle.zeminRengi; 
+        ctx.fillRect(zemin.x, zemin.y, zemin.w, zemin.h); 
+        
+        ctx.strokeStyle = currentStyle.zeminCizgi; 
+        ctx.lineWidth = 3; 
+        ctx.strokeRect(zemin.x, zemin.y, zemin.w, zemin.h); 
+    });
+
+    // DYNAMIC RETRO CUSTOM-COLORED OBSTACLES CONFIGURATION
+    harita.engeller.forEach(engel => { 
+        ctx.fillStyle = currentStyle.engelRengi; 
+        ctx.beginPath(); 
+        ctx.moveTo(engel.x, engel.y + engel.h); 
+        ctx.lineTo(engel.x + (engel.w/2), engel.y); 
+        ctx.lineTo(engel.x + engel.w, engel.y + engel.h); 
+        ctx.closePath(); 
+        ctx.fill(); 
+        
+        // Add a sleek highlighted pixel trim border
+        ctx.strokeStyle = "#fff";
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+    });
     
     if(harita.paralar) {
         harita.paralar.forEach(para => {
@@ -327,7 +355,6 @@ function oyunDongusu() {
 
     ctx.fillStyle = "#f1c40f"; ctx.fillRect(harita.bitis.x, harita.bitis.y, harita.bitis.w, harita.bitis.h);
 
-    // DYNAMIC GRAPHICS TEXT
     ctx.fillStyle = "#fff"; ctx.font = "20px monospace";
     ctx.fillText("LIVES: " + "❤️".repeat(oyuncuCan), cameraX + 30, 40);
     ctx.fillText(`COINS: 🪙 ${toplananPara}`, cameraX + 30, 70);
@@ -345,7 +372,7 @@ function oyunDongusu() {
 }
 
 function shareOnTwitter() {
-    let tName = temaIsimleri[secilenTema]; let enteredName = document.getElementById("playerNameInput").value.trim();
+    let tName = temaAyarlari[secilenTema].isim; let enteredName = document.getElementById("playerNameInput").value.trim();
     let finalHeroString = enteredName.length > 0 ? `${baseCharacterName} (${enteredName.toUpperCase()})` : baseCharacterName;
     let currentUrl = window.location.href; 
     let challengeText = `🎮 MISSION ACCOMPLISHED! 🎮\n\ni just cleared the "${tName}" world playing as ${finalHeroString} and collected ${toplananPara} coins! ✨\n\nthink you can beat me? take the challenge! 👇\n${currentUrl}`;
