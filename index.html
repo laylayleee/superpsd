@@ -8,27 +8,28 @@
         body { margin: 0; background: #05050a; display: flex; justify-content: center; align-items: center; min-height: 100vh; color: white; font-family: 'Courier New', Courier, monospace; font-weight: bold; overflow: hidden; touch-action: none; -webkit-user-select: none; user-select: none; }
         #game-container { position: relative; width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; box-sizing: border-box; }
         
-        /* FIXED RETRO PATTERN MENUS OVERLAY - GRAPHIC WITH NO BLUR DEPENDENCY */
-        #bg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #0a0a16; z-index: 1; }
+        #bg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #0a0a16; z-index: 1; transition: background 0.3s; }
         
+        /* SHARP INTEGRATED EXCLUSIVE ANNOUNCEMENT BAR (NO OPEN PROMO TAG) */
+        #promo-bar { position: absolute; top: 0; left: 0; width: 100%; background: linear-gradient(90deg, #9d17f7, #e74c3c); color: #fff; text-align: center; padding: 12px 10px; font-size: 13px; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(157, 23, 247, 0.5); z-index: 999; box-sizing: border-box; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
         /* INCE UZUN RETRO CANVASES */
-        canvas { display: none; width: 95vw; height: 60vh; max-width: 1000px; max-height: 450px; border: 4px solid #fff; background: transparent; z-index: 3; position: relative; }
+        canvas { display: none; width: 95vw; height: 55vh; max-width: 1000px; max-height: 420px; border: 4px solid #fff; background: transparent; z-index: 3; position: relative; margin-top: 40px; box-shadow: 0 0 25px rgba(255,255,255,0.15); }
         
-        /* LUXURY TRANSPARENT GLOW PANELS WITH LARGE SHARP BUTTONS */
-        .menu-panel { background: rgba(12, 12, 24, 0.92); padding: 35px; border: 3px solid #00f0ff; width: 92vw; max-width: 500px; border-radius: 16px; box-shadow: 0 0 30px rgba(0, 240, 255, 0.3), inset 0 0 20px rgba(0, 240, 255, 0.1); backdrop-filter: blur(12px); z-index: 5; box-sizing: border-box; text-align: center; }
+        /* LUXURY TRANSPARENT GLOW UI PANELS WITH LARGE SHARP BUTTONS */
+        .menu-panel { background: rgba(12, 12, 24, 0.92); padding: 35px; border: 3px solid #00f0ff; width: 92vw; max-width: 500px; border-radius: 16px; box-shadow: 0 0 30px rgba(0, 240, 255, 0.3), inset 0 0 20px rgba(0, 240, 255, 0.1); backdrop-filter: blur(12px); z-index: 5; box-sizing: border-box; text-align: center; margin-top: 40px; }
         h1 { margin-top: 0; color: #f1c40f; text-transform: uppercase; letter-spacing: 3px; text-shadow: 0 0 12px rgba(241, 196, 15, 0.5); font-size: 28px; margin-bottom: 25px; }
         p { font-size: 14px; color: #a2a2ca; margin-bottom: 30px; }
         
-        /* BIG SHARP BUTTONS - IGRENC GORUNUM KOKTEN BITTI */
         .world-btn { display: block; width: 100%; max-width: 380px; padding: 16px 20px; margin: 14px auto; font-family: 'Courier New', Courier, monospace; font-size: 16px; font-weight: bold; cursor: pointer; border: 3px solid #9d17f7; background: rgba(157, 23, 247, 0.1); color: #fff; text-shadow: 0 0 5px #9d17f7; box-shadow: 0 0 15px rgba(157, 23, 247, 0.3); transition: 0.15s; text-transform: uppercase; border-radius: 6px; }
         .world-btn:hover { background: #9d17f7; color: #000; box-shadow: 0 0 25px #9d17f7; text-shadow: none; transform: scale(1.02); }
         
-        .char-select-btn { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; width: 120px; height: 140px; padding: 12px; margin: 10px; border: 3px solid #00f0ff; color: #fff; background: rgba(0,240,255,0.05); box-shadow: 0 0 15px rgba(0,240,255,0.2); border-radius: 6px; }
+        .char-select-btn { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; width: 120px; height: 140px; padding: 12px; margin: 10px; border: 3px solid #00f0ff; color: #fff; background: rgba(0,240,255,0.05); box-shadow: 0 0 15px rgba(0,240,255,0.2); border-radius: 6px; font-family: monospace; font-weight: bold; font-size: 13px; cursor: pointer; }
         .char-select-btn:hover { border-color: #f1c40f; color: #f1c40f; box-shadow: 0 0 25px #f1c40f; transform: translateY(-3px); }
         .char-select-btn img { width: 45px; height: 60px; margin-bottom: 10px; border: 2px solid rgba(255,255,255,0.4); background: rgba(0,0,0,0.5); image-rendering: pixelated; }
 
         .hidden { display: none !important; }
-        #muteBtn { position: absolute; top: 25px; right: 25px; padding: 8px 16px; font-size: 12px; background: rgba(192, 57, 43, 0.2); border: 2px solid #e74c3c; color: #e74c3c; box-shadow: 0 0 15px rgba(231, 76, 60, 0.2); z-index: 10; border-radius: 6px; cursor: pointer; }
+        #muteBtn { position: absolute; top: 60px; right: 25px; padding: 8px 16px; font-size: 12px; background: rgba(192, 57, 43, 0.2); border: 2px solid #e74c3c; color: #e74c3c; box-shadow: 0 0 15px rgba(231, 76, 60, 0.2); z-index: 10; border-radius: 6px; cursor: pointer; }
         #muteBtn:hover { background: #e74c3c; color: #fff; box-shadow: 0 0 20px #e74c3c; }
         
         .ticket { background: #f1c40f; color: #000; padding: 15px; border: 4px dashed #000; width: 100%; max-width: 360px; margin: 15px auto; box-sizing: border-box; text-align: left; }
@@ -49,6 +50,10 @@
     </style>
 </head>
 <body>
+
+<div id="promo-bar">
+    ⚡ PERTHSANTA "DEVIL'S KISS" CONCERT IS COMING SOON! DON'T FORGET: 18-19TH JULY! ⚡
+</div>
 
 <div id="rotate-warning">
     <h2>🔄 HORIZONTAL ORIENTATION REQUIRED 🔄</h2>
@@ -72,15 +77,16 @@
         <button class="world-btn" onclick="temaSec(2)">2. Perfect 10 Liners</button>
         <button class="world-btn" onclick="temaSec(3)">3. Real Life</button>
         <button class="world-btn" onclick="temaSec(4)">4. Me and Thee</button>
-        <button onclick="backToStart()" style="border-color:#7f8c8d; color:#7f8c8d; box-shadow:none; font-size:12px; padding:8px 18px; margin-top:10px;">BACK</button>
+        <br>
+        <button onclick="backToStart()" style="border-color:#7f8c8d; color:#7f8c8d; background:transparent; cursor:pointer; font-size:12px; padding:8px 18px; margin-top:10px;">BACK</button>
     </div>
 
     <div id="karakterMenu" class="menu-panel hidden">
         <h1 id="temaBaslik">SELECT CHARACTER</h1>
-        <p>Deploy your hero onto the coordinate grid</p>
+        <p>Choose your hero to deploy onto the track</p>
         <div id="karakterButonlari"></div>
         <br>
-        <button onclick="backToWorlds()" style="border-color:#e74c3c; color:#e74c3c; box-shadow:none; padding:8px 18px;">BACK</button>
+        <button onclick="backToWorlds()" style="border-color:#e74c3c; color:#e74c3c; background:transparent; cursor:pointer; padding:8px 18px;">BACK</button>
     </div>
 
     <div id="endScreen" class="menu-panel hidden">
@@ -96,9 +102,9 @@
             <div style="clear: both;"></div>
             <div class="barcode">||| | || |||| | ||| |</div>
         </div>
-        <button style="border-color:#1da1f2; color:#1da1f2;" onclick="shareOnTwitter()">🎟️ TWEET MY TIME 🎟️</button>
+        <button style="border-color:#1da1f2; color:#1da1f2; background:transparent; cursor:pointer;" onclick="shareOnTwitter()">🎟️ TWEET MY TIME 🎟️</button>
         <br>
-        <button onclick="backToMenuFromEnd()" style="border-color:#fff; color:#fff; margin-top:12px; font-size:11px; padding:6px 12px;">PLAY AGAIN</button>
+        <button onclick="backToMenuFromEnd()" style="border-color:#fff; color:#fff; margin-top:12px; font-size:11px; padding:6px 12px; background:transparent; cursor:pointer;">PLAY AGAIN</button>
     </div>
 
     <canvas id="gameCanvas" width="900" height="420"></canvas>
@@ -122,12 +128,11 @@ let cameraX = 0;
 let oyuncuCan = 3; let toplananPara = 0;
 let baseCharacterName = "";
 
-// ALL THEMATIC DESIGN PARAMETERS ENTIRELY CODED INSIDE MATH MATRICES
 const temaAyarlari = {
-    1: { isim: "Love You Teacher", zeminRengi: "#6d4c41", zeminCizgi: "#ffb74d", screenBg: "#2d1f1e", panelGlow: "#6d4c41" }, 
-    2: { isim: "Perfect 10 Liners", zeminRengi: "#37474f", zeminCizgi: "#cfd8dc", screenBg: "#171b22", panelGlow: "#37474f" }, 
-    3: { isim: "Real Life", zeminRengi: "#212121", zeminCizgi: "#00e5ff", screenBg: "#0c0e17", panelGlow: "#00e5ff" },          
-    4: { isim: "Me and Thee", zeminRengi: "#1a237e", zeminCizgi: "#ffd54f", screenBg: "#0a0912", panelGlow: "#ffd54f" }          
+    1: { isim: "Love You Teacher", zeminRengi: "#6d4c41", zeminCizgi: "#ffb74d", screenBg: "linear-gradient(180deg, #2d1f1e 0%, #0d0908 100%)", panelGlow: "#6d4c41" }, 
+    2: { isim: "Perfect 10 Liners", zeminRengi: "#37474f", zeminCizgi: "#cfd8dc", screenBg: "linear-gradient(180deg, #171b22 0%, #090a0d 100%)", panelGlow: "#37474f" }, 
+    3: { isim: "Real Life", zeminRengi: "#212121", zeminCizgi: "#00e5ff", screenBg: "linear-gradient(180deg, #0c0e17 0%, #05070a 100%)", panelGlow: "#00e5ff" },          
+    4: { isim: "Me and Thee", zeminRengi: "#1a237e", zeminCizgi: "#ffd54f", screenBg: "linear-gradient(180deg, #0a0912 0%, #040408 100%)", panelGlow: "#ffd54f" }          
 };
 
 const karakterIsimleri = {
@@ -162,32 +167,13 @@ for(let t=1; t<=4; t++) {
 let oyuncu = { x: 80, y: 250, w: 45, h: 60, vy: 0, vx: 0, yerde: false, bakisYonu: "sag" };
 const yercekimi = 0.5;
 
-function drawMenuBackground() {
-    let overlay = document.getElementById("bg-overlay");
-    overlay.innerHTML = '<canvas id="bg-pattern-canvas" style="display:block; width:100%; height:100%; opacity:0.15; position:absolute;"></canvas>';
-    let patCanvas = document.getElementById("bg-pattern-canvas");
-    if(!patCanvas) return;
-    patCanvas.width = window.innerWidth; patCanvas.height = window.innerHeight;
-    let pCtx = patCanvas.getContext("2d");
-    pCtx.strokeStyle = "#9d17f7"; pCtx.lineWidth = 2;
-    for(let i=0; i<patCanvas.width; i+=60) {
-        for(let j=0; j<patCanvas.height; j+=60) {
-            pCtx.strokeRect(i, j, 40, 40);
-            if((i+j)%120===0) { pCtx.fillStyle="rgba(0,240,255,0.3)"; pCtx.fillRect(i+15, j+15, 10, 10); }
-        }
-    }
-}
-window.addEventListener("load", drawMenuBackground);
-window.addEventListener("resize", drawMenuBackground);
-
 function giristenTemaya() { document.getElementById("girisEkrani").classList.add("hidden"); document.getElementById("temaMenu").classList.remove("hidden"); }
-function backToStart() { document.getElementById("temaMenu").classList.add("hidden"); document.getElementById("girisEkrani").classList.remove("hidden"); drawMenuBackground(); }
-function backToWorlds() { document.getElementById("karakterMenu").classList.add("hidden"); document.getElementById("temaMenu").classList.remove("hidden"); drawMenuBackground(); }
+function backToStart() { document.getElementById("temaMenu").classList.add("hidden"); document.getElementById("girisEkrani").classList.remove("hidden"); document.getElementById("bg-overlay").style.background = ""; }
+function backToWorlds() { document.getElementById("karakterMenu").classList.add("hidden"); document.getElementById("temaMenu").classList.remove("hidden"); document.getElementById("bg-overlay").style.background = ""; }
 
 function temaSec(temaNo) {
     secilenTema = temaNo; document.getElementById("temaMenu").classList.add("hidden");
     let currentTheme = temaAyarlari[temaNo];
-    document.getElementById("bg-overlay").innerHTML = ""; // Kill menu drawings
     document.getElementById("bg-overlay").style.background = currentTheme.screenBg;
     
     let panels = document.querySelectorAll(".menu-panel");
@@ -219,6 +205,22 @@ function oyunuBaslat(karakterNo) {
     oyunDongusu();
 }
 
+let tuslar = {};
+window.addEventListener("keydown", e => { tuslar[e.code] = true; });
+window.addEventListener("keyup", e => { tuslar[e.code] = false; });
+
+const setupTouch = (id, key) => {
+    const el = document.getElementById(id);
+    el.addEventListener("touchstart", (e) => { e.preventDefault(); tuslar[key] = true; });
+    el.addEventListener("touchend", (e) => { e.preventDefault(); tuslar[key] = false; });
+    el.addEventListener("touchcancel", (e) => { e.preventDefault(); tuslar[key] = false; });
+};
+setupTouch("btn-left", "ArrowLeft");
+setupTouch("btn-right", "ArrowRight");
+setupTouch("btn-jump", "Space");
+
+function carpismaVarMi(k1, k2) { return k1.x < k2.x + k2.w && k1.x + k1.w > k2.x && k1.y < k2.y + k2.h && k1.y + k1.h > k2.y; }
+
 const haritalar = {
     "1_0": { zeminler: [{x: 0, y: 360, w: 900, h: 60}, {x: 1050, y: 360, w: 800, h: 60}, {x: 2000, y: 300, w: 700, h: 120}, {x: 2850, y: 360, w: 800, h: 60}, {x: 3800, y: 360, w: 900, h: 60}, {x: 4850, y: 300, w: 750, h: 120}], engeller: [{x: 500, y: 315, w: 45, h: 45}, {x: 1300, y: 315, w: 45, h: 45}, {x: 2300, y: 255, w: 45, h: 45}, {x: 3200, y: 315, w: 45, h: 45}, {x: 4200, y: 315, w: 45, h: 45}], paralar: [{x: 300, y: 280, w: 22, h: 22}, {x: 650, y: 280, w: 22, h: 22}, {x: 1200, y: 280, w: 22, h: 22}, {x: 1600, y: 280, w: 22, h: 22}, {x: 2500, y: 200, w: 22, h: 22}, {x: 3500, y: 280, w: 22, h: 22}, {x: 4400, y: 280, w: 22, h: 22}], bitis: {x: 5450, y: 220, w: 45, h: 80} },
     "1_1": { zeminler: [{x: 0, y: 360, w: 700, h: 60}, {x: 850, y: 300, w: 400, h: 40}, {x: 1400, y: 360, w: 900, h: 60}, {x: 2450, y: 300, w: 500, h: 40}, {x: 3100, y: 360, w: 1200, h: 60}, {x: 4450, y: 300, w: 1100, h: 60}], engeller: [{x: 400, y: 315, w: 45, h: 45}, {x: 1050, y: 255, w: 45, h: 45}, {x: 1700, y: 315, w: 45, h: 45}, {x: 2650, y: 255, w: 45, h: 45}, {x: 3600, y: 315, w: 45, h: 45}, {x: 4800, y: 255, w: 45, h: 45}], paralar: [{x: 250, y: 280, w: 22, h: 22}, {x: 950, y: 220, w: 22, h: 22}, {x: 1550, y: 280, w: 22, h: 22}, {x: 2550, y: 220, w: 22, h: 22}, {x: 3350, y: 280, w: 22, h: 22}, {x: 4700, y: 220, w: 22, h: 22}], bitis: {x: 5400, y: 220, w: 45, h: 80} },
@@ -244,7 +246,6 @@ function oyunDongusu() {
 
     if (oyuncu.x > (canvas.width / 2)) { cameraX = oyuncu.x - (canvas.width / 2); }
 
-    // DYNAMIC RETRO HORIZONTAL SCROLL ENGINE LINKED DIRECTLY TO PLAYER VELOCITY
     document.getElementById("bg-overlay").style.backgroundPosition = `-${cameraX * 0.4}px center`;
 
     let harita = haritalar[`${secilenTema}_${secilenKarakter}`];
@@ -268,12 +269,12 @@ function oyunDongusu() {
     if (oyuncu.y > canvas.height) hasDied = true;
 
     if (hasDied) {
-        oyuncuCan--;
+        oyuCan = oyuncuCan - 1; oyuncuCan--;
         if (oyuncuCan > 0) {
             alert(`❤️ Ouch! ${oyuncuCan} LIVES LEFT.`);
             oyuncu.x = cameraX + 60; oyuncu.y = 150; oyuncu.vy = 0;
         } else {
-            alert("❌ GAME OVER! Reseting directly to the start of this stage track!");
+            alert("❌ GAME OVER! Reseting you back to the start of this stage track!");
             oyuncuCan = 3;
             oyuncu.x = 80; oyuncu.y = 150; oyuncu.vy = 0; cameraX = 0;
             if(harita.paralar) harita.paralar.forEach(p => p.collected = false);
@@ -299,7 +300,6 @@ function oyunDongusu() {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    // BACKDROP COMPOSITION ASSURANCE LAYER
     document.getElementById("game-container").style.background = temaAyarlari[secilenTema].screenBg;
 
     ctx.save();
@@ -307,7 +307,6 @@ function oyunDongusu() {
 
     let currentStyle = temaAyarlari[secilenTema];
 
-    // DRAW GROUND TRACKS WITH DYNAMIC FILL INDICES
     harita.zeminler.forEach(zemin => { 
         ctx.fillStyle = currentStyle.zeminRengi; 
         ctx.fillRect(zemin.x, zemin.y, zemin.w, zemin.h); 
@@ -316,46 +315,41 @@ function oyunDongusu() {
         ctx.strokeRect(zemin.x, zemin.y, zemin.w, zemin.h); 
     });
 
-    // --- THE VECTOR ART ENGINE: DRAWS DISTINCT AUTHENTIC SHAPES INSTEAD OF TRIANGLES ---
+    // --- ENTIRELY RESOLVED UNIQUE THEMATIC VECTOR ENGINE FOR SEAMLESS GRAPHICS ---
     harita.engeller.forEach(engel => { 
         ctx.save();
         ctx.lineWidth = 3;
         ctx.strokeStyle = "#fff";
         
         if (secilenTema === 1) { 
-            // THEME 1 (LOVE YOU TEACHER - ANAOKULU): PIXEL WOODEN PLAY TOY BOX CUBES
-            ctx.fillStyle = currentStyle.engelRengi;
+            // WORLD 1 (LOVE YOU TEACHER): KIDS PLAY TOY BLOCKS (CUBES)
+            ctx.fillStyle = currentStyle.zeminCizgi;
             ctx.fillRect(engel.x, engel.y, engel.w, engel.h);
             ctx.strokeRect(engel.x, engel.y, engel.w, engel.h);
-            // Kindergarten interior cross cross ties inside toy box bounds
             ctx.beginPath(); ctx.moveTo(engel.x + 8, engel.y + 8); ctx.lineTo(engel.x + engel.w - 8, engel.y + engel.h - 8); ctx.stroke();
             ctx.beginPath(); ctx.moveTo(engel.x + engel.w - 8, engel.y + 8); ctx.lineTo(engel.x + 8, engel.y + engel.h - 8); ctx.stroke();
         } 
         else if (secilenTema === 2) { 
-            // THEME 2 (PERFECT 10 LINERS - BLUEPRINT): ENGINEERING DRAWING DESKS
-            ctx.fillStyle = currentStyle.engelRengi;
-            // Draw a tilted engineering desk angle board matrix
+            // WORLD 2 (PERFECT 10 LINERS): ARCHITECTURE BLUEPRINT DRAWING TABLES
+            ctx.fillStyle = "#37474f";
             ctx.fillRect(engel.x, engel.y + 12, engel.w, engel.h - 12);
             ctx.strokeRect(engel.x, engel.y + 12, engel.w, engel.h - 12);
-            // Leg supports vector blueprint lines
             ctx.beginPath(); ctx.moveTo(engel.x + 10, engel.y + 12); ctx.lineTo(engel.x + 10, engel.y + engel.h); ctx.stroke();
             ctx.beginPath(); ctx.moveTo(engel.x + engel.w - 10, engel.y + 12); ctx.lineTo(engel.x + engel.w - 10, engel.y + engel.h); ctx.stroke();
         } 
         else if (secilenTema === 3) { 
-            // THEME 3 (REAL LIFE - BANGKOK): BANGKOK STREET ROAD BLOCK BARICADES
-            ctx.fillStyle = currentStyle.engelRengi;
+            // WORLD 3 (REAL LIFE): BANGKOK HIGHWAY RED BARICADES
+            ctx.fillStyle = "#e74c3c";
             ctx.fillRect(engel.x, engel.y + 15, engel.w, engel.h - 15);
             ctx.strokeRect(engel.x, engel.y + 15, engel.w, engel.h - 15);
-            // Translucent warning alert striping
             ctx.fillStyle = "#fff";
             ctx.fillRect(engel.x + 6, engel.y + 22, engel.w - 12, 8);
         } 
         else if (secilenTema === 4) { 
-            // THEME 4 (ME AND THEE - MODEL ROOM): COUTURE STAND LUXURY HANGER SHAPES
-            ctx.strokeStyle = currentStyle.engelRengi;
+            // WORLD 4 (ME AND THEE): COUTURE STUDIO HANGER CLOTHES RACKS
+            ctx.strokeStyle = "#ffd54f";
             ctx.lineWidth = 4;
             ctx.strokeRect(engel.x + 12, engel.y, engel.w - 24, engel.h);
-            // Steel hanging bar pin accents
             ctx.fillStyle = "#fff";
             ctx.fillRect(engel.x, engel.y, engel.w, 6);
         }
