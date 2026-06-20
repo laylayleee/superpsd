@@ -3,31 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PerthSanta x Domiia Arcade</title>
+    <title>PERTHSANTA X DOMIIA ARCADE</title>
     <style>
-        /* TEMEL AYARLAR - TAM EKRAN VE SIFIR BOŞLUK */
+        /* TAM EKRAN VE SIFIR BOŞLUK */
         body { margin: 0; padding: 0; background: #000; overflow: hidden; font-family: 'Courier New', Courier, monospace; font-weight: bold; color: white; touch-action: none; user-select: none; }
-        
-        #game-container { position: relative; width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; box-sizing: border-box; }
-        
-        /* RENK CÜMBÜŞÜ MENÜ ARKA PLANI */
-        #bg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; background: linear-gradient(135deg, #1a0b2e 0%, #3b0944 100%); background-image: radial-gradient(rgba(0,240,255,0.15) 2px, transparent 2px); background-size: 40px 40px; }
+        #game-container { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
 
-        /* KAYAN KONSER PROMO BARI */
-        #promo-bar { position: absolute; top: 0; left: 0; width: 100%; background: linear-gradient(90deg, #9d17f7, #e74c3c); color: #fff; padding: 10px 0; font-size: 16px; border-bottom: 3px solid #f1c40f; z-index: 150; overflow: hidden; white-space: nowrap; box-shadow: 0 4px 15px rgba(0,0,0,0.8); }
+        /* KAYAN KONSER YAZISI (MARQUEE) */
+        #promo-bar { position: absolute; top: 0; left: 0; width: 100%; background: linear-gradient(90deg, #8e44ad, #e74c3c); color: #fff; padding: 12px 0; font-size: 16px; border-bottom: 3px solid #f1c40f; z-index: 150; overflow: hidden; white-space: nowrap; box-shadow: 0 4px 15px rgba(0,0,0,0.8); }
         .marquee { display: inline-block; padding-left: 100%; animation: scroll-left 20s linear infinite; text-transform: uppercase; letter-spacing: 2px; text-shadow: 2px 2px 0px #000;}
         @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-        /* ARCADE SALONU UI (MENÜLER) */
-        #ui-layer { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; z-index: 50; flex-direction: column; }
-        .menu-panel { background: rgba(5, 5, 12, 0.95); padding: 35px; border: 4px solid #00f0ff; width: 90vw; max-width: 600px; border-radius: 10px; box-shadow: 0 0 40px rgba(0, 240, 255, 0.4), inset 0 0 20px rgba(0, 240, 255, 0.2); text-align: center; }
-        h1 { margin-top: 0; color: #ff00ff; text-transform: uppercase; letter-spacing: 3px; font-size: 36px; margin-bottom: 15px; text-shadow: 3px 3px 0px #000, 0 0 15px #ff00ff; }
-        p { font-size: 16px; color: #00f0ff; margin-bottom: 25px; line-height: 1.5; text-shadow: 1px 1px 0px #000; }
+        /* GİRİŞ EKRANINDAKİ 4 EVREN KOLAJI (PIXEL GÖRÜNÜM) */
+        #collage-bg { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; display: grid; grid-template-columns: 50% 50%; grid-template-rows: 50% 50%; }
+        .collage-part { position: relative; }
+        .collage-part::after { content: ""; position: absolute; top:0; left:0; width:100%; height:100%; background-image: radial-gradient(rgba(0,0,0,0.3) 2px, transparent 2px); background-size: 10px 10px; }
+        .c1 { background: #5c3d2e; } /* Okul */
+        .c2 { background: #37474f; } /* Kampüs */
+        .c3 { background: #212121; } /* Şehir */
+        .c4 { background: #1a237e; } /* Stüdyo */
+
+        /* ARCADE SALONU EKRANI EFEKTİ VE MENÜLER */
+        #ui-layer { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; z-index: 50; background: rgba(0, 0, 0, 0.6); flex-direction: column; }
+        /* CRT Çizgileri Sadece Menüde */
+        #ui-layer::before { content: " "; position: absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%); background-size: 100% 4px; pointer-events: none; z-index: -1; }
         
-        .world-btn { display: block; width: 100%; max-width: 450px; padding: 18px; margin: 12px auto; font-family: inherit; font-size: 18px; font-weight: bold; cursor: pointer; border: 3px solid #ff00ff; background: #110011; color: #fff; transition: 0.2s; text-transform: uppercase; border-radius: 5px; box-shadow: 4px 4px 0px rgba(255,0,255,0.5); }
+        .menu-panel { background: rgba(10, 10, 20, 0.95); padding: 35px; border: 4px solid #00f0ff; width: 90vw; max-width: 600px; border-radius: 8px; box-shadow: 0 0 40px rgba(0, 240, 255, 0.5), inset 0 0 20px rgba(0, 240, 255, 0.2); text-align: center; }
+        h1 { margin-top: 0; color: #ff00ff; text-transform: uppercase; letter-spacing: 3px; font-size: 32px; margin-bottom: 15px; text-shadow: 4px 4px 0px #000, 0 0 15px #ff00ff; }
+        p { font-size: 16px; color: #00f0ff; margin-bottom: 25px; line-height: 1.5; text-shadow: 2px 2px 0px #000; }
+        
+        .world-btn { display: block; width: 100%; max-width: 450px; padding: 18px; margin: 12px auto; font-family: inherit; font-size: 18px; font-weight: bold; cursor: pointer; border: 3px solid #ff00ff; background: #110011; color: #fff; transition: 0.1s; text-transform: uppercase; border-radius: 5px; box-shadow: 4px 4px 0px rgba(255,0,255,0.5); }
         .world-btn:hover { background: #ff00ff; color: #000; transform: translate(2px, 2px); box-shadow: 2px 2px 0px rgba(255,255,255,0.5); }
         
-        .char-select-btn { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; width: 120px; height: 150px; padding: 10px; margin: 10px; border: 3px solid #00f0ff; color: #00f0ff; background: #001111; border-radius: 8px; font-family: inherit; font-weight: bold; font-size: 15px; cursor: pointer; transition: 0.2s; box-shadow: 4px 4px 0px rgba(0,240,255,0.3); }
+        .char-select-btn { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; width: 120px; height: 150px; padding: 10px; margin: 10px; border: 3px solid #00f0ff; color: #00f0ff; background: #001111; border-radius: 8px; font-family: inherit; font-weight: bold; font-size: 15px; cursor: pointer; transition: 0.1s; box-shadow: 4px 4px 0px rgba(0,240,255,0.3); }
         .char-select-btn:hover { border-color: #f1c40f; color: #f1c40f; background: #111; transform: translate(2px, 2px); box-shadow: 2px 2px 0px #f1c40f; }
         .char-select-btn img { width: 60px; height: 80px; margin-bottom: 12px; border: 2px solid #fff; image-rendering: pixelated; object-fit: cover; background: #000; }
 
@@ -42,19 +50,21 @@
         .back-btn-ingame { pointer-events: auto; padding: 10px 20px; background: #e74c3c; border: 3px solid #fff; color: white; font-family: inherit; font-weight: bold; cursor: pointer; border-radius: 5px; box-shadow: 4px 4px 0px #000; margin-bottom: 15px; display: inline-block; font-size: 16px; transition: 0.1s; text-transform: uppercase; }
         .back-btn-ingame:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px #000; }
 
-        /* KİŞİYE ÖZEL BİLET ALANI */
+        /* BİTİŞ KARTI VE İSİM */
         .name-input-box { width: 100%; max-width: 350px; padding: 15px; margin: 5px auto 15px auto; font-family: inherit; font-size: 18px; font-weight: bold; text-align: center; border: 3px solid #f1c40f; background: #111; color: #f1c40f; border-radius: 5px; text-transform: uppercase; outline: none; box-shadow: inset 0 0 10px rgba(241,196,15,0.3); }
-        .name-input-box::placeholder { color: #f1c40f; opacity: 0.4; }
-
         .ticket { background: #f1c40f; color: #000; padding: 20px; border: 4px dashed #000; width: 100%; max-width: 360px; margin: 0 auto 15px auto; text-align: left; box-shadow: 8px 8px 0px rgba(0,0,0,0.8); }
         .ticket-row { margin: 8px 0; font-size: 15px; border-bottom: 2px dotted rgba(0,0,0,0.3); padding-bottom: 5px; font-weight: bold;}
         .barcode { text-align: center; letter-spacing: 4px; font-size: 24px; margin-top: 15px; border-top: 3px solid #000; padding-top: 10px; font-weight: 900;}
 
-        /* TÜM EKRAN ZIPLAMA ALANI (MOBİL İÇİN) */
-        #jump-overlay { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 15; display: none; cursor: pointer; }
-        
+        /* MARIO TARZI MOBİL KONTROLLER (SAĞ, SOL, ZIPLA) */
+        #mobile-controls { position: absolute; bottom: 30px; left: 5vw; width: 90vw; display: none; justify-content: space-between; box-sizing: border-box; z-index: 99; pointer-events: none; }
+        .dpad-btn, .action-btn { width: 75px; height: 75px; background: rgba(0, 0, 0, 0.7); border: 3px solid #fff; color: #fff; font-size: 28px; display: flex; justify-content: center; align-items: center; border-radius: 50%; pointer-events: auto; cursor: pointer; box-shadow: 0px 4px 10px rgba(0,0,0,0.5); font-family: inherit; }
+        .dpad-btn:active, .action-btn:active { background: #00f0ff; color: #000; border-color: #00f0ff; }
+        .dpad-group { display: flex; gap: 15px; pointer-events: auto; }
+
         #rotate-warning { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 9999; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; box-sizing: border-box; }
         @media (orientation: portrait) and (pointer: coarse) { #rotate-warning { display: flex; } #ui-layer, canvas { display: none !important; } }
+        @media (pointer: coarse) { #mobile-controls.active { display: flex; } }
     </style>
 </head>
 <body>
@@ -69,13 +79,19 @@
 </div>
 
 <div id="game-container">
-    <div id="bg-overlay"></div>
+    
+    <div id="collage-bg">
+        <div class="collage-part c1"></div>
+        <div class="collage-part c2"></div>
+        <div class="collage-part c3"></div>
+        <div class="collage-part c4"></div>
+    </div>
 
     <div id="ui-layer">
         
         <div id="girisEkrani" class="menu-panel">
-            <h1>PS RETRO ARCADE</h1>
-            <p>Welcome to the ultimate arcade experience! Your character runs automatically. Tap the screen to <b>JUMP</b> over ground obstacles, and let it run to pass <b>UNDER</b> flying obstacles!</p>
+            <h1>PERTHSANTA X DOMIIA ARCADE</h1>
+            <p>You control the hero! Use Left/Right to move and Jump to dodge obstacles. Collect coins and reach the finish line to claim your ticket!</p>
             <button class="world-btn" onclick="showScreen('temaMenu')">INSERT COIN (START)</button>
         </div>
 
@@ -96,9 +112,7 @@
 
         <div id="endScreen" class="menu-panel hidden">
             <h1 style="font-size:32px; color:#2ecc71; text-shadow: 2px 2px #000;">STAGE CLEARED!</h1>
-            
             <input type="text" id="playerNameInput" class="name-input-box" maxlength="20" placeholder="ENTER YOUR NAME HERE" oninput="updateTicketName()">
-            
             <div class="ticket">
                 <div style="text-align:center; font-size:22px; border-bottom:4px double #000; padding-bottom:8px; margin-bottom:15px; font-weight:900;">ARCADE ADMISSION</div>
                 <img id="tktCharImg" src="" style="float:right; width:60px; height:80px; border:3px solid #000; image-rendering:pixelated; margin-left:10px; background:#fff;">
@@ -110,27 +124,31 @@
                 <div style="clear:both;"></div>
                 <div class="barcode">||| | || |||| | ||| |</div>
             </div>
-            
             <p style="color:#ff00ff; font-size:15px; font-weight:bold; text-shadow: 1px 1px #000;">📸 SS ALMAYI UNUTMA! (SCREENSHOT THIS!) 📸</p>
-            
             <button class="world-btn" style="background:#1da1f2; border-color:#1da1f2; margin-top:5px; box-shadow:4px 4px 0px #000;" onclick="shareOnTwitter()">🎟️ TWEET SCORE</button>
             <button onclick="showScreen('temaMenu')" style="margin-top:10px; padding:12px 24px; background:transparent; border:3px solid #fff; color:#fff; cursor:pointer; font-weight:bold; font-family:inherit;">PLAY AGAIN</button>
         </div>
     </div>
 
     <canvas id="gameCanvas"></canvas>
-    
-    <div id="jump-overlay"></div>
 
     <div id="game-hud">
-        <div>
-            <button class="back-btn-ingame" onclick="oyunuKapat()">↩ QUIT TO MENU</button>
+        <div style="text-align:left; pointer-events:auto;">
+            <button class="back-btn-ingame" onclick="oyunuKapat()">↩ BACK TO MENU</button>
             <div class="hud-text" id="hud-lives">LIVES: ❤️❤️❤️</div>
             <div class="hud-text" id="hud-coins" style="color:#f1c40f;">COINS: 🪙 0</div>
         </div>
         <div style="text-align:right;">
             <div class="hud-text" id="hud-time" style="color: #00f0ff;">TIME: 0.0s</div>
         </div>
+    </div>
+
+    <div id="mobile-controls">
+        <div class="dpad-group">
+            <div class="dpad-btn" id="btn-left">◀</div>
+            <div class="dpad-btn" id="btn-right">▶</div>
+        </div>
+        <div class="action-btn" id="btn-jump">▲</div>
     </div>
 </div>
 
@@ -141,7 +159,7 @@ function showScreen(screenId) {
     screens.forEach(id => document.getElementById(id).classList.add("hidden"));
     document.getElementById(screenId).classList.remove("hidden");
     document.getElementById("ui-layer").style.display = "flex";
-    document.getElementById("bg-overlay").style.display = "block";
+    document.getElementById("collage-bg").style.display = "grid";
 }
 
 const canvas = document.getElementById("gameCanvas");
@@ -151,12 +169,12 @@ let secilenTema = 1; let secilenKarakter = 0; let oyunAktif = false;
 let startTime = 0; let finalTime = 0; let cameraX = 0; 
 let oyuncuCan = 3; let toplananPara = 0; let baseCharacterName = "";
 
-// SABİT VE RENKLİ ARKA PLANLAR (Hareketsiz, Göz Yormayan) & DEV DİZİ İSİMLERİ
+// SABİT VE RENKLİ ARKA PLANLAR (Oyun İçi)
 const temaAyarlari = {
-    1: { isim: "Love You Teacher", bgYazi: "LOVE YOU TEACHER", zemin: "#6d4c41", cizgi: "#d7ccc8", screenBg: "#3e2723" }, 
-    2: { isim: "Perfect 10 Liners", bgYazi: "PERFECT 10 LINERS", zemin: "#37474f", cizgi: "#b0bec5", screenBg: "#263238" }, 
-    3: { isim: "Real Life", bgYazi: "PERTHSANTADOMIIA", zemin: "#212121", cizgi: "#757575", screenBg: "#1a1214" },          
-    4: { isim: "Me and Thee", bgYazi: "ME AND THEE", zemin: "#1a237e", cizgi: "#9fa8da", screenBg: "#0d1130" }          
+    1: { isim: "Love You Teacher", zemin: "#6d4c41", cizgi: "#d7ccc8", screenBg: "#3e2723", gokyuzu: "#ffcc80" }, 
+    2: { isim: "Perfect 10 Liners", zemin: "#37474f", cizgi: "#b0bec5", screenBg: "#263238", gokyuzu: "#90caf9" }, 
+    3: { isim: "Real Life", zemin: "#212121", cizgi: "#757575", screenBg: "#1a1214", gokyuzu: "#f48fb1" },          
+    4: { isim: "Me and Thee", zemin: "#1a237e", cizgi: "#9fa8da", screenBg: "#0d1130", gokyuzu: "#ce93d8" }          
 };
 
 const karakterIsimleri = {
@@ -175,11 +193,11 @@ for(let t=1; t<=4; t++) {
     }
 }
 
-// BÜYÜK KARAKTER VE MÜKEMMEL FİZİKLER
-let oyuncu = { x: 150, y: 0, w: 70, h: 90, vy: 0, yerde: false };
+// BÜYÜK KARAKTER VE SUPER MARIO FİZİKLERİ
+let oyuncu = { x: 150, y: 0, w: 70, h: 90, vy: 0, vx: 0, yerde: false, bakisYonu: "sag" };
 const yercekimi = 0.65;
-const otoHiz = 6.5; // Sabit koşma hızı
-const ziplamaGucu = -15.5;
+const hareketHizi = 6; 
+const ziplamaGucu = -15;
 
 function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
 window.addEventListener('resize', resizeCanvas);
@@ -198,13 +216,12 @@ function oyunuKapat() {
     oyunAktif = false;
     canvas.style.display = "none";
     document.getElementById("game-hud").style.display = "none";
-    document.getElementById("jump-overlay").style.display = "none";
+    document.getElementById("mobile-controls").classList.remove("active");
     showScreen("temaMenu");
 }
 
 function temaSec(temaNo) {
     secilenTema = temaNo; 
-    document.getElementById("bg-overlay").style.background = temaAyarlari[temaNo].screenBg;
     const kButonAlani = document.getElementById("karakterButonlari"); kButonAlani.innerHTML = "";
     document.getElementById("temaBaslik").innerText = temaAyarlari[temaNo].isim;
     let kListesi = karakterIsimleri[temaNo];
@@ -215,30 +232,28 @@ function temaSec(temaNo) {
     showScreen("karakterMenu");
 }
 
-// HARİTALAR (Hem yerde atlamalık, hem havada altından geçmelik engellerle dolu)
+// HARİTALAR (Farklı rotalar ve çok çeşitli engeller)
 const haritalar = {
-    "1_0": { zeminler: [{x:0,w:1400},{x:1600,w:1200},{x:3000,w:2000}], engeller: [{x:600,tip:"masa"},{x:1000,tip:"hava_bayrak"},{x:1800,tip:"kup"},{x:2300,tip:"hava_bayrak"},{x:3200,tip:"masa"}], paralar: [{x:800},{x:2000},{x:2600},{x:3600}], bitis: {x:4500} },
-    "1_1": { zeminler: [{x:0,w:1200},{x:1400,w:1500},{x:3100,w:1500}], engeller: [{x:500,tip:"kup"},{x:900,tip:"hava_bayrak"},{x:1600,tip:"masa"},{x:2400,tip:"hava_bayrak"},{x:3300,tip:"kup"}], paralar: [{x:700},{x:1200},{x:2100},{x:2900}], bitis: {x:4200} },
+    "1_0": { zeminler: [{x:0,w:1400},{x:1600,w:1200},{x:3000,w:2000}], engeller: [{x:600,tip:"masa"},{x:1100,tip:"kup"},{x:1800,tip:"masa"},{x:2400,tip:"kup"},{x:3200,tip:"masa"}], paralar: [{x:800},{x:2000},{x:2600},{x:3600}], bitis: {x:4500} },
+    "1_1": { zeminler: [{x:0,w:1200},{x:1400,w:1500},{x:3100,w:1500}], engeller: [{x:500,tip:"kup"},{x:900,tip:"masa"},{x:1600,tip:"masa"},{x:2400,tip:"kup"},{x:3300,tip:"masa"}], paralar: [{x:700},{x:1200},{x:2100},{x:2900}], bitis: {x:4200} },
     
-    "2_0": { zeminler: [{x:0,w:1600},{x:1800,w:1400},{x:3400,w:1500}], engeller: [{x:700,tip:"cizim"},{x:1200,tip:"hava_drone"},{x:2000,tip:"disli"},{x:2600,tip:"hava_drone"},{x:3600,tip:"cizim"}], paralar: [{x:900},{x:1500},{x:2300},{x:3000}], bitis: {x:4500} },
-    "2_1": { zeminler: [{x:0,w:1300},{x:1500,w:1400},{x:3100,w:1500}], engeller: [{x:600,tip:"disli"},{x:1000,tip:"hava_drone"},{x:1700,tip:"cizim"},{x:2500,tip:"hava_drone"},{x:3400,tip:"disli"}], paralar: [{x:800},{x:1300},{x:2100},{x:2800}], bitis: {x:4300} },
+    "2_0": { zeminler: [{x:0,w:1600},{x:1800,w:1400},{x:3400,w:1500}], engeller: [{x:700,tip:"cizim"},{x:1200,tip:"disli"},{x:2000,tip:"disli"},{x:2600,tip:"cizim"},{x:3600,tip:"disli"}], paralar: [{x:900},{x:1500},{x:2300},{x:3000}], bitis: {x:4500} },
+    "2_1": { zeminler: [{x:0,w:1300},{x:1500,w:1400},{x:3100,w:1500}], engeller: [{x:600,tip:"disli"},{x:1000,tip:"cizim"},{x:1700,tip:"cizim"},{x:2500,tip:"disli"},{x:3400,tip:"cizim"}], paralar: [{x:800},{x:1300},{x:2100},{x:2800}], bitis: {x:4300} },
     
-    "3_0": { zeminler: [{x:0,w:1500},{x:1700,w:1300},{x:3200,w:2000}], engeller: [{x:600,tip:"tuktuk"},{x:1000,tip:"hava_tabela"},{x:1900,tip:"koni"},{x:2500,tip:"hava_tabela"},{x:3500,tip:"tuktuk"}], paralar: [{x:800},{x:1400},{x:2200},{x:2900}], bitis: {x:4700} },
-    "3_1": { zeminler: [{x:0,w:1200},{x:1400,w:1200},{x:2800,w:2000}], engeller: [{x:500,tip:"koni"},{x:1000,tip:"hava_tabela"},{x:1600,tip:"tuktuk"},{x:2200,tip:"hava_tabela"},{x:3000,tip:"koni"}], paralar: [{x:750},{x:1250},{x:1900},{x:2500}], bitis: {x:4400} },
-    "3_2": { zeminler: [{x:0,w:1700},{x:1900,w:3000}], engeller: [{x:800,tip:"tuktuk"},{x:1400,tip:"hava_tabela"},{x:2100,tip:"koni"},{x:2700,tip:"hava_tabela"}], paralar: [{x:1100},{x:2400},{x:3100}], bitis: {x:4600} },
+    "3_0": { zeminler: [{x:0,w:1500},{x:1700,w:1300},{x:3200,w:2000}], engeller: [{x:600,tip:"tuktuk"},{x:1000,tip:"koni"},{x:1900,tip:"koni"},{x:2500,tip:"tuktuk"},{x:3500,tip:"koni"}], paralar: [{x:800},{x:1400},{x:2200},{x:2900}], bitis: {x:4700} },
+    "3_1": { zeminler: [{x:0,w:1200},{x:1400,w:1200},{x:2800,w:2000}], engeller: [{x:500,tip:"koni"},{x:1000,tip:"tuktuk"},{x:1600,tip:"tuktuk"},{x:2200,tip:"koni"},{x:3000,tip:"tuktuk"}], paralar: [{x:750},{x:1250},{x:1900},{x:2500}], bitis: {x:4400} },
+    "3_2": { zeminler: [{x:0,w:1700},{x:1900,w:3000}], engeller: [{x:800,tip:"tuktuk"},{x:1400,tip:"koni"},{x:2100,tip:"koni"},{x:2700,tip:"tuktuk"}], paralar: [{x:1100},{x:2400},{x:3100}], bitis: {x:4600} },
 
-    "4_0": { zeminler: [{x:0,w:1200},{x:1400,w:1600},{x:3200,w:1500}], engeller: [{x:500,tip:"aski"},{x:1000,tip:"hava_isik"},{x:1700,tip:"ayna"},{x:2400,tip:"hava_isik"},{x:3400,tip:"aski"}], paralar: [{x:750},{x:1250},{x:2000},{x:2900}], bitis: {x:4300} },
-    "4_1": { zeminler: [{x:0,w:1400},{x:1600,w:1400},{x:3200,w:1500}], engeller: [{x:600,tip:"ayna"},{x:1100,tip:"hava_isik"},{x:1800,tip:"aski"},{x:2600,tip:"hava_isik"},{x:3500,tip:"ayna"}], paralar: [{x:850},{x:1400},{x:2200},{x:3000}], bitis: {x:4400} }
+    "4_0": { zeminler: [{x:0,w:1200},{x:1400,w:1600},{x:3200,w:1500}], engeller: [{x:500,tip:"aski"},{x:1000,tip:"ayna"},{x:1700,tip:"ayna"},{x:2400,tip:"aski"},{x:3400,tip:"ayna"}], paralar: [{x:750},{x:1250},{x:2000},{x:2900}], bitis: {x:4300} },
+    "4_1": { zeminler: [{x:0,w:1400},{x:1600,w:1400},{x:3200,w:1500}], engeller: [{x:600,tip:"ayna"},{x:1100,tip:"aski"},{x:1800,tip:"aski"},{x:2600,tip:"ayna"},{x:3500,tip:"aski"}], paralar: [{x:850},{x:1400},{x:2200},{x:3000}], bitis: {x:4400} }
 };
-
-let ziplamaIstegi = false;
 
 function oyunuBaslat(karakterNo) {
     secilenKarakter = karakterNo; 
     
     // MENÜLERİ GİZLE, OYUNU AÇ
     document.getElementById("ui-layer").style.display = "none";
-    document.getElementById("bg-overlay").style.display = "none"; 
+    document.getElementById("collage-bg").style.display = "none"; 
     
     document.getElementById("playerNameInput").value = "";
     document.getElementById("tktName").innerText = "GUEST";
@@ -246,7 +261,7 @@ function oyunuBaslat(karakterNo) {
     resizeCanvas();
     canvas.style.display = "block"; 
     document.getElementById("game-hud").style.display = "flex";
-    document.getElementById("jump-overlay").style.display = "block"; // Zıplama alanı
+    document.getElementById("mobile-controls").classList.add("active"); 
     
     oyunAktif = true; startTime = Date.now(); oyuncuCan = 3; toplananPara = 0;
     
@@ -254,7 +269,6 @@ function oyunuBaslat(karakterNo) {
     oyuncu.y = (canvas.height * 0.85) - 200; 
     oyuncu.vy = 0; 
     cameraX = 0;
-    ziplamaIstegi = false;
     
     baseCharacterName = karakterIsimleri[secilenTema][secilenKarakter];
     updateHUD();
@@ -265,14 +279,28 @@ function oyunuBaslat(karakterNo) {
     oyunDongusu();
 }
 
-// SADECE ZIPLAMA KONTROLÜ (Space veya Ekrana Dokunma)
-window.addEventListener("keydown", e => { if(e.code==="Space" || e.code==="ArrowUp") ziplamaIstegi = true; });
-window.addEventListener("keyup", e => { if(e.code==="Space" || e.code==="ArrowUp") ziplamaIstegi = false; });
-const jumpPad = document.getElementById("jump-overlay");
-jumpPad.addEventListener("touchstart", e => { e.preventDefault(); ziplamaIstegi = true; });
-jumpPad.addEventListener("touchend", e => { e.preventDefault(); ziplamaIstegi = false; });
-jumpPad.addEventListener("mousedown", () => ziplamaIstegi = true);
-jumpPad.addEventListener("mouseup", () => ziplamaIstegi = false);
+// SUPER MARIO KONTROLLERİ
+let tuslar = { sag: false, sol: false };
+window.addEventListener("keydown", e => { 
+    if(e.code==="ArrowRight" || e.code==="KeyD") tuslar.sag = true;
+    if(e.code==="ArrowLeft" || e.code==="KeyA") tuslar.sol = true;
+    if((e.code==="Space" || e.code==="ArrowUp" || e.code==="KeyW") && oyuncu.yerde) { oyuncu.vy = ziplamaGucu; oyuncu.yerde = false; }
+});
+window.addEventListener("keyup", e => { 
+    if(e.code==="ArrowRight" || e.code==="KeyD") tuslar.sag = false;
+    if(e.code==="ArrowLeft" || e.code==="KeyA") tuslar.sol = false;
+});
+
+// Mobil Kontroller
+const btnSag = document.getElementById("btn-right");
+const btnSol = document.getElementById("btn-left");
+const btnZipla = document.getElementById("btn-jump");
+
+btnSag.addEventListener("touchstart", e => { e.preventDefault(); tuslar.sag = true; oyuncu.bakisYonu="sag"; });
+btnSag.addEventListener("touchend", e => { e.preventDefault(); tuslar.sag = false; });
+btnSol.addEventListener("touchstart", e => { e.preventDefault(); tuslar.sol = true; oyuncu.bakisYonu="sol"; });
+btnSol.addEventListener("touchend", e => { e.preventDefault(); tuslar.sol = false; });
+btnZipla.addEventListener("touchstart", e => { e.preventDefault(); if(oyuncu.yerde){ oyuncu.vy = ziplamaGucu; oyuncu.yerde = false; } });
 
 function carpisma(k1, k2) { return k1.x < k2.x + k2.w && k1.x + k1.w > k2.x && k1.y < k2.y + k2.h && k1.y + k1.h > k2.y; }
 
@@ -285,16 +313,19 @@ function oyunDongusu() {
     let liveTime = ((Date.now() - startTime) / 1000).toFixed(1);
     document.getElementById("hud-time").innerText = `TIME: ${liveTime}s`;
 
-    // OTOMATİK İLERLEME (Sağ sol tuşu iptal)
-    oyuncu.x += otoHiz;
-    cameraX = oyuncu.x - 150; 
+    // SAĞA SOLA GİTME (MARIO MANTIĞI)
+    if (tuslar.sag) { oyuncu.x += hareketHizi; oyuncu.bakisYonu = "sag"; }
+    if (tuslar.sol) { oyuncu.x -= hareketHizi; oyuncu.bakisYonu = "sol"; }
+    if (oyuncu.x < 0) oyuncu.x = 0; // Ekranın en solundan çıkamasın
 
-    // ZIPLAMA
-    if (ziplamaIstegi && oyuncu.yerde) { 
-        oyuncu.vy = ziplamaGucu; 
-        oyuncu.yerde = false; 
+    // KAMERA TAKİBİ
+    if (oyuncu.x > cameraX + canvas.width * 0.3) {
+        cameraX = oyuncu.x - canvas.width * 0.3;
+    } else if (oyuncu.x < cameraX + 50) {
+        cameraX = Math.max(0, oyuncu.x - 50);
     }
 
+    // YERÇEKİMİ
     oyuncu.vy += yercekimi; 
     oyuncu.y += oyuncu.vy;
     oyuncu.yerde = false;
@@ -311,10 +342,10 @@ function oyunDongusu() {
         });
     }
 
-    // ALTIN
+    // ALTIN TOPLAMA
     if(harita && harita.paralar) {
         harita.paralar.forEach(p => {
-            let pRect = {x: p.x, y: baseH - 160, w: 35, h: 35};
+            let pRect = {x: p.x, y: baseH - 140, w: 30, h: 30};
             if (!p.collected && carpisma(oyuncu, pRect)) { p.collected = true; toplananPara++; updateHUD(); }
         });
     }
@@ -327,30 +358,24 @@ function oyunDongusu() {
             
             if (e.tip === "tuktuk" || e.tip === "masa" || e.tip === "cizim") { ew = 100; eh = 80; ey = baseH - eh; }
             if (e.tip === "ayna" || e.tip === "aski") { ew = 80; eh = 110; ey = baseH - eh; }
-            
-            // HAVA ENGELLERİ (Altından geç)
-            if (e.tip.startsWith("hava")) {
-                ew = 80; eh = 50; 
-                ey = baseH - 190; // Havada asılı!
-            }
 
             let eRect = { x: e.x + 10, y: ey + 10, w: ew - 20, h: eh - 15 }; 
             if (carpisma(oyuncu, eRect)) hasDied = true;
         });
     }
 
+    // BOŞLUĞA DÜŞME
     if (oyuncu.y > canvas.height) hasDied = true;
 
-    // ÖLÜM VE CHECKPOINT SİSTEMİ (En baştan başlamaz, yandığı yerin biraz gerisinden düşer)
+    // ÖLÜM SİSTEMİ (Checkpoint: Yandığı yerin gerisinden havadan başlar)
     if (hasDied) {
         oyuncuCan--;
         updateHUD();
         if (oyuncuCan > 0) {
-            // Biraz geriye al ve havadan bırak
-            oyuncu.x = oyuncu.x - 400; 
-            if(oyuncu.x < 150) oyuncu.x = 150;
-            oyuncu.y = baseH - 300; 
+            oyuncu.x = Math.max(150, oyuncu.x - 300); // 300 piksel geriye at
+            oyuncu.y = baseH - 300; // Havadan bırak
             oyuncu.vy = 0; 
+            cameraX = Math.max(0, oyuncu.x - 150); // Kamerayı düzelt
         } else {
             // Can bitti, menüye dön
             oyunuKapat();
@@ -359,13 +384,13 @@ function oyunDongusu() {
     }
 
     // BİTİŞ KAPISI
-    let bitisRect = {x: harita.bitis.x, y: baseH - 200, w: 50, h: 200};
+    let bitisRect = {x: harita.bitis.x, y: baseH - 250, w: 60, h: 250};
     if (carpisma(oyuncu, bitisRect)) {
         finalTime = ((Date.now() - startTime) / 1000).toFixed(2); 
         oyunAktif = false;
         canvas.style.display = "none"; 
         document.getElementById("game-hud").style.display = "none";
-        document.getElementById("jump-overlay").style.display = "none";
+        document.getElementById("mobile-controls").classList.remove("active");
         
         document.getElementById("tktWorld").innerText = temaAyarlari[secilenTema].isim;
         document.getElementById("tktHero").innerText = baseCharacterName;
@@ -377,28 +402,19 @@ function oyunDongusu() {
         return;
     }
 
-    // ÇİZİMLER
+    // --- EKRAN ÇİZİMLERİ ---
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     let currentStyle = temaAyarlari[secilenTema];
 
-    // 1. SABİT RENKLİ ARKAPLAN
-    ctx.fillStyle = currentStyle.screenBg;
+    // SABİT GÖKYÜZÜ
+    ctx.fillStyle = currentStyle.gokyuzu;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // 2. SABİT DEV DİZİ İSMİ (Hareketsiz)
-    ctx.save();
-    ctx.fillStyle = "rgba(255,255,255,0.06)"; 
-    ctx.font = "bold 100px monospace";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(currentStyle.bgYazi, canvas.width/2, canvas.height/2 - 50);
-    ctx.restore();
-
-    // 3. KAMERA İÇİ ÇİZİMLER (Sadece yer, engeller ve karakter hareket eder)
+    // KAMERA İÇİ ÇİZİMLER
     ctx.save();
     ctx.translate(-cameraX, 0);
 
-    // ZEMİN
+    // ZEMİN ÇİZİMİ
     if(harita && harita.zeminler) {
         harita.zeminler.forEach(z => { 
             ctx.fillStyle = currentStyle.zemin; ctx.fillRect(z.x, baseH, z.w, canvas.height - baseH); 
@@ -406,13 +422,12 @@ function oyunDongusu() {
         });
     }
 
-    // ENGELLER (Yerdekiler ve Havadakiler)
+    // ENGELLERİ ÇİZ
     if(harita && harita.engeller) {
         harita.engeller.forEach(e => { 
             let ew = 70; let eh = 70; let ey = baseH - eh;
             ctx.lineWidth = 4; ctx.strokeStyle = "#fff";
 
-            // YER ENGELLERİ
             if (e.tip === "masa") { 
                 ew = 100; eh = 80; ey = baseH - eh;
                 ctx.fillStyle = "#8d6e63"; ctx.fillRect(e.x, ey, ew, 15); ctx.strokeRect(e.x, ey, ew, 15);
@@ -454,30 +469,6 @@ function oyunDongusu() {
                 ctx.strokeStyle = "#ffd54f"; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(e.x+ew/2, ey); ctx.lineTo(e.x+ew/2, ey+eh); ctx.stroke(); ctx.beginPath(); ctx.moveTo(e.x, ey+15); ctx.lineTo(e.x+ew, ey+15); ctx.stroke();
                 ctx.fillStyle = "#e53935"; ctx.fillRect(e.x+20, ey+20, 20, 50); ctx.strokeRect(e.x+20, ey+20, 20, 50);
             }
-            
-            // HAVA ENGELLERİ (Altından koşarak geçilecek)
-            else if (e.tip === "hava_drone") {
-                ew = 90; eh = 35; ey = baseH - 190;
-                ctx.fillStyle = "#444"; ctx.fillRect(e.x, ey, ew, eh); ctx.strokeRect(e.x, ey, ew, eh);
-                ctx.fillStyle = "#e74c3c"; ctx.fillRect(e.x+ew/2-15, ey+eh, 30, 10);
-            }
-            else if (e.tip === "hava_bayrak") {
-                ew = 80; eh = 60; ey = baseH - 200;
-                ctx.fillStyle = "#2ecc71"; ctx.beginPath(); ctx.moveTo(e.x, ey); ctx.lineTo(e.x+ew, ey); ctx.lineTo(e.x+ew/2, ey+eh); ctx.fill(); ctx.stroke();
-            }
-            else if (e.tip === "hava_tabela") {
-                ew = 110; eh = 50; ey = baseH - 200;
-                ctx.fillStyle = "#3498db"; ctx.fillRect(e.x, ey, ew, eh); ctx.strokeRect(e.x, ey, ew, eh);
-                ctx.fillStyle = "#fff"; ctx.font = "bold 24px monospace"; ctx.fillText("RUN!", e.x+25, ey+35);
-            }
-            else if (e.tip === "hava_kutu") {
-                ew = 70; eh = 50; ey = baseH - 190;
-                ctx.fillStyle = "#e67e22"; ctx.fillRect(e.x, ey, ew, eh); ctx.strokeRect(e.x, ey, ew, eh);
-            }
-            else if (e.tip === "hava_isik") {
-                ew = 60; eh = 60; ey = baseH - 200;
-                ctx.fillStyle = "#f1c40f"; ctx.beginPath(); ctx.arc(e.x+ew/2, ey+eh/2, 30, 0, Math.PI*2); ctx.fill(); ctx.stroke();
-            }
         });
     }
     
@@ -485,14 +476,14 @@ function oyunDongusu() {
     if(harita && harita.paralar) {
         harita.paralar.forEach(p => {
             if(!p.collected) {
-                let py = baseH - 160;
+                let py = baseH - 140;
                 ctx.fillStyle = "#f1c40f"; ctx.beginPath(); ctx.arc(p.x + 15, py + 15, 18, 0, Math.PI * 2); ctx.fill();
                 ctx.fillStyle = "#fff"; ctx.fillRect(p.x+12, py+5, 6, 20);
             }
         });
     }
 
-    // CHECKERED FINISH GATE
+    // DAMALI BİTİŞ ÇİZGİSİ
     let bs = 12; 
     ctx.strokeStyle = "#fff"; ctx.lineWidth = 4; ctx.strokeRect(bitisRect.x, bitisRect.y, bitisRect.w, bitisRect.h);
     for(let r=0; r<bitisRect.h/bs; r++) {
@@ -501,13 +492,14 @@ function oyunDongusu() {
             ctx.fillRect(bitisRect.x + c*bs, bitisRect.y + r*bs, bs, bs);
         }
     }
-    ctx.fillStyle = "#fff"; ctx.font = "bold 28px monospace"; ctx.fillText("FINISH", bitisRect.x - 20, bitisRect.y - 15);
+    ctx.fillStyle = "#fff"; ctx.font = "bold 28px monospace"; ctx.textBaseline="bottom"; ctx.fillText("FINISH", bitisRect.x - 20, bitisRect.y - 10);
 
-    // DEV KARAKTER
+    // DEV KARAKTERİ ÇİZ
     let aktifGorsel = oyuncu.yerde ? gorselYukleyici.karakterler[secilenTema][secilenKarakter].yuru : gorselYukleyici.karakterler[secilenTema][secilenKarakter].zipla;
     if (aktifGorsel.complete && aktifGorsel.naturalWidth !== 0) {
         ctx.save();
-        ctx.drawImage(aktifGorsel, oyuncu.x, oyuncu.y, oyuncu.w, oyuncu.h);
+        if (oyuncu.bakisYonu === "sol") { ctx.translate(oyuncu.x + oyuncu.w, oyuncu.y); ctx.scale(-1, 1); ctx.drawImage(aktifGorsel, 0, 0, oyuncu.w, oyuncu.h); }
+        else { ctx.drawImage(aktifGorsel, oyuncu.x, oyuncu.y, oyuncu.w, oyuncu.h); }
         ctx.restore();
     } else { 
         ctx.fillStyle = "#f1c40f"; ctx.fillRect(oyuncu.x, oyuncu.y, oyuncu.w, oyuncu.h); 
