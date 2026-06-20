@@ -3,121 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pixel Arcade Platformer</title>
+    <title>PerthSanta x Domiia Arcade</title>
     <style>
-        body { margin: 0; background: #05050a; display: flex; justify-content: center; align-items: center; min-height: 100vh; color: white; font-family: 'Courier New', Courier, monospace; font-weight: bold; overflow: hidden; touch-action: none; -webkit-user-select: none; user-select: none; }
-        #game-container { position: relative; width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; box-sizing: border-box; }
+        body { margin: 0; background: #000; overflow: hidden; font-family: 'Courier New', Courier, monospace; font-weight: bold; color: white; touch-action: none; -webkit-user-select: none; user-select: none; }
         
-        /* BACKGROUND PANEL SYSTEM */
-        #bg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #0a0a16; z-index: 1; transition: background 0.3s; }
+        /* CRT ARCADE SCREEN EFFECT */
+        .crt::before { content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); z-index: 100; background-size: 100% 2px, 3px 100%; pointer-events: none; }
         
-        /* INTEGRATED CONCERT ANNOUNCEMENT BAR */
-        #promo-bar { position: absolute; top: 0; left: 0; width: 100%; background: linear-gradient(90deg, #9d17f7, #e74c3c); color: #fff; text-align: center; padding: 12px 10px; font-size: 13px; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(157, 23, 247, 0.4); z-index: 999; box-sizing: border-box; text-transform: uppercase; }
+        /* FULLSCREEN CANVAS */
+        canvas { display: none; position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 3; image-rendering: pixelated; }
 
-        /* CRISP RETRO INCE UZUN CANVAS BOX */
-        canvas { display: none; width: 95vw; height: 55vh; max-width: 1000px; max-height: 420px; border: 4px solid #00f0ff; background: #0c0e17; z-index: 3; position: relative; margin-top: 40px; box-shadow: 0 0 25px rgba(0,240,255,0.3); }
+        /* THEMED COLLAGE BACKGROUND FOR START SCREEN */
+        #bg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; transition: 0.5s; background: linear-gradient(135deg, #5c3d2e 25%, #37474f 25%, #37474f 50%, #1c1d22 50%, #1c1d22 75%, #1a237e 75%); background-size: 200% 200%; animation: bgShift 15s ease infinite; }
+        @keyframes bgShift { 0% {background-position: 0% 50%;} 50% {background-position: 100% 50%;} 100% {background-position: 0% 50%;} }
+
+        /* SCROLLING PROMO MARQUEE - HYPING THE SOLD OUT CONCERT */
+        #promo-bar { position: absolute; top: 0; left: 0; width: 100%; background: #000; color: #f1c40f; padding: 10px 0; font-size: 16px; border-bottom: 3px solid #e74c3c; z-index: 150; overflow: hidden; white-space: nowrap; box-shadow: 0 5px 15px rgba(231, 76, 60, 0.5); }
+        .marquee { display: inline-block; padding-left: 100%; animation: scroll-left 22s linear infinite; text-transform: uppercase; letter-spacing: 2px; }
+        @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+        /* ARCADE STYLE MENUS */
+        #ui-layer { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; z-index: 5; flex-direction: column; }
+        .menu-panel { background: rgba(5, 5, 10, 0.95); padding: 40px; border: 4px solid #00f0ff; width: 90vw; max-width: 650px; border-radius: 8px; box-shadow: 0 0 30px #00f0ff, inset 0 0 20px rgba(0, 240, 255, 0.3); text-align: center; }
+        h1 { margin-top: 0; color: #ff00ff; text-transform: uppercase; letter-spacing: 2px; text-shadow: 3px 3px #00f0ff; font-size: 32px; margin-bottom: 10px; }
+        p { font-size: 15px; color: #fff; margin-bottom: 25px; text-shadow: 1px 1px #000; line-height: 1.5; }
         
-        /* MODERN TRANSPARENT NEON GLOW UI PANELS */
-        .menu-panel { background: rgba(5, 5, 15, 0.95); padding: 35px; border: 3px solid #00f0ff; width: 92vw; max-width: 520px; border-radius: 12px; box-shadow: 0 0 35px rgba(0, 240, 255, 0.35), inset 0 0 20px rgba(0, 240, 255, 0.1); backdrop-filter: blur(10px); z-index: 5; box-sizing: border-box; text-align: center; margin-top: 40px; }
-        h1 { margin-top: 0; color: #f1c40f; text-transform: uppercase; letter-spacing: 3px; text-shadow: 0 0 10px #f1c40f; font-size: 28px; margin-bottom: 25px; }
-        p { font-size: 14px; color: #8a99ad; margin-bottom: 30px; }
+        .world-btn { display: block; width: 100%; max-width: 450px; padding: 16px; margin: 15px auto; font-family: inherit; font-size: 18px; font-weight: bold; cursor: pointer; border: 3px solid #ff00ff; background: transparent; color: #fff; text-shadow: 2px 2px #000; box-shadow: 0 0 10px rgba(255, 0, 255, 0.5); transition: 0.2s; text-transform: uppercase; }
+        .world-btn:hover { background: #ff00ff; color: #fff; box-shadow: 0 0 30px #ff00ff; transform: scale(1.03); }
         
-        /* LARGE ARCADE MACHINE BUTTONS */
-        .world-btn { display: block; width: 100%; max-width: 420px; padding: 18px 24px; margin: 16px auto; font-family: 'Courier New', Courier, monospace; font-size: 18px; font-weight: bold; cursor: pointer; border: 3px solid #9d17f7; background: rgba(157, 23, 247, 0.15); color: #fff; text-shadow: 0 0 5px #9d17f7; box-shadow: 0 0 15px rgba(157, 23, 247, 0.3); transition: 0.1s; text-transform: uppercase; border-radius: 6px; }
-        .world-btn:hover { background: #9d17f7; color: #000; box-shadow: 0 0 30px #9d17f7; text-shadow: none; transform: translateY(-2px); }
-        
-        /* CHARACTERS IMAGES ATTACHED INSIDE THE BUTTON MATRIX */
-        .char-select-btn { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; width: 130px; height: 145px; padding: 12px; margin: 10px; border: 3px solid #00f0ff; color: #fff; background: rgba(0,240,255,0.05); box-shadow: 0 0 15px rgba(0,240,255,0.2); border-radius: 6px; font-family: monospace; font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.15s; }
-        .char-select-btn:hover { border-color: #f1c40f; color: #f1c40f; box-shadow: 0 0 25px #f1c40f; transform: translateY(-4px); }
-        .char-select-btn img { width: 50px; height: 65px; margin-bottom: 12px; border: 2px solid rgba(255,255,255,0.4); background: rgba(0,0,0,0.5); image-rendering: pixelated; object-fit: cover; }
+        .char-select-btn { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; width: 120px; height: 140px; padding: 10px; margin: 10px; border: 3px solid #00f0ff; color: #fff; background: rgba(0,0,0,0.5); border-radius: 8px; font-family: inherit; font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.2s; }
+        .char-select-btn:hover { border-color: #f1c40f; color: #f1c40f; box-shadow: 0 0 20px #f1c40f; transform: translateY(-5px); }
+        .char-select-btn img { width: 50px; height: 65px; margin-bottom: 10px; border: 2px solid #fff; image-rendering: pixelated; object-fit: cover; background: #111; }
 
         .hidden { display: none !important; }
-        #muteBtn { position: absolute; top: 65px; right: 25px; padding: 8px 16px; font-size: 12px; background: rgba(192, 57, 43, 0.2); border: 2px solid #e74c3c; color: #e74c3c; z-index: 10; border-radius: 4px; cursor: pointer; }
         
-        .ticket { background: #f1c40f; color: #000; padding: 15px; border: 4px dashed #000; width: 100%; max-width: 360px; margin: 15px auto; box-sizing: border-box; text-align: left; }
-        .ticket-header { text-align: center; font-size: 18px; border-bottom: 3px double #000; padding-bottom: 8px; margin-bottom: 12px; }
-        .ticket-row { margin: 8px 0; font-size: 13px; }
-        .barcode { text-align: center; letter-spacing: 3px; font-size: 20px; margin-top: 15px; border-top: 2px solid #000; padding-top: 8px; }
+        /* IN-GAME HUD & CONTROLS */
+        #game-hud { position: absolute; top: 60px; left: 20px; z-index: 10; display: none; }
+        .hud-text { font-size: 24px; color: #fff; text-shadow: 2px 2px #000; margin-bottom: 5px; }
+        .back-btn-ingame { padding: 10px 20px; background: rgba(231, 76, 60, 0.8); border: 3px solid #fff; color: white; font-family: inherit; font-weight: bold; cursor: pointer; border-radius: 5px; box-shadow: 0 0 10px #000; margin-bottom: 15px; display: inline-block; font-size: 16px; transition: 0.2s; }
+        .back-btn-ingame:hover { background: #e74c3c; transform: scale(1.05); }
         
-        #mobile-controls { position: absolute; bottom: 5vh; left: 5vw; width: 90vw; display: none; justify-content: space-between; box-sizing: border-box; z-index: 99; pointer-events: none; }
-        .dpad-btn, .action-btn { width: 80px; height: 80px; background: rgba(0, 0, 0, 0.8); border: 3px solid #00f0ff; color: #00f0ff; font-size: 32px; display: flex; justify-content: center; align-items: center; border-radius: 50%; pointer-events: auto; cursor: pointer; box-shadow: 0px 0px 20px rgba(0, 240, 255, 0.3); font-family: monospace; user-select: none; -webkit-user-select: none; }
-        .dpad-btn:active, .action-btn:active { background: #00f0ff; color: #000; }
+        .screenshot-note { font-size: 14px; color: #00f0ff; margin: 15px 0 15px 0; text-transform: uppercase; text-shadow: 1px 1px #000; letter-spacing: 1px; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 0.7; } 50% { opacity: 1; text-shadow: 0 0 10px #00f0ff; } 100% { opacity: 0.7; } }
+
+        #mobile-controls { position: absolute; bottom: 30px; left: 5vw; width: 90vw; display: none; justify-content: space-between; box-sizing: border-box; z-index: 99; pointer-events: none; }
+        .dpad-btn, .action-btn { width: 80px; height: 80px; background: rgba(0, 0, 0, 0.6); border: 4px solid #fff; color: #fff; font-size: 32px; display: flex; justify-content: center; align-items: center; border-radius: 50%; pointer-events: auto; cursor: pointer; box-shadow: 0px 4px 10px rgba(0,0,0,0.5); font-family: inherit; }
+        .dpad-btn:active, .action-btn:active { background: #f1c40f; color: #000; }
         .dpad-group { display: flex; gap: 20px; pointer-events: auto; }
 
-        #rotate-warning { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #05050a; z-index: 9999; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; box-sizing: border-box; }
-        #rotate-warning h2 { color: #f1c40f; font-size: 20px; }
-
-        @media (orientation: portrait) and (pointer: coarse) { #rotate-warning { display: flex; } #game-container { display: none; } }
         @media (pointer: coarse) { #mobile-controls.active { display: flex; } }
     </style>
 </head>
-<body>
+<body class="crt">
 
 <div id="promo-bar">
-    ⚡ PERTHSANTA "DEVIL'S KISS" CONCERT IS COMING SOON! DON'T FORGET: 18-19TH JULY! ⚡
+    <div class="marquee">🔥 TICKETS SOLD OUT! THE WAIT IS ALMOST OVER! GET READY FOR PERTHSANTA "DEVIL'S KISS" CONCERT ON JULY 18-19TH! 🔥</div>
 </div>
 
-<div id="rotate-warning">
-    <h2>🔄 HORIZONTAL ORIENTATION REQUIRED 🔄</h2>
-    <p style="font-size: 14px; margin-top: 10px; color: #a2a2ca;">Please rotate your device to landscape mode to play! 🎮</p>
-</div>
+<div id="bg-overlay"></div>
 
-<div id="game-container">
-    <div id="bg-overlay"></div>
-    <button id="muteBtn" class="hidden" onclick="toggleMute()">SOUND: ON</button>
-
+<div id="ui-layer">
     <div id="girisEkrani" class="menu-panel">
-        <h1>PIXEL ARCADE</h1>
-        <p style="color: #00f0ff; font-size: 14px; letter-spacing: 1px;">AUTHENTIC RETRO EXPERIENCE</p>
-        <button class="world-btn" style="border-color:#00f0ff; color:#00f0ff;" onclick="giristenTemaya()">START GAME</button>
+        <h1>PERTHSANTA X DOMIIA ARCADE</h1>
+        <p style="color: #00f0ff;">Explore 4 iconic series universes! Run, jump, dodge unique obstacles, and collect coins. Reach the end to claim your exclusive arcade ticket!</p>
+        <button class="world-btn" style="border-color:#00f0ff; color:#00f0ff; box-shadow: 0 0 20px rgba(0,240,255,0.5);" onclick="giristenTemaya()">START GAME</button>
     </div>
 
     <div id="temaMenu" class="menu-panel hidden">
-        <h1>SELECT WORLD</h1>
-        <p>Explore thematic levels with unique obstacles</p>
+        <h1 style="font-size:24px; color:#00f0ff; text-shadow:2px 2px #ff00ff;">SELECT WORLD</h1>
+        <p>Each world features completely unique themes & obstacles!</p>
         <button class="world-btn" onclick="temaSec(1)">1. Love You Teacher</button>
         <button class="world-btn" onclick="temaSec(2)">2. Perfect 10 Liners</button>
         <button class="world-btn" onclick="temaSec(3)">3. Real Life</button>
         <button class="world-btn" onclick="temaSec(4)">4. Me and Thee</button>
-        <br>
-        <button onclick="backToStart()" style="border-color:#7f8c8d; color:#7f8c8d; background:transparent; cursor:pointer; font-size:12px; padding:8px 18px; margin-top:10px; border-radius:4px;">BACK</button>
+        <button onclick="backToStart()" style="margin-top:20px; padding:10px 20px; background:transparent; border:2px solid #fff; color:#fff; cursor:pointer; font-family:inherit; font-weight:bold;">↩ BACK</button>
     </div>
 
     <div id="karakterMenu" class="menu-panel hidden">
-        <h1 id="temaBaslik">SELECT CHARACTER</h1>
-        <p>Choose your hero to deploy onto the track</p>
+        <h1 id="temaBaslik" style="font-size:24px;">HERO</h1>
+        <p>Choose your character to deploy</p>
         <div id="karakterButonlari"></div>
         <br>
-        <button onclick="backToWorlds()" style="border-color:#e74c3c; color:#e74c3c; background:transparent; cursor:pointer; padding:8px 18px; border-radius:4px;">BACK</button>
+        <button onclick="backToWorlds()" style="margin-top:20px; padding:10px 20px; background:transparent; border:2px solid #fff; color:#fff; cursor:pointer; font-family:inherit; font-weight:bold;">↩ BACK</button>
     </div>
 
     <div id="endScreen" class="menu-panel hidden">
         <h1>STAGE CLEAR!</h1>
-        <div class="ticket">
-            <div class="ticket-header">ARCADE ADMISSION</div>
-            <img id="tktCharImg" src="" style="float: right; width: 50px; height: 65px; border: 3px solid #000; background: rgba(0,0,0,0.05); image-rendering: pixelated; margin-left: 10px;" alt="Hero">
-            <div class="ticket-row"><span>WORLD:</span> <span id="tktWorld" style="float:right; font-weight:bold;">-</span></div>
-            <div class="ticket-row"><span>HERO:</span> <span id="tktHero" style="float:right; font-weight:bold; color:#c0392b;">-</span></div>
-            <div class="ticket-row"><span>COINS COLLECTED:</span> <span id="tktCoins" style="float:right; font-weight:bold; color:#d35400;">0 🪙</span></div>
-            <div class="ticket-row"><span>TIME RESULT:</span> <span id="tktTime" style="float:right; font-weight:bold;">-</span></div>
-            <div class="ticket-row"><span>STATUS:</span> <span style="color:#27ae60; float:right; font-weight:bold;">VERIFIED ✔</span></div>
-            <div style="clear: both;"></div>
-            <div class="barcode">||| | || |||| | ||| |</div>
+        <div style="background:#f1c40f; color:#000; padding:15px; border:4px dashed #000; text-align:left; margin:15px auto; max-width:350px;">
+            <div style="text-align:center; font-size:18px; border-bottom:3px double #000; padding-bottom:8px; margin-bottom:12px; font-weight:bold;">ARCADE ADMISSION</div>
+            <img id="tktCharImg" src="" style="float:right; width:50px; height:65px; border:2px solid #000; image-rendering:pixelated; margin-left:10px; background:#fff;">
+            <div style="margin:8px 0; font-size:14px;"><b>WORLD:</b> <span id="tktWorld" style="float:right;">-</span></div>
+            <div style="margin:8px 0; font-size:14px;"><b>HERO:</b> <span id="tktHero" style="float:right; color:#c0392b;">-</span></div>
+            <div style="margin:8px 0; font-size:14px;"><b>COINS:</b> <span id="tktCoins" style="float:right;">0</span></div>
+            <div style="margin:8px 0; font-size:14px;"><b>TIME:</b> <span id="tktTime" style="float:right;">-</span></div>
+            <div style="clear:both;"></div>
         </div>
-        <button style="border-color:#1da1f2; color:#1da1f2; background:transparent; cursor:pointer;" onclick="shareOnTwitter()">🎟️ TWEET MY TIME 🎟️</button>
-        <br>
-        <button onclick="backToMenuFromEnd()" style="border-color:#fff; color:#fff; margin-top:12px; font-size:11px; padding:6px 12px; background:transparent; cursor:pointer;">PLAY AGAIN</button>
+        
+        <div class="screenshot-note">📸 DON'T FORGET TO TAKE A SCREENSHOT OF YOUR TICKET! 📸</div>
+        
+        <button class="world-btn" style="border-color:#1da1f2; background:#1da1f2; color:#fff; box-shadow:none; padding:12px;" onclick="shareOnTwitter()">🎟️ TWEET MY SCORE</button>
+        <button onclick="backToMenuFromEnd()" style="margin-top:10px; padding:10px 20px; background:transparent; border:2px solid #fff; color:#fff; cursor:pointer; font-family:inherit; font-weight:bold;">PLAY AGAIN</button>
     </div>
+</div>
 
-    <canvas id="gameCanvas" width="900" height="420"></canvas>
+<canvas id="gameCanvas"></canvas>
 
-    <div id="mobile-controls">
-        <div class="dpad-group">
-            <div class="dpad-btn" id="btn-left">◀</div>
-            <div class="dpad-btn" id="btn-right">▶</div>
-        </div>
-        <div class="action-btn" id="btn-jump">A</div>
+<div id="game-hud">
+    <button class="back-btn-ingame" onclick="backFromGame()">↩ BACK</button>
+    <div class="hud-text" id="hud-lives">LIVES: ❤️❤️❤️</div>
+    <div class="hud-text" id="hud-coins">COINS: 🪙 0</div>
+</div>
+
+<div id="mobile-controls">
+    <div class="dpad-group">
+        <div class="dpad-btn" id="btn-left">◀</div>
+        <div class="dpad-btn" id="btn-right">▶</div>
     </div>
+    <div class="action-btn" id="btn-jump">A</div>
 </div>
 
 <script>
@@ -125,79 +127,68 @@ const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
 let secilenTema = 1; let secilenKarakter = 0; let oyunAktif = false;
-let startTime = 0; let finalTime = 0; let isMuted = false;
-let cameraX = 0;
-let oyuncuCan = 3; let toplananPara = 0;
+let startTime = 0; let finalTime = 0;
+let cameraX = 0; let oyuncuCan = 3; let toplananPara = 0;
 let baseCharacterName = "";
 
 const temaAyarlari = {
-    1: { isim: "Love You Teacher", zeminRengi: "#6d4c41", zeminCizgi: "#ffb74d", screenBg: "linear-gradient(180deg, #2d1f1e 0%, #0d0908 100%)", panelGlow: "#ffb74d", skyColor: "#fed7aa" }, 
-    2: { isim: "Perfect 10 Liners", zeminRengi: "#37474f", zeminCizgi: "#cfd8dc", screenBg: "linear-gradient(180deg, #171b22 0%, #090a0d 100%)", panelGlow: "#00f0ff", skyColor: "#ccfbf1" }, 
-    3: { isim: "Real Life", zeminRengi: "#1c1d22", zeminCizgi: "#ff5722", screenBg: "linear-gradient(180deg, #0c0e17 0%, #05070a 100%)", panelGlow: "#ff5722", skyColor: "#ffedd5" },          
-    4: { isim: "Me and Thee", zeminRengi: "#1a237e", zeminCizgi: "#ffd54f", screenBg: "linear-gradient(180deg, #0a0912 0%, #040408 100%)", panelGlow: "#ffd54f", skyColor: "#fef08a" }          
+    1: { isim: "Love You Teacher", zeminRengi: "#6d4c41", zeminCizgi: "#ffb74d", screenBg: "#2d1f1e", skyColor: "#ffedd5" }, 
+    2: { isim: "Perfect 10 Liners", zeminRengi: "#37474f", zeminCizgi: "#cfd8dc", screenBg: "#171b22", skyColor: "#ccfbf1" }, 
+    3: { isim: "Real Life", zeminRengi: "#1c1d22", zeminCizgi: "#ff5722", screenBg: "#0c0e17", skyColor: "#ffedd5" },          
+    4: { isim: "Me and Thee", zeminRengi: "#1a237e", zeminCizgi: "#ffd54f", screenBg: "#0a0912", skyColor: "#fef08a" }          
 };
 
 const karakterIsimleri = {
     1: ["Pobmek", "Solar"], 2: ["Yotha", "Gun"], 3: ["Perth", "Santa", "Domiia"], 4: ["Tawan", "Aran"]
 };
 
-const bgMusic = new Audio("arcade_music.mp3"); bgMusic.loop = true;
-const jumpSound = new Audio("jump_effect.mov");
-
-function toggleMute() { isMuted = !isMuted; bgMusic.muted = isMuted; jumpSound.muted = isMuted; }
-
-let oyuncu = { x: 80, y: 200, w: 40, h: 55, vy: 0, vx: 0, yerde: false, bakisYonu: "sag" };
-const yercekimi = 0.5;
-
-function drawMenuBackground() {
-    let overlay = document.getElementById("bg-overlay");
-    overlay.innerHTML = '<canvas id="bg-pattern-canvas" style="display:block; width:100%; height:100%; opacity:0.15; position:absolute;"></canvas>';
-    let patCanvas = document.getElementById("bg-pattern-canvas");
-    if(!patCanvas) return;
-    patCanvas.width = window.innerWidth; patCanvas.height = window.innerHeight;
-    let pCtx = patCanvas.getContext("2d");
-    
-    // Draw classic retro layout markings
-    pCtx.strokeStyle = "#00f0ff"; pCtx.lineWidth = 3;
-    for(let i=40; i<patCanvas.width; i+=160) {
-        pCtx.strokeRect(i, 60, 90, 70); pCtx.strokeRect(i, 240, 90, 70);
-    }
-    pCtx.fillStyle = "#9d17f7";
-    for(let x=20; x<patCanvas.width; x+=60) {
-        for(let y=20; y<patCanvas.height; y+=60) {
-            pCtx.fillRect(x, y, 6, 6);
-        }
+// PRELOAD CHARACTER SPRITES FROM USER UPLOADS
+const gorselYukleyici = { karakterler: { 1: [], 2: [], 3: [], 4: [] } };
+for(let t=1; t<=4; t++) {
+    let kSayisi = t === 3 ? 3 : 2;
+    for(let k=0; k<kSayisi; k++) {
+        let kAd = karakterIsimleri[t][k].toLowerCase();
+        let yuru = new Image(); yuru.src = `${kAd}_yuru.jpg`;
+        let zipla = new Image(); zipla.src = `${kAd}_zipla.jpg`;
+        gorselYukleyici.karakterler[t].push({ yuru: yuru, zipla: zipla });
     }
 }
-window.addEventListener("load", drawMenuBackground);
-window.addEventListener("resize", drawMenuBackground);
 
+let oyuncu = { x: 80, y: 0, w: 45, h: 65, vy: 0, vx: 0, yerde: false, bakisYonu: "sag" };
+const yercekimi = 0.6;
+
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+
+function updateHUD() {
+    document.getElementById("hud-lives").innerText = "LIVES: " + "❤️".repeat(oyuncuCan);
+    document.getElementById("hud-coins").innerText = `COINS: 🪙 ${toplananPara}`;
+}
+
+// MENU NAVIGATION LOGIC
 function giristenTemaya() { document.getElementById("girisEkrani").classList.add("hidden"); document.getElementById("temaMenu").classList.remove("hidden"); }
-function backToStart() { document.getElementById("temaMenu").classList.add("hidden"); document.getElementById("girisEkrani").classList.remove("hidden"); drawMenuBackground(); }
+function backToStart() { document.getElementById("temaMenu").classList.add("hidden"); document.getElementById("girisEkrani").classList.remove("hidden"); document.getElementById("bg-overlay").style.display = "block"; }
 function backToWorlds() { document.getElementById("karakterMenu").classList.add("hidden"); document.getElementById("temaMenu").classList.remove("hidden"); }
 
-// CRITICAL GAME OVER LIVE STAGE RETREAT TRIGGER
 function backFromGame() {
-    oyunAktif = false; canvas.style.display = "none";
+    oyunAktif = false;
+    canvas.style.display = "none";
+    document.getElementById("ui-layer").style.display = "flex";
+    document.getElementById("game-hud").style.display = "none";
     document.getElementById("mobile-controls").classList.remove("active");
-    document.getElementById("bg-overlay").style.filter = "none";
     document.getElementById("karakterMenu").classList.remove("hidden");
+    document.getElementById("bg-overlay").style.display = "block";
 }
 
 function temaSec(temaNo) {
     secilenTema = temaNo; document.getElementById("temaMenu").classList.add("hidden");
-    let currentTheme = temaAyarlari[temaNo];
-    document.getElementById("bg-overlay").innerHTML = ""; 
-    document.getElementById("bg-overlay").style.background = currentTheme.screenBg;
+    document.getElementById("bg-overlay").style.background = temaAyarlari[temaNo].screenBg;
     
-    let panels = document.querySelectorAll(".menu-panel");
-    panels.forEach(p => {
-        p.style.borderColor = currentTheme.panelGlow;
-        p.style.boxShadow = `0 0 25px ${currentTheme.panelGlow}, inset 0 0 15px ${currentTheme.panelGlow}44`;
-    });
-
     const kButonAlani = document.getElementById("karakterButonlari"); kButonAlani.innerHTML = "";
-    document.getElementById("temaBaslik").innerText = `${currentTheme.isim.toUpperCase()}`;
+    document.getElementById("temaBaslik").innerText = `${temaAyarlari[temaNo].isim}`;
     let kListesi = karakterIsimleri[temaNo];
     
     for(let i = 0; i < kListesi.length; i++) { 
@@ -208,223 +199,234 @@ function temaSec(temaNo) {
 }
 
 function oyunuBaslat(karakterNo) {
-    secilenKarakter = karakterNo; document.getElementById("karakterMenu").classList.add("hidden");
-    canvas.style.display = "block"; document.getElementById("muteBtn").classList.remove("hidden");
+    secilenKarakter = karakterNo; 
+    document.getElementById("ui-layer").style.display = "none";
+    document.getElementById("bg-overlay").style.display = "none"; // Hide start screen bg for game
+    
+    resizeCanvas();
+    canvas.style.display = "block"; 
+    document.getElementById("game-hud").style.display = "block";
     document.getElementById("mobile-controls").classList.add("active"); 
+    
     oyunAktif = true; startTime = Date.now(); oyuncuCan = 3; toplananPara = 0;
-    oyuncu.x = 80; oyuncu.y = 150; oyuncu.vy = 0; oyuncu.vx = 0; cameraX = 0;
+    oyuncu.x = 80; oyuncu.y = canvas.height / 2; oyuncu.vy = 0; oyuncu.vx = 0; cameraX = 0;
     baseCharacterName = karakterIsimleri[secilenTema][secilenKarakter];
+    updateHUD();
     
     Object.keys(haritalar).forEach(key => { haritalar[key].paralar.forEach(p => p.collected = false); });
+    
     oyunDongusu();
 }
 
 let tuslar = {};
 window.addEventListener("keydown", e => { tuslar[e.code] = true; });
 window.addEventListener("keyup", e => { tuslar[e.code] = false; });
-
-const setupTouch = (id, key) => {
-    const el = document.getElementById(id);
-    el.addEventListener("touchstart", (e) => { e.preventDefault(); tuslar[key] = true; });
-    el.addEventListener("touchend", (e) => { e.preventDefault(); tuslar[key] = false; });
-    el.addEventListener("touchcancel", (e) => { e.preventDefault(); tuslar[key] = false; });
+const bindTouch = (id, key) => {
+    let el = document.getElementById(id);
+    el.addEventListener("touchstart", e => { e.preventDefault(); tuslar[key] = true; });
+    el.addEventListener("touchend", e => { e.preventDefault(); tuslar[key] = false; });
 };
-setupTouch("btn-left", "ArrowLeft");
-setupTouch("btn-right", "ArrowRight");
-setupTouch("btn-jump", "Space");
+bindTouch("btn-left", "ArrowLeft"); bindTouch("btn-right", "ArrowRight"); bindTouch("btn-jump", "Space");
 
-function carpismaVarMi(k1, k2) { return k1.x < k2.x + k2.w && k1.x + k1.w > k2.x && k1.y < k2.y + k2.h && k1.y + k1.h > k2.y; }
+function carpisma(k1, k2) { return k1.x < k2.x + k2.w && k1.x + k1.w > k2.x && k1.y < k2.y + k2.h && k1.y + k1.h > k2.y; }
 
+// UNIQUE MAPS & VARIOUS OBSTACLES FOR EVERY THEME
 const haritalar = {
-    "1_0": { zeminler: [{x: 0, y: 360, w: 900, h: 60}, {x: 1050, y: 360, w: 800, h: 60}, {x: 2000, y: 300, w: 700, h: 120}, {x: 2850, y: 360, w: 800, h: 60}, {x: 3800, y: 360, w: 900, h: 60}, {x: 4850, y: 300, w: 750, h: 120}], engeller: [{x: 500, y: 315, w: 45, h: 45}, {x: 1300, y: 315, w: 45, h: 45}, {x: 2300, y: 255, w: 45, h: 45}, {x: 3200, y: 315, w: 45, h: 45}, {x: 4200, y: 315, w: 45, h: 45}], paralar: [{x: 300, y: 280, w: 22, h: 22}, {x: 650, y: 280, w: 22, h: 22}, {x: 1200, y: 280, w: 22, h: 22}, {x: 1600, y: 280, w: 22, h: 22}, {x: 2500, y: 200, w: 22, h: 22}], bitis: {x: 5450, y: 220, w: 45, h: 80} },
-    "1_1": { zeminler: [{x: 0, y: 360, w: 700, h: 60}, {x: 850, y: 300, w: 400, h: 40}, {x: 1400, y: 360, w: 900, h: 60}, {x: 2450, y: 300, w: 500, h: 40}, {x: 3100, y: 360, w: 1200, h: 60}, {x: 4450, y: 300, w: 1100, h: 60}], engeller: [{x: 400, y: 315, w: 45, h: 45}, {x: 1050, y: 255, w: 45, h: 45}, {x: 1700, y: 315, w: 45, h: 45}, {x: 2650, y: 255, w: 45, h: 45}, {x: 3600, y: 315, w: 45, h: 45}], paralar: [{x: 250, y: 280, w: 22, h: 22}, {x: 950, y: 220, w: 22, h: 22}, {x: 1550, y: 280, w: 22, h: 22}, {x: 2550, y: 220, w: 22, h: 22}, {x: 3350, y: 280, w: 22, h: 22}], bitis: {x: 5400, y: 220, w: 45, h: 80} },
-    "2_0": { zeminler: [{x: 0, y: 360, w: 1000, h: 60}, {x: 1150, y: 360, w: 800, h: 60}, {x: 2100, y: 360, w: 900, h: 60}, {x: 3150, y: 360, w: 700, h: 60}, {x: 4000, y: 360, w: 1600, h: 60}], engeller: [{x: 500, y: 315, w: 45, h: 45}, {x: 1450, y: 315, w: 45, h: 45}, {x: 2400, y: 315, w: 45, h: 45}, {x: 3400, y: 315, w: 45, h: 45}, {x: 4400, y: 315, w: 45, h: 45}], paralar: [{x: 300, y: 280, w: 22, h: 22}, {x: 750, y: 280, w: 22, h: 22}, {x: 1300, y: 280, w: 22, h: 22}, {x: 1700, y: 280, w: 22, h: 22}, {x: 2600, y: 280, w: 22, h: 22}], bitis: {x: 5450, y: 280, w: 45, h: 80} },
-    "2_1": { zeminler: [{x: 0, y: 360, w: 600, h: 60}, {x: 700, y: 300, w: 300, h: 30}, {x: 1100, y: 240, w: 300, h: 30}, {x: 1500, y: 300, w: 400, h: 30}, {x: 2000, y: 360, w: 1000, h: 60}, {x: 3100, y: 300, w: 400, h: 30}, {x: 3600, y: 360, w: 2000, h: 60}], engeller: [{x: 450, y: 315, w: 45, h: 45}, {x: 800, y: 255, w: 45, h: 45}, {x: 1200, y: 195, w: 45, h: 45}, {x: 1650, y: 255, w: 45, h: 45}, {x: 2400, y: 315, w: 45, h: 45}], paralar: [{x: 200, y: 280, w: 22, h: 22}, {x: 850, y: 220, w: 22, h: 22}, {x: 1250, y: 160, w: 22, h: 22}, {x: 1700, y: 220, w: 22, h: 22}, {x: 2500, y: 280, w: 22, h: 22}], bitis: {x: 5450, y: 280, w: 45, h: 80} },
-    "3_0": { zeminler: [{x: 0, y: 360, w: 5500, h: 60}], engeller: [{x: 600, y: 315, w: 45, h: 45}, {x: 1200, y: 315, w: 45, h: 45}, {x: 1800, y: 315, w: 45, h: 45}, {x: 2400, y: 315, w: 45, h: 45}, {x: 3000, y: 315, w: 45, h: 45}], paralar: [{x: 400, y: 280, w: 22, h: 22}, {x: 900, y: 280, w: 22, h: 22}, {x: 1500, y: 280, w: 22, h: 22}, {x: 2100, y: 280, w: 22, h: 22}], bitis: {x: 5400, y: 280, w: 45, h: 80} },
-    "3_1": { zeminler: [{x: 0, y: 360, w: 5500, h: 60}], engeller: [{x: 700, y: 315, w: 45, h: 45}, {x: 1400, y: 315, w: 45, h: 45}, {x: 2100, y: 315, w: 45, h: 45}, {x: 2800, y: 315, w: 45, h: 45}], paralar: [{x: 500, y: 280, w: 22, h: 22}, {x: 1000, y: 280, w: 22, h: 22}, {x: 1700, y: 280, w: 22, h: 22}], bitis: {x: 5400, y: 280, w: 45, h: 80} },
-    "4_0": { zeminler: [{x: 0, y: 360, w: 5500, h: 60}], engeller: [{x: 800, y: 315, w: 45, h: 45}, {x: 1600, y: 315, w: 45, h: 45}, {x: 2400, y: 315, w: 45, h: 45}, {x: 3200, y: 315, w: 45, h: 45}], paralar: [{x: 400, y: 280, w: 22, h: 22}, {x: 1200, y: 280, w: 22, h: 22}, {x: 2000, y: 280, w: 22, h: 22}], bitis: {x: 5400, y: 280, w: 45, h: 80} },
-    "4_1": { zeminler: [{x: 0, y: 360, w: 5500, h: 60}], engeller: [{x: 900, y: 315, w: 45, h: 45}, {x: 1800, y: 315, w: 45, h: 45}, {x: 2700, y: 315, w: 45, h: 45}], paralar: [{x: 500, y: 280, w: 22, h: 22}, {x: 1300, y: 280, w: 22, h: 22}, {x: 2200, y: 280, w: 22, h: 22}], bitis: {x: 5400, y: 280, w: 45, h: 80} },
-    "4_2": { zeminler: [{x: 0, y: 360, w: 5500, h: 60}], engeller: [{x: 1000, y: 315, w: 45, h: 45}, {x: 2000, y: 315, w: 45, h: 45}], paralar: [{x: 600, y: 280, w: 22, h: 22}, {x: 1500, y: 280, w: 22, h: 22}], bitis: {x: 5400, y: 280, w: 45, h: 80} }
+    // THEME 1: Love You Teacher (School) - Desk & Toy Cube
+    "1_0": { zeminler: [{x: 0, w: 900}, {x: 1100, w: 800}, {x: 2100, w: 700}, {x: 3000, w: 800}, {x: 4000, w: 1000}], engeller: [{x: 500, tip: "masa"}, {x: 1300, tip: "kup"}, {x: 2300, tip: "masa"}, {x: 3200, tip: "kup"}, {x: 4300, tip: "masa"}], paralar: [{x: 300}, {x: 700}, {x: 1200}, {x: 1600}, {x: 2500}, {x: 3500}], bitis: {x: 4800} },
+    "1_1": { zeminler: [{x: 0, w: 700}, {x: 900, w: 400}, {x: 1500, w: 900}, {x: 2600, w: 500}, {x: 3300, w: 1500}], engeller: [{x: 400, tip: "kup"}, {x: 1100, tip: "masa"}, {x: 1800, tip: "kup"}, {x: 2800, tip: "masa"}, {x: 3600, tip: "kup"}], paralar: [{x: 250}, {x: 1000}, {x: 1650}, {x: 2700}, {x: 3500}], bitis: {x: 4600} },
+    
+    // THEME 2: Perfect 10 Liners (Campus) - Draft Table & Gear
+    "2_0": { zeminler: [{x: 0, w: 1000}, {x: 1200, w: 800}, {x: 2200, w: 900}, {x: 3300, w: 1600}], engeller: [{x: 500, tip: "cizim"}, {x: 1500, tip: "disli"}, {x: 2500, tip: "cizim"}, {x: 3500, tip: "disli"}], paralar: [{x: 300}, {x: 800}, {x: 1350}, {x: 1800}, {x: 2700}, {x: 3700}], bitis: {x: 4700} },
+    "2_1": { zeminler: [{x: 0, w: 800}, {x: 1000, w: 600}, {x: 1800, w: 800}, {x: 2800, w: 1800}], engeller: [{x: 450, tip: "disli"}, {x: 1200, tip: "cizim"}, {x: 2000, tip: "disli"}, {x: 3000, tip: "cizim"}], paralar: [{x: 200}, {x: 900}, {x: 1400}, {x: 2100}, {x: 3200}], bitis: {x: 4400} },
+    
+    // THEME 3: Real Life (Bangkok) - TukTuk & Cone
+    "3_0": { zeminler: [{x: 0, w: 1200}, {x: 1400, w: 1000}, {x: 2600, w: 2000}], engeller: [{x: 600, tip: "tuktuk"}, {x: 1200, tip: "koni"}, {x: 1800, tip: "tuktuk"}, {x: 2400, tip: "koni"}, {x: 3000, tip: "tuktuk"}, {x: 3600, tip: "koni"}], paralar: [{x: 400}, {x: 900}, {x: 1600}, {x: 2100}, {x: 2800}, {x: 3400}], bitis: {x: 4300} },
+    "3_1": { zeminler: [{x: 0, w: 900}, {x: 1100, w: 800}, {x: 2100, w: 2500}], engeller: [{x: 700, tip: "koni"}, {x: 1400, tip: "tuktuk"}, {x: 2100, tip: "koni"}, {x: 2800, tip: "tuktuk"}, {x: 3500, tip: "koni"}], paralar: [{x: 500}, {x: 1000}, {x: 1700}, {x: 2400}, {x: 3100}], bitis: {x: 4400} },
+    "3_2": { zeminler: [{x: 0, w: 1500}, {x: 1700, w: 3000}], engeller: [{x: 800, tip: "tuktuk"}, {x: 1600, tip: "koni"}, {x: 2400, tip: "tuktuk"}, {x: 3200, tip: "koni"}], paralar: [{x: 400}, {x: 1200}, {x: 2000}, {x: 2800}], bitis: {x: 4500} },
+
+    // THEME 4: Me and Thee (Studio) - Rack & Mirror
+    "4_0": { zeminler: [{x: 0, w: 1100}, {x: 1300, w: 900}, {x: 2400, w: 2000}], engeller: [{x: 600, tip: "aski"}, {x: 1100, tip: "ayna"}, {x: 1700, tip: "aski"}, {x: 2300, tip: "ayna"}, {x: 3000, tip: "aski"}], paralar: [{x: 400}, {x: 1200}, {x: 1900}, {x: 2600}, {x: 3400}], bitis: {x: 4200} },
+    "4_1": { zeminler: [{x: 0, w: 800}, {x: 1000, w: 1200}, {x: 2400, w: 2000}], engeller: [{x: 500, tip: "ayna"}, {x: 1300, tip: "aski"}, {x: 2100, tip: "ayna"}, {x: 2900, tip: "aski"}], paralar: [{x: 300}, {x: 1100}, {x: 1800}, {x: 2600}, {x: 3300}], bitis: {x: 4200} }
 };
 
 function oyunDongusu() {
     if (!oyunAktif) return;
     
-    oyContinuity = true;
+    let harita = haritalar[`${secilenTema}_${secilenKarakter}`];
+    let ch = canvas.height;
+    let baseH = ch * 0.75; // Ground level
+
+    // Physics
     oyuncu.vx = 0;
-    if (tuslar["ArrowRight"]) { oyuncu.vx = 4.8; oyuncu.bakisYonu = "sag"; }
-    if (tuslar["ArrowLeft"]) { oyuncu.vx = -4.8; oyuncu.bakisYonu = "sol"; }
-    if ((tuslar["Space"] || tuslar["ArrowUp"]) && oyuncu.yerde) { oyuncu.vy = -13.5; oyuncu.yerde = false; jumpSound.currentTime = 0; jumpSound.play().catch(e=>{}); }
+    if (tuslar["ArrowRight"]) { oyuncu.vx = 5.5; oyuncu.bakisYonu = "sag"; }
+    if (tuslar["ArrowLeft"]) { oyuncu.vx = -5.5; oyuncu.bakisYonu = "sol"; }
+    if ((tuslar["Space"] || tuslar["ArrowUp"]) && oyuncu.yerde) { oyuncu.vy = -15; oyuncu.yerde = false; }
 
     oyuncu.vy += yercekimi; oyuncu.x += oyuncu.vx; oyuncu.y += oyuncu.vy;
     if (oyuncu.x < 0) oyuncu.x = 0;
 
-    if (oyuncu.x > (canvas.width / 2)) { cameraX = oyuncu.x - (canvas.width / 2); }
+    // Camera follow player smoothly
+    if (oyuncu.x > (canvas.width / 2.5)) { cameraX = oyuncu.x - (canvas.width / 2.5); }
 
-    let harita = haritalar[`${secilenTema}_${secilenKarakter}`];
     oyuncu.yerde = false;
-    
-    harita.zeminler.forEach(zemin => {
-        if (carpismaVarMi(oyuncu, zemin) && oyuncu.vy > 0 && (oyuncu.y + oyuncu.h - oyuncu.vy) <= zemin.y) { oyuncu.y = zemin.y - oyuncu.h; oyuncu.vy = 0; oyuncu.yerde = true; }
+
+    // Map Ground Collision
+    harita.zeminler.forEach(z => {
+        let zRect = {x: z.x, y: baseH, w: z.w, h: ch - baseH};
+        if (carpisma(oyuncu, zRect) && oyuncu.vy > 0 && (oyuncu.y + oyuncu.h - oyuncu.vy) <= zRect.y + 10) {
+            oyuncu.y = zRect.y - oyuncu.h; oyuncu.vy = 0; oyuncu.yerde = true;
+        }
     });
 
+    // Coins Logic
     if(harita.paralar) {
-        harita.paralar.forEach(para => {
-            if (!para.collected && carpismaVarMi(oyuncu, para)) { para.collected = true; toplananPara++; }
+        harita.paralar.forEach(p => {
+            let pRect = {x: p.x, y: baseH - 120, w: 25, h: 25};
+            if (!p.collected && carpisma(oyuncu, pRect)) { p.collected = true; toplananPara++; updateHUD(); }
         });
     }
 
+    // Death / Obstacles Logic
     let hasDied = false;
-    harita.engeller.forEach(engel => { 
-        let fairHitbox = { x: engel.x + 6, y: engel.y + 6, w: engel.w - 12, h: engel.h - 6 };
-        if (carpismaVarMi(oyuncu, fairHitbox)) hasDied = true;
+    harita.engeller.forEach(e => { 
+        let ew = (e.tip === "tuktuk" || e.tip === "masa") ? 80 : 45;
+        let eh = (e.tip === "ayna" || e.tip === "aski") ? 80 : 50;
+        let eRect = { x: e.x + 8, y: baseH - eh + 8, w: ew - 16, h: eh - 8 }; // Adjusted Hitbox
+        if (carpisma(oyuncu, eRect)) hasDied = true;
     });
-    if (oyuncu.y > canvas.height) hasDied = true;
+    if (oyuncu.y > ch) hasDied = true;
 
+    // CHECKPOINT SYSTEM
     if (hasDied) {
         oyuncuCan--;
+        updateHUD();
         if (oyuncuCan > 0) {
-            alert(`❤️ Ouch! ${oyuncuCan} LIVES LEFT.`);
-            oyuncu.x = cameraX + 60; oyuncu.y = 150; oyuncu.vy = 0;
+            // Respawn slightly back in the air safely
+            oyuncu.x = cameraX + 80; oyuncu.y = baseH - 200; oyuncu.vy = 0; 
         } else {
-            alert("❌ GAME OVER! Sending you to the START OF THIS LEVEL!");
             oyuncuCan = 3;
-            oyuncu.x = 80; oyuncu.y = 150; oyuncu.vy = 0; cameraX = 0;
+            oyuncu.x = 80; oyuncu.y = baseH - 200; oyuncu.vy = 0; cameraX = 0;
             if(harita.paralar) harita.paralar.forEach(p => p.collected = false);
+            updateHUD();
         }
     }
 
-    if (carpismaVarMi(oyuncu, harita.bitis)) {
-        finalTime = ((Date.now() - startTime) / 1000).toFixed(2); oyunAktif = false; canvas.style.display = "none";
-        document.getElementById("muteBtn").classList.add("hidden");
+    // Goal
+    let bitisRect = {x: harita.bitis.x, y: baseH - 100, w: 60, h: 100};
+    if (carpisma(oyuncu, bitisRect)) {
+        finalTime = ((Date.now() - startTime) / 1000).toFixed(2); oyunAktif = false;
+        canvas.style.display = "none"; document.getElementById("game-hud").style.display = "none";
         document.getElementById("mobile-controls").classList.remove("active");
-        document.getElementById("bg-overlay").style.filter = "blur(5px)";
+        document.getElementById("ui-layer").style.display = "flex";
+        document.getElementById("bg-overlay").style.display = "block";
         
         document.getElementById("tktWorld").innerText = temaAyarlari[secilenTema].isim;
         document.getElementById("tktHero").innerText = baseCharacterName;
         document.getElementById("tktCoins").innerText = `${toplananPara} 🪙`;
         document.getElementById("tktTime").innerText = `${finalTime} SEC`;
-        
+        document.getElementById("tktCharImg").src = gorselYukleyici.karakterler[secilenTema][secilenKarakter].yuru.src;
         document.getElementById("endScreen").classList.remove("hidden");
         return;
     }
 
+    // --- DRAWING CONTEXT ---
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    document.getElementById("game-container").style.background = temaAyarlari[secilenTema].screenBg;
-
-    ctx.save();
-    ctx.translate(-cameraX, 0);
-
     let currentStyle = temaAyarlari[secilenTema];
 
-    // --- PROCEDURAL GENERATED LANDSCAPE DRAWER ENGINE ---
+    // BACKGROUND
     ctx.fillStyle = currentStyle.skyColor;
-    ctx.fillRect(cameraX, 0, canvas.width, canvas.height);
-    
-    // Grid Lines Layer
-    ctx.strokeStyle = "rgba(255,255,255,0.08)"; ctx.lineWidth = 1;
-    for(let gx = Math.floor(cameraX/40)*40; gx < cameraX + canvas.width; gx += 40) {
-        ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, canvas.height); ctx.stroke();
-    }
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    if (secilenTema === 1) { // Love You Teacher
-        ctx.fillStyle = "rgba(109,76,65,0.15)";
-        ctx.fillRect(cameraX + 200, 80, 140, 100);
-        ctx.fillStyle = "#ffb74d"; ctx.font = "24px monospace"; ctx.fillText("A B C", cameraX + 235, 140);
-        ctx.strokeStyle = "#ffb74d"; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(cameraX, 40); ctx.lineTo(cameraX+canvas.width, 40); ctx.stroke();
-    } else if (secilenTema === 2) { // Perfect 10 Liners
-        ctx.strokeStyle = "rgba(0,240,255,0.15)"; ctx.lineWidth = 3;
-        ctx.strokeRect(cameraX + 150, 60, 300, 150);
-        ctx.beginPath(); ctx.moveTo(cameraX + 150, 60); ctx.lineTo(cameraX + 450, 210); ctx.stroke();
-    } else if (secilenTema === 3) { // Real Life
-        ctx.fillStyle = "rgba(255,87,34,0.12)";
-        for(let bi=0; bi<4; bi++) { ctx.fillRect(cameraX + 80 + (bi*240), 90, 110, 270); }
-    } else if (secilenTema === 4) { // Me and Thee
-        ctx.strokeStyle = "rgba(255,213,79,0.15)"; ctx.lineWidth = 4;
-        ctx.strokeRect(cameraX + 350, 50, 140, 260);
+    ctx.save();
+    ctx.translate(-cameraX * 0.4, 0); // Background Parallax Scroll
+    if (secilenTema === 1) { 
+        ctx.fillStyle = "rgba(109,76,65,0.2)"; ctx.fillRect(200, baseH-150, 150, 100);
+        ctx.fillStyle = "#ffb74d"; ctx.font = "28px monospace"; ctx.fillText("A B C", 220, baseH-90);
+        ctx.strokeStyle = "#e74c3c"; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(0, 50); ctx.lineTo(6000, 50); ctx.stroke();
+    } else if (secilenTema === 2) { 
+        ctx.strokeStyle = "rgba(0,240,255,0.3)"; ctx.lineWidth = 4; ctx.strokeRect(300, baseH-200, 200, 120);
+        ctx.beginPath(); ctx.moveTo(300, baseH-200); ctx.lineTo(500, baseH-80); ctx.stroke();
+    } else if (secilenTema === 3) { 
+        ctx.fillStyle = "rgba(255,87,34,0.2)";
+        for(let bi=0; bi<30; bi++) { ctx.fillRect(100 + (bi*250), baseH-250, 120, 250); }
+    } else if (secilenTema === 4) { 
+        ctx.strokeStyle = "rgba(255,213,79,0.3)"; ctx.lineWidth = 6;
+        for(let mi=0; mi<15; mi++) { ctx.strokeRect(200 + (mi*350), baseH-220, 100, 200); }
     }
+    ctx.restore();
 
-    // GROUND TRACK RENDER
-    harita.zeminler.forEach(zemin => { 
-        ctx.fillStyle = currentStyle.zeminRengi; ctx.fillRect(zemin.x, zemin.y, zemin.w, zemin.h); 
-        ctx.strokeStyle = currentStyle.zeminCizgi; ctx.lineWidth = 3; ctx.strokeRect(zemin.x, zemin.y, zemin.w, zemin.h); 
+    ctx.save();
+    ctx.translate(-cameraX, 0); // Foreground Objects Camera
+
+    // DRAW GROUND
+    harita.zeminler.forEach(z => { 
+        ctx.fillStyle = currentStyle.zeminRengi; ctx.fillRect(z.x, baseH, z.w, ch-baseH); 
+        ctx.strokeStyle = currentStyle.zeminCizgi; ctx.lineWidth = 4; ctx.strokeRect(z.x, baseH, z.w, ch-baseH); 
     });
 
-    // --- ACCURATE VECTOR THEMATIC OBSTACLE DRAWER ENGINE ---
-    harita.engeller.forEach(engel => { 
-        ctx.save(); ctx.lineWidth = 3; ctx.strokeStyle = "#fff";
-        if (secilenTema === 1) { // KINDERGARTEN TOY CUBES / TABLES
-            ctx.fillStyle = "#ffb74d"; ctx.fillRect(engel.x, engel.y, engel.w, engel.h); ctx.strokeRect(engel.x, engel.y, engel.w, engel.h);
-            ctx.beginPath(); ctx.moveTo(engel.x+8, engel.y+8); ctx.lineTo(engel.x+engel.w-8, engel.y+engel.h-8); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(engel.x+engel.w-8, engel.y+8); ctx.lineTo(engel.x+8, engel.y+engel.h-8); ctx.stroke();
-        } else if (secilenTema === 2) { // ENGINEERING DRAWING DESKS / TABLES
-            ctx.fillStyle = "#cfd8dc"; ctx.fillRect(engel.x, engel.y + 12, engel.w, engel.h - 12); ctx.strokeRect(engel.x, engel.y + 12, engel.w, engel.h - 12);
-            ctx.beginPath(); ctx.moveTo(engel.x+8, engel.y+12); ctx.lineTo(engel.x+8, engel.y+engel.h); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(engel.x+engel.w-8, engel.y+12); ctx.lineTo(engel.x+engel.w-8, engel.y+engel.h); ctx.stroke();
-        } else if (secilenTema === 3) { // ROAD BARICADES
-            ctx.fillStyle = "#ff5722"; ctx.fillRect(engel.x, engel.y + 15, engel.w, engel.h - 15); ctx.strokeRect(engel.x, engel.y + 15, engel.w, engel.h - 15);
-            ctx.fillStyle = "#fff"; ctx.fillRect(engel.x + 5, engel.y + 22, engel.w - 10, 8);
-        } else if (secilenTema === 4) { // CLOTHES STUDIO RACKS
-            ctx.strokeStyle = "#ffd54f"; ctx.lineWidth = 4; ctx.strokeRect(engel.x + 10, engel.y, engel.w - 20, engel.h);
-            ctx.fillStyle = "#fff"; ctx.fillRect(engel.x, engel.y, engel.w, 6);
+    // DRAW OBSTACLES (Procedural)
+    harita.engeller.forEach(e => { 
+        ctx.lineWidth = 3; ctx.strokeStyle = "#fff";
+        let ew = (e.tip === "tuktuk" || e.tip === "masa") ? 80 : 45;
+        let eh = (e.tip === "ayna" || e.tip === "aski") ? 80 : 50;
+        let ey = baseH - eh;
+
+        if (e.tip === "masa") { 
+            ctx.fillStyle = "#8d6e63"; ctx.fillRect(e.x, ey, ew, eh); ctx.strokeRect(e.x, ey, ew, eh);
+            ctx.fillStyle = "#fff"; ctx.fillRect(e.x+10, ey+10, ew-20, 10);
+        } else if (e.tip === "kup") { 
+            ctx.fillStyle = "#e74c3c"; ctx.fillRect(e.x, ey, ew, eh); ctx.strokeRect(e.x, ey, ew, eh);
+            ctx.beginPath(); ctx.moveTo(e.x, ey); ctx.lineTo(e.x+ew, ey+eh); ctx.stroke();
+        } else if (e.tip === "cizim") { 
+            ctx.fillStyle = "#78909c"; ctx.beginPath(); ctx.moveTo(e.x, ey+eh); ctx.lineTo(e.x+20, ey); ctx.lineTo(e.x+ew, ey); ctx.lineTo(e.x+ew-20, ey+eh); ctx.fill(); ctx.stroke();
+        } else if (e.tip === "disli") { 
+            ctx.fillStyle = "#546e7a"; ctx.fillRect(e.x, ey, ew, eh); ctx.beginPath(); ctx.arc(e.x+ew/2, ey+eh/2, 12, 0, Math.PI*2); ctx.stroke();
+        } else if (e.tip === "tuktuk") { 
+            ctx.fillStyle = "#00bcd4"; ctx.fillRect(e.x, ey+15, ew, eh-15); ctx.fillStyle="#fff"; ctx.fillRect(e.x+10, ey, ew-20, 15); ctx.strokeRect(e.x, ey+15, ew, eh-15);
+        } else if (e.tip === "koni") { 
+            ctx.fillStyle = "#ff5722"; ctx.beginPath(); ctx.moveTo(e.x+ew/2, ey); ctx.lineTo(e.x+ew, ey+eh); ctx.lineTo(e.x, ey+eh); ctx.fill(); ctx.stroke();
+            ctx.fillStyle = "#fff"; ctx.fillRect(e.x+10, ey+20, ew-20, 8);
+        } else if (e.tip === "ayna") { 
+            ctx.fillStyle = "#fff"; ctx.fillRect(e.x, ey, ew, eh); ctx.strokeStyle="#ffd54f"; ctx.lineWidth=5; ctx.strokeRect(e.x, ey, ew, eh);
+        } else if (e.tip === "aski") { 
+            ctx.strokeStyle = "#ffd54f"; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(e.x+ew/2, ey); ctx.lineTo(e.x+ew/2, ey+eh); ctx.stroke(); ctx.beginPath(); ctx.moveTo(e.x, ey+10); ctx.lineTo(e.x+ew, ey+10); ctx.stroke();
         }
-        ctx.restore();
     });
     
+    // DRAW COINS
     if(harita.paralar) {
-        harita.paralar.forEach(para => {
-            if(!para.collected) {
-                ctx.fillStyle = "#f1c40f"; ctx.beginPath(); ctx.arc(para.x + 11, para.y + 11, 11, 0, Math.PI * 2); ctx.fill();
+        harita.paralar.forEach(p => {
+            if(!p.collected) {
+                let py = baseH - 120;
+                ctx.fillStyle = "#f1c40f"; ctx.beginPath(); ctx.arc(p.x + 12, py + 12, 12, 0, Math.PI * 2); ctx.fill();
                 ctx.strokeStyle = "#fff"; ctx.lineWidth = 2; ctx.stroke();
             }
         });
     }
 
-    ctx.fillStyle = "#27ae60"; ctx.fillRect(harita.bitis.x, harita.bitis.y, harita.bitis.w, harita.bitis.h);
+    // DRAW FINISH LINE
+    ctx.fillStyle = "#2ecc71"; ctx.fillRect(bitisRect.x, bitisRect.y, bitisRect.w, bitisRect.h);
+    ctx.fillStyle = "#fff"; ctx.font = "bold 20px monospace"; ctx.fillText("GOAL", bitisRect.x, bitisRect.y - 10);
 
-    // --- INTERACTIVE IN-GAME LIVE CLICKABLE BACK BUTTON ---
-    ctx.fillStyle = "#e74c3c"; ctx.fillRect(cameraX + 20, 20, 95, 35);
-    ctx.strokeStyle = "#fff"; ctx.lineWidth = 2; ctx.strokeRect(cameraX + 20, 20, 95, 35);
-    ctx.fillStyle = "#fff"; ctx.font = "bold 13px monospace"; ctx.fillText("↩ BACK", cameraX + 35, 42);
-
-    // DYNAMIC STATS OVERLAY
-    ctx.fillStyle = "#000"; ctx.font = "bold 15px monospace";
-    ctx.fillText("LIVES: " + "❤️".repeat(oyuncuCan), cameraX + 140, 42);
-    ctx.fillText(`COINS: 🪙 ${toplananPara}`, cameraX + 300, 42);
-
-    // CHARACTER RENDER MANAGEMENT
+    // DRAW PLAYER HERO
     let aktifGorsel = oyuncu.yerde ? gorselYukleyici.karakterler[secilenTema][secilenKarakter].yuru : gorselYukleyici.karakterler[secilenTema][secilenKarakter].zipla;
     if (aktifGorsel.complete && aktifGorsel.naturalWidth !== 0) {
         ctx.save();
         if (oyuncu.bakisYonu === "sol") { ctx.translate(oyuncu.x + oyuncu.w, oyuncu.y); ctx.scale(-1, 1); ctx.drawImage(aktifGorsel, 0, 0, oyuncu.w, oyuncu.h); }
         else { ctx.drawImage(aktifGorsel, oyuncu.x, oyuncu.y, oyuncu.w, oyuncu.h); }
         ctx.restore();
-    } else { ctx.fillStyle = "#f1c40f"; ctx.fillRect(oyuncu.x, oyuncu.y, oyuncu.w, oyuncu.h); ctx.strokeStyle = "#fff"; ctx.strokeRect(oyuncu.x, oyuncu.y, oyuncu.w, oyuncu.h); }
+    } else { ctx.fillStyle = "#f1c40f"; ctx.fillRect(oyuncu.x, oyuncu.y, oyuncu.w, oyuncu.h); }
 
     ctx.restore();
     requestAnimationFrame(oyunDongusu);
 }
 
-// BIND INTERACTIVE CANVAS CLICKS DIRECTLY TO TRIGGER GAME STAGE ESCAPE
-canvas.addEventListener("touchstart", function(e) {
-    let rect = canvas.getBoundingClientRect(); let touch = e.touches[0];
-    let clickX = ((touch.clientX - rect.left) / rect.width) * canvas.width;
-    let clickY = ((touch.clientY - rect.top) / rect.height) * canvas.height;
-    if (clickX >= 20 && clickX <= 115 && clickY >= 20 && clickY <= 55) { backFromGame(); }
-});
-canvas.addEventListener("click", function(e) {
-    let rect = canvas.getBoundingClientRect();
-    let clickX = ((e.clientX - rect.left) / rect.width) * canvas.width;
-    let clickY = ((e.clientY - rect.top) / rect.height) * canvas.height;
-    if (clickX >= 20 && clickX <= 115 && clickY >= 20 && clickY <= 55) { backFromGame(); }
-});
-
+// TWITTER SHARE SYSTEM WITH HASHTAGS
 function shareOnTwitter() {
-    let tName = temaAyarlari[secilenTema].isim;
     let currentUrl = window.location.href; 
-    let challengeText = `🎮 MISSION ACCOMPLISHED! 🎮\n\ni just cleared the "${tName}" world playing as ${baseCharacterName} and collected ${toplananPara} coins! ✨\n\nthink you can beat me? take the challenge! 👇\n${currentUrl}`;
-    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(challengeText)}`, '_blank');
+    let challengeText = `🎮 MISSION ACCOMPLISHED! 🎮\n\ni just cleared the "${temaAyarlari[secilenTema].isim}" world playing as ${baseCharacterName} and collected ${toplananPara} coins in ${finalTime} seconds! ✨\n\nthink you can beat me? take the challenge! 👇\n${currentUrl}\n\n%23PerthSanta %23เพิร์ธแซนต้า`;
+    window.open(`https://twitter.com/intent/tweet?text=${challengeText}`, '_blank');
 }
 function backToMenuFromEnd() { document.getElementById("endScreen").classList.add("hidden"); document.getElementById("temaMenu").classList.remove("hidden"); }
 </script>
