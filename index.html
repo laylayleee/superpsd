@@ -25,38 +25,26 @@
             overflow: hidden;
         }
         
-        /* FLOATING BACKGROUND CHARACTERS FOR MENU */
+        /* STATIC BACKGROUND CHARACTERS FOR MENU (Will toggle src via JS) */
         #bg-characters { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
-        .bg-char { position: absolute; width: 60px; height: 80px; border: 2px solid #6c5ce7; image-rendering: pixelated; object-fit: cover; background: #111; border-radius: 6px; box-shadow: 0 0 15px rgba(108, 92, 231, 0.3); opacity: 0.8; }
+        .bg-char { position: absolute; width: 70px; height: 95px; border: 2px solid #6c5ce7; image-rendering: pixelated; object-fit: cover; background: #111; border-radius: 6px; box-shadow: 0 0 15px rgba(108, 92, 231, 0.4); opacity: 0.85; transition: transform 0.2s; }
         
-        /* Animation classes for background characters */
-        .walk-fast { bottom: 15%; animation: walkRight 10s linear infinite; }
-        .walk-slow { bottom: 25%; animation: walkLeft 15s linear infinite; }
-        .jump-arc { bottom: 10%; animation: jumpArc 8s ease-in-out infinite; }
-        .float-high { top: 20%; animation: floatAccross 20s linear infinite, bobbing 3s ease-in-out infinite; }
-        .hop-across { bottom: 20%; animation: hopping 12s linear infinite; }
-
-        @keyframes walkRight { 0% { transform: translateX(-100px) scaleX(1); } 100% { transform: translateX(110vw) scaleX(1); } }
-        @keyframes walkLeft { 0% { transform: translateX(110vw) scaleX(-1); } 100% { transform: translateX(-100px) scaleX(-1); } }
-        @keyframes jumpArc { 0% { transform: translate(-100px, 0); } 50% { transform: translate(50vw, -300px); } 100% { transform: translate(110vw, 0); } }
-        @keyframes floatAccross { 0% { transform: translateX(-150px); } 100% { transform: translateX(110vw); } }
-        @keyframes bobbing { 0%, 100% { margin-top: 0; } 50% { margin-top: -30px; } }
-        @keyframes hopping { 
-            0% { transform: translateX(-100px) translateY(0); } 
-            20% { transform: translateX(20vw) translateY(-100px); } 
-            40% { transform: translateX(40vw) translateY(0); }
-            60% { transform: translateX(60vw) translateY(-100px); }
-            80% { transform: translateX(80vw) translateY(0); }
-            100% { transform: translateX(110vw) translateY(-100px); }
-        }
+        /* Fixed Positions */
+        #char-pos-1 { top: 15%; left: 5%; transform: rotate(-10deg); }
+        #char-pos-2 { top: 20%; right: 5%; transform: rotate(10deg); }
+        #char-pos-3 { bottom: 15%; left: 15%; transform: rotate(5deg); }
+        #char-pos-4 { bottom: 20%; right: 15%; transform: rotate(-5deg); }
 
         /* UI PANELS */
-        .menu-panel { background: rgba(15, 15, 18, 0.95); padding: 30px; border: 3px solid #6c5ce7; width: 90vw; max-width: 600px; border-radius: 12px; box-shadow: 0 0 30px rgba(108, 92, 231, 0.3); text-align: center; position: relative; z-index: 20; overflow-y: auto; max-height: 85vh; }
+        .menu-panel { background: rgba(15, 15, 18, 0.95); padding: 25px; border: 3px solid #6c5ce7; width: 90vw; max-width: 550px; border-radius: 12px; box-shadow: 0 0 30px rgba(108, 92, 231, 0.3); text-align: center; position: relative; z-index: 20; overflow-y: auto; max-height: 85vh; }
         
+        /* END SCREEN (TICKET PANEL) - WIDER! */
+        #endScreen { max-width: 850px; padding: 20px; }
+
         h1 { margin-top: 0; color: #a29bfe; text-transform: uppercase; letter-spacing: 3px; font-size: 28px; margin-bottom: 15px; text-shadow: 2px 2px 0px #000; position: relative; z-index: 20;}
-        p { font-size: 14px; color: #b2bec3; margin-bottom: 25px; line-height: 1.5; position: relative; z-index: 20;}
+        p { font-size: 14px; color: #b2bec3; margin-bottom: 20px; line-height: 1.5; position: relative; z-index: 20;}
         
-        .world-btn { display: block; width: 100%; max-width: 400px; padding: 15px; margin: 10px auto; font-family: inherit; font-size: 16px; font-weight: bold; cursor: pointer; border: 2px solid #6c5ce7; background: #000; color: #fff; transition: 0.2s; text-transform: uppercase; letter-spacing: 1px; border-radius: 6px; position: relative; z-index: 20; }
+        .world-btn { display: inline-block; width: 100%; max-width: 350px; padding: 12px; margin: 8px auto; font-family: inherit; font-size: 15px; font-weight: bold; cursor: pointer; border: 2px solid #6c5ce7; background: #000; color: #fff; transition: 0.2s; text-transform: uppercase; letter-spacing: 1px; border-radius: 6px; position: relative; z-index: 20; }
         .world-btn:hover { background: #6c5ce7; color: #fff; transform: scale(1.02); }
         
         /* CHARACTER SELECTION */
@@ -74,21 +62,36 @@
         .back-btn-ingame { pointer-events: auto; padding: 8px 16px; background: #d63031; border: 2px solid #fff; color: white; font-family: inherit; font-weight: bold; cursor: pointer; border-radius: 6px; display: inline-block; font-size: 14px; transition: 0.1s; text-transform: uppercase; box-shadow: 2px 2px 0px #000; margin-bottom: 15px;}
         .back-btn-ingame:active { transform: translate(2px, 2px); box-shadow: none; }
 
-        /* END SCREEN TICKET & SCREENSHOT WARNING */
+        /* HORIZONTAL END TICKET */
+        .name-input-box { width: 100%; max-width: 320px; padding: 12px; margin: 5px auto 15px auto; font-family: inherit; font-size: 18px; font-weight: bold; text-align: center; border: 3px solid #6c5ce7; background: #fff; color: #000; text-transform: uppercase; outline: none; border-radius: 6px; position: relative; z-index: 20; display: block;}
+        
+        .ticket-wrapper { display: flex; justify-content: center; width: 100%; margin-bottom: 15px; }
+        .ticket { 
+            display: flex; flex-direction: row; align-items: center; justify-content: space-between;
+            background: #fdfae6; color: #000; padding: 20px; border: 3px dashed #2d3436; 
+            width: 100%; max-width: 750px; box-shadow: 6px 6px 0px rgba(108, 92, 231, 0.4); 
+            border-radius: 8px; position: relative; z-index: 20;
+        }
+        
+        .ticket-left { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; border-right: 2px dashed #aaa; padding-right: 20px; }
+        .ticket-middle { flex: 1; padding: 0 20px; text-align: left; }
+        .ticket-right { flex: 0 0 auto; border-left: 2px dashed #aaa; padding-left: 20px; text-align: center; }
+
+        .ticket-row { margin: 8px 0; font-size: 16px; border-bottom: 2px dotted rgba(0,0,0,0.3); padding-bottom: 5px; font-weight: 900;}
+        .barcode { text-align: center; letter-spacing: 5px; font-size: 24px; margin-top: 15px; border-top: 3px solid #000; padding-top: 10px; font-weight: 900;}
+        
         .screenshot-warning { 
-            font-size: 15px; font-weight: 900; color: #000; background: #fdcb6e; 
+            font-size: 16px; font-weight: 900; color: #000; background: #fdcb6e; 
             padding: 12px; margin: 15px auto; border: 3px dashed #d63031; border-radius: 8px; 
-            text-transform: uppercase;
-            animation: pulse-alert 1.2s infinite; width: 95%; max-width: 400px;
+            text-transform: uppercase; text-align: center;
+            animation: pulse-alert 1.2s infinite; width: 95%; max-width: 600px;
         }
         @keyframes pulse-alert { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); background: #ffeaa7; } }
 
-        .name-input-box { width: 100%; max-width: 320px; padding: 12px; margin: 5px auto 15px auto; font-family: inherit; font-size: 18px; font-weight: bold; text-align: center; border: 3px solid #6c5ce7; background: #fff; color: #000; text-transform: uppercase; outline: none; border-radius: 6px; position: relative; z-index: 20;}
-        
-        .ticket { background: #fdfae6; color: #000; padding: 15px; border: 3px dashed #2d3436; width: 100%; max-width: 350px; margin: 0 auto 10px auto; text-align: left; box-shadow: 6px 6px 0px rgba(108, 92, 231, 0.4); border-radius: 8px; position: relative; z-index: 20;}
-        .ticket-row { margin: 6px 0; font-size: 14px; border-bottom: 2px dotted rgba(0,0,0,0.3); padding-bottom: 5px; font-weight: 900;}
-        .barcode { text-align: center; letter-spacing: 5px; font-size: 20px; margin-top: 10px; border-top: 3px solid #000; padding-top: 10px; font-weight: 900;}
-        
+        /* BUTTON ROW FOR END SCREEN */
+        .end-buttons { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+        .end-buttons .world-btn { width: auto; min-width: 200px; margin: 0; }
+
         /* MOBILE CONTROLS */
         #mobile-controls { position: absolute; bottom: 15px; left: 0; width: 100vw; padding: 0 5vw; display: none; justify-content: space-between; box-sizing: border-box; z-index: 99; pointer-events: none; }
         .dpad-group { display: flex; gap: 10px; pointer-events: auto; }
@@ -96,30 +99,37 @@
         .touch-btn:active { background: #6c5ce7; color: #fff; border-color: #6c5ce7; text-shadow: none; transform: scale(0.9); }
         
         @media (pointer: coarse) { #mobile-controls.active { display: flex; } }
+        
+        /* Responsive adjustments for ticket */
+        @media (max-width: 650px) {
+            .ticket { flex-direction: column; text-align: center; }
+            .ticket-left { border-right: none; border-bottom: 2px dashed #aaa; padding-right: 0; padding-bottom: 15px; margin-bottom: 15px; }
+            .ticket-middle { padding: 0; margin-bottom: 15px; width: 100%; text-align: center; }
+            .ticket-right { border-left: none; border-top: 2px dashed #aaa; padding-left: 0; padding-top: 15px; width: 100%; }
+        }
     </style>
 </head>
 <body>
 
 <div id="promo-bar">
-    <div class="marquee">🔥 BREAKING NEWS: PERTH & SANTA'S NEW SERIES "HEARTBOUND" IS COMING SOON! DON'T FORGET TO WATCH THE TRAILER! 🔥</div>
+    <div class="marquee">BREAKING NEWS: PERTH & SANTA'S NEW SERIES "HEARTBOUND" IS COMING SOON! DON'T FORGET TO WATCH THE TRAILER!</div>
 </div>
 
 <div id="game-container">
     <div id="ui-layer">
         
-        <!-- BACKGROUND FLOATING CHARACTERS (Dynamic Menu) -->
+        <!-- STATIC BACKGROUND CHARACTERS (Toggled by JS) -->
         <div id="bg-characters">
-            <img src="perth_zipla.jpg" class="bg-char jump-arc" onerror="this.src='';this.style.background='#6c5ce7'">
-            <img src="santa_yuru.jpg" class="bg-char walk-fast" onerror="this.src='';this.style.background='#6c5ce7'">
-            <img src="tawan_zipla.jpg" class="bg-char hop-across" onerror="this.src='';this.style.background='#6c5ce7'">
-            <img src="yotha_yuru.jpg" class="bg-char walk-slow" onerror="this.src='';this.style.background='#6c5ce7'">
-            <img src="domiia_zipla.jpg" class="bg-char float-high" onerror="this.src='';this.style.background='#6c5ce7'">
+            <img src="perth_yuru.jpg" class="bg-char-anim" id="char-pos-1" onerror="this.src='';this.style.background='#6c5ce7'">
+            <img src="santa_zipla.jpg" class="bg-char-anim" id="char-pos-2" onerror="this.src='';this.style.background='#6c5ce7'">
+            <img src="tawan_yuru.jpg" class="bg-char-anim" id="char-pos-3" onerror="this.src='';this.style.background='#6c5ce7'">
+            <img src="yotha_zipla.jpg" class="bg-char-anim" id="char-pos-4" onerror="this.src='';this.style.background='#6c5ce7'">
         </div>
 
         <!-- MAIN MENU -->
         <div id="girisEkrani" class="menu-panel">
             <h1>PERTHSANTA ARCADE</h1>
-            <p>Use Left/Right to run. UP to jump over ground obstacles. DOWN to slide under flying ones. Collect coins and claim your VIP Ticket!</p>
+            <p>Use Left/Right to run.<br>UP to jump over ground obstacles.<br>DOWN to slide under flying obstacles.<br>Collect coins and claim your VIP Ticket!</p>
             <button class="world-btn" onclick="showScreen('temaMenu')">INSERT COIN (START)</button>
         </div>
 
@@ -140,28 +150,41 @@
             <button onclick="showScreen('temaMenu')" style="margin-top:15px; padding:10px 20px; background:transparent; border:2px solid #b2bec3; color:#b2bec3; cursor:pointer; font-weight:bold; font-family:inherit; border-radius:6px;">↩ BACK</button>
         </div>
 
-        <!-- TICKET / END SCREEN -->
+        <!-- WIDE HORIZONTAL TICKET / END SCREEN -->
         <div id="endScreen" class="menu-panel hidden">
             <h1 style="color:#00b894; font-size:26px;">STAGE CLEARED!</h1>
             <input type="text" id="playerNameInput" class="name-input-box" maxlength="15" placeholder="ENTER YOUR NAME" oninput="updateTicketName()">
             
-            <div class="ticket">
-                <div style="text-align:center; font-size:20px; border-bottom:3px double #000; padding-bottom:6px; margin-bottom:10px; font-weight:900;">🎉 VIP ADMISSION 🎉</div>
-                <img id="tktCharImg" src="" style="float:right; width:50px; height:65px; border:2px solid #000; image-rendering:pixelated; margin-left:10px; background:#fff; border-radius: 4px;">
-                <div class="ticket-row">NAME: <span id="tktName" style="float:right; font-weight:900; color:#6c5ce7;">GUEST</span></div>
-                <div class="ticket-row">HERO: <span id="tktHero" style="float:right;">-</span></div>
-                <div class="ticket-row">WORLD: <span id="tktWorld" style="float:right; font-size:12px;">-</span></div>
-                <div class="ticket-row">COINS: <span id="tktCoins" style="float:right; color:#d63031;">0</span></div>
-                <div class="ticket-row">TIME: <span id="tktTime" style="float:right;">-</span></div>
-                <div style="clear:both;"></div>
-                <div class="barcode">||| | || |||| | ||| |</div>
+            <div class="ticket-wrapper">
+                <div class="ticket">
+                    <!-- Left: Image -->
+                    <div class="ticket-left">
+                        <div style="font-size:18px; margin-bottom:10px; font-weight:900;">VIP ADMISSION</div>
+                        <img id="tktCharImg" src="" style="width:70px; height:90px; border:2px solid #000; image-rendering:pixelated; background:#fff; border-radius: 4px;">
+                    </div>
+                    
+                    <!-- Middle: Details -->
+                    <div class="ticket-middle">
+                        <div class="ticket-row" style="color:#6c5ce7; border-bottom-color:#6c5ce7;">NAME: <span id="tktName" style="float:right;">GUEST</span></div>
+                        <div class="ticket-row">HERO: <span id="tktHero" style="float:right;">-</span></div>
+                        <div class="ticket-row">WORLD: <span id="tktWorld" style="float:right; font-size:14px;">-</span></div>
+                        <div class="ticket-row">COINS: <span id="tktCoins" style="float:right; color:#d63031;">0</span></div>
+                        <div class="ticket-row">TIME: <span id="tktTime" style="float:right;">-</span></div>
+                    </div>
+                    
+                    <!-- Right: Barcode -->
+                    <div class="ticket-right">
+                        <div style="font-size:14px; font-weight:bold; color:#555;">VALID FOR 1 ENTRY</div>
+                        <div class="barcode">||| | || |||| | ||| |</div>
+                    </div>
+                </div>
             </div>
 
-            <div class="screenshot-warning">📸 DON'T FORGET TO TAKE A SCREENSHOT TO PROVE YOUR SCORE! 📸</div>
+            <div class="screenshot-warning">DON'T FORGET TO TAKE A SCREENSHOT TO PROVE YOUR SCORE!</div>
             
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-                <button class="world-btn" style="background:#1da1f2; color:#fff; border-color:#1da1f2; margin:0 auto;" onclick="shareOnTwitter()">🐦 TWEET SCORE</button>
-                <button class="world-btn" style="margin:0 auto;" onclick="showScreen('temaMenu')">CHOOSE ANOTHER HERO</button>
+            <div class="end-buttons">
+                <button class="world-btn" style="background:#1da1f2; color:#fff; border-color:#1da1f2;" onclick="shareOnTwitter()">TWEET SCORE</button>
+                <button class="world-btn" onclick="showScreen('temaMenu')">CHOOSE ANOTHER HERO</button>
             </div>
         </div>
     </div>
@@ -194,6 +217,21 @@
 </div>
 
 <script>
+// BACKGROUND CHARACTERS TOGGLE SCRIPT (Fixed positions, toggling src every 1.5s)
+const bgChars = document.querySelectorAll('.bg-char-anim');
+setInterval(() => {
+    bgChars.forEach(img => {
+        if (!img.src) return;
+        if (img.src.includes('yuru.jpg')) {
+            img.src = img.src.replace('yuru.jpg', 'zipla.jpg');
+            img.style.transform = img.style.transform + " translateY(-10px)";
+        } else if (img.src.includes('zipla.jpg')) {
+            img.src = img.src.replace('zipla.jpg', 'yuru.jpg');
+            img.style.transform = img.style.transform.replace(" translateY(-10px)", "");
+        }
+    });
+}, 1500);
+
 function showScreen(screenId) {
     const screens = ["girisEkrani", "temaMenu", "karakterMenu", "endScreen"];
     screens.forEach(id => document.getElementById(id).classList.add("hidden"));
@@ -210,10 +248,10 @@ let oyuncuCan = 3; let toplananPara = 0; let baseCharacterName = "";
 
 /* THEMES DEFINITION (VIBE ADJUSTED) */
 const temaAyarlari = {
-    1: { isim: "Love You Teacher", zemin: "#8e44ad", cizgi: "#9b59b6", gokyuzu: "#74b9ff" }, // Kindergarten bright
-    2: { isim: "Perfect 10 Liners", zemin: "#2d3436", cizgi: "#636e72", gokyuzu: "#2c3e50" }, // Engineering dark uni
-    3: { isim: "Real Life", zemin: "#2f3640", cizgi: "#353b48", gokyuzu: "#ff7f50" }, // Bangkok Sunset
-    4: { isim: "Peach and Me", zemin: "#111111", cizgi: "#d4af37", gokyuzu: "#1a0b2e" } // Glam/Classy Dark
+    1: { isim: "Love You Teacher", zemin: "#8e44ad", cizgi: "#9b59b6", gokyuzu: "#74b9ff" }, 
+    2: { isim: "Perfect 10 Liners", zemin: "#2d3436", cizgi: "#636e72", gokyuzu: "#2c3e50" }, 
+    3: { isim: "Real Life", zemin: "#2f3640", cizgi: "#353b48", gokyuzu: "#ff7f50" }, 
+    4: { isim: "Peach and Me", zemin: "#111111", cizgi: "#d4af37", gokyuzu: "#1a0b2e" } 
 };
 
 /* CORRECT CHARACTERS */
@@ -237,7 +275,7 @@ for(let t=1; t<=4; t++) {
 
 let oyuncu = { x: 150, y: 0, w: 70, normalH: 90, slideH: 45, h: 90, vy: 0, vx: 0, yerde: false, bakisYonu: "sag", kayiyor: false };
 const yercekimi = 0.65;
-const hareketHizi = 7; 
+const hareketHizi = 7.5; 
 const ziplamaGucu = -16;
 
 function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
@@ -274,25 +312,27 @@ function temaSec(temaNo) {
     showScreen("karakterMenu");
 }
 
-/* UNIQUE MAPS FOR EVERY CHARACTER - NO COPY PASTING */
-/* tip: Ground (Jump over) | hava_: Air (Slide under) */
+/* 
+  UNIQUE MAPS - PERFECTLY BALANCED OBSTACLE SPACING
+  Air obstacles (hava_) REQUIRE sliding. Ground obstacles require jumping.
+*/
 const haritalar = {
-    // 1. Love You Teacher (Kindergarten)
-    "1_0": { zeminler: [{x:0,w:2000},{x:2200,w:1800},{x:4300,w:2000}], engeller: [{x:800,tip:"desk"},{x:1200,tip:"hava_balloon"},{x:1700,tip:"lego"},{x:2400,tip:"desk"},{x:3000,tip:"hava_balloon"},{x:3500,tip:"lego"},{x:4500,tip:"hava_balloon"}], paralar: [{x:1000},{x:1500},{x:2600},{x:3200},{x:3800}], bitis: {x:5300} },
-    "1_1": { zeminler: [{x:0,w:1800},{x:2100,w:2000},{x:4400,w:2000}], engeller: [{x:900,tip:"lego"},{x:1400,tip:"hava_balloon"},{x:2200,tip:"desk"},{x:2800,tip:"lego"},{x:3400,tip:"hava_balloon"},{x:3800,tip:"hava_balloon"},{x:4700,tip:"lego"}], paralar: [{x:1100},{x:1800},{x:2500},{x:3100},{x:4200}], bitis: {x:5500} },
+    // 1. Love You Teacher
+    "1_0": { zeminler: [{x:0,w:2000},{x:2200,w:1800},{x:4200,w:2000}], engeller: [{x:800,tip:"desk"},{x:1400,tip:"hava_balloon"},{x:2000,tip:"lego"},{x:2600,tip:"hava_balloon"},{x:3200,tip:"desk"},{x:3800,tip:"hava_balloon"},{x:4500,tip:"lego"}], paralar: [{x:1100},{x:1700},{x:2300},{x:2900},{x:3500}], bitis: {x:5400} },
+    "1_1": { zeminler: [{x:0,w:1800},{x:2000,w:2000},{x:4200,w:2000}], engeller: [{x:900,tip:"hava_balloon"},{x:1500,tip:"lego"},{x:2100,tip:"hava_balloon"},{x:2700,tip:"desk"},{x:3300,tip:"hava_balloon"},{x:3900,tip:"lego"},{x:4600,tip:"hava_balloon"}], paralar: [{x:1200},{x:1800},{x:2400},{x:3000},{x:3600}], bitis: {x:5500} },
     
-    // 2. Perfect 10 Liners (Engineering)
-    "2_0": { zeminler: [{x:0,w:1900},{x:2100,w:2000},{x:4400,w:2000}], engeller: [{x:700,tip:"draft_table"},{x:1300,tip:"hava_drone"},{x:1800,tip:"gear"},{x:2400,tip:"draft_table"},{x:3100,tip:"hava_drone"},{x:3700,tip:"gear"},{x:4600,tip:"hava_drone"}], paralar: [{x:1000},{x:1600},{x:2200},{x:2800},{x:3500}], bitis: {x:5600} },
-    "2_1": { zeminler: [{x:0,w:1700},{x:2000,w:2100},{x:4400,w:2000}], engeller: [{x:800,tip:"gear"},{x:1400,tip:"gear"},{x:2200,tip:"hava_drone"},{x:2900,tip:"draft_table"},{x:3500,tip:"hava_drone"},{x:4100,tip:"draft_table"},{x:4800,tip:"gear"}], paralar: [{x:1200},{x:1800},{x:2600},{x:3200},{x:3900}], bitis: {x:5800} },
+    // 2. Perfect 10 Liners
+    "2_0": { zeminler: [{x:0,w:1900},{x:2100,w:1900},{x:4200,w:2000}], engeller: [{x:800,tip:"gear"},{x:1400,tip:"hava_drone"},{x:2000,tip:"draft_table"},{x:2600,tip:"hava_drone"},{x:3200,tip:"gear"},{x:3800,tip:"hava_drone"},{x:4500,tip:"draft_table"}], paralar: [{x:1100},{x:1700},{x:2300},{x:2900},{x:3500}], bitis: {x:5400} },
+    "2_1": { zeminler: [{x:0,w:1700},{x:1900,w:2100},{x:4200,w:2000}], engeller: [{x:900,tip:"hava_drone"},{x:1500,tip:"gear"},{x:2100,tip:"hava_drone"},{x:2700,tip:"draft_table"},{x:3300,tip:"hava_drone"},{x:3900,tip:"gear"},{x:4600,tip:"hava_drone"}], paralar: [{x:1200},{x:1800},{x:2400},{x:3000},{x:3600}], bitis: {x:5500} },
     
-    // 3. Real Life (Bangkok)
-    "3_0": { zeminler: [{x:0,w:2200},{x:2400,w:1800},{x:4500,w:2000}], engeller: [{x:900,tip:"tuktuk"},{x:1500,tip:"hava_sign"},{x:2100,tip:"cone"},{x:2700,tip:"tuktuk"},{x:3400,tip:"hava_sign"},{x:4000,tip:"cone"},{x:4800,tip:"hava_sign"}], paralar: [{x:1200},{x:1800},{x:2500},{x:3100},{x:3800}], bitis: {x:5700} },
-    "3_1": { zeminler: [{x:0,w:1800},{x:2100,w:2200},{x:4600,w:2000}], engeller: [{x:700,tip:"cone"},{x:1300,tip:"tuktuk"},{x:1900,tip:"hava_sign"},{x:2600,tip:"hava_sign"},{x:3400,tip:"tuktuk"},{x:4200,tip:"cone"},{x:4900,tip:"tuktuk"}], paralar: [{x:1000},{x:1600},{x:2300},{x:3000},{x:3900}], bitis: {x:5900} },
-    "3_2": { zeminler: [{x:0,w:2500},{x:2800,w:3500}], engeller: [{x:800,tip:"hava_sign"},{x:1400,tip:"tuktuk"},{x:2000,tip:"hava_sign"},{x:2600,tip:"cone"},{x:3300,tip:"hava_sign"},{x:4000,tip:"tuktuk"},{x:4700,tip:"cone"}], paralar: [{x:1100},{x:1700},{x:2300},{x:3000},{x:3700}], bitis: {x:6000} },
+    // 3. Real Life
+    "3_0": { zeminler: [{x:0,w:2000},{x:2200,w:1800},{x:4200,w:2000}], engeller: [{x:800,tip:"tuktuk"},{x:1400,tip:"hava_sign"},{x:2000,tip:"cone"},{x:2600,tip:"hava_sign"},{x:3200,tip:"tuktuk"},{x:3800,tip:"hava_sign"},{x:4500,tip:"cone"}], paralar: [{x:1100},{x:1700},{x:2300},{x:2900},{x:3500}], bitis: {x:5400} },
+    "3_1": { zeminler: [{x:0,w:1800},{x:2000,w:2000},{x:4200,w:2000}], engeller: [{x:900,tip:"hava_sign"},{x:1500,tip:"cone"},{x:2100,tip:"hava_sign"},{x:2700,tip:"tuktuk"},{x:3300,tip:"hava_sign"},{x:3900,tip:"cone"},{x:4600,tip:"hava_sign"}], paralar: [{x:1200},{x:1800},{x:2400},{x:3000},{x:3600}], bitis: {x:5500} },
+    "3_2": { zeminler: [{x:0,w:2500},{x:2700,w:3500}], engeller: [{x:1000,tip:"cone"},{x:1600,tip:"hava_sign"},{x:2200,tip:"tuktuk"},{x:2800,tip:"hava_sign"},{x:3400,tip:"cone"},{x:4000,tip:"hava_sign"},{x:4700,tip:"tuktuk"}], paralar: [{x:1300},{x:1900},{x:2500},{x:3100},{x:3700}], bitis: {x:5600} },
 
-    // 4. Peach and Me (Glam/Modeling)
-    "4_0": { zeminler: [{x:0,w:2000},{x:2200,w:1900},{x:4400,w:2000}], engeller: [{x:700,tip:"mirror"},{x:1300,tip:"hava_spot"},{x:1900,tip:"rack"},{x:2600,tip:"mirror"},{x:3200,tip:"hava_spot"},{x:3900,tip:"rack"},{x:4700,tip:"hava_spot"}], paralar: [{x:1000},{x:1600},{x:2300},{x:2900},{x:3600}], bitis: {x:5500} },
-    "4_1": { zeminler: [{x:0,w:1800},{x:2100,w:2100},{x:4500,w:2000}], engeller: [{x:900,tip:"rack"},{x:1500,tip:"hava_spot"},{x:2200,tip:"mirror"},{x:2800,tip:"hava_spot"},{x:3500,tip:"rack"},{x:4200,tip:"mirror"},{x:4900,tip:"hava_spot"}], paralar: [{x:1200},{x:1800},{x:2500},{x:3200},{x:3800}], bitis: {x:5800} }
+    // 4. Peach and Me
+    "4_0": { zeminler: [{x:0,w:1900},{x:2100,w:1900},{x:4200,w:2000}], engeller: [{x:800,tip:"mirror"},{x:1400,tip:"hava_spot"},{x:2000,tip:"rack"},{x:2600,tip:"hava_spot"},{x:3200,tip:"mirror"},{x:3800,tip:"hava_spot"},{x:4500,tip:"rack"}], paralar: [{x:1100},{x:1700},{x:2300},{x:2900},{x:3500}], bitis: {x:5400} },
+    "4_1": { zeminler: [{x:0,w:1700},{x:1900,w:2100},{x:4200,w:2000}], engeller: [{x:900,tip:"hava_spot"},{x:1500,tip:"rack"},{x:2100,tip:"hava_spot"},{x:2700,tip:"mirror"},{x:3300,tip:"hava_spot"},{x:3900,tip:"rack"},{x:4600,tip:"hava_spot"}], paralar: [{x:1200},{x:1800},{x:2400},{x:3000},{x:3600}], bitis: {x:5500} }
 };
 
 function oyunuBaslat(karakterNo) {
@@ -384,12 +424,19 @@ function oyunDongusu() {
 
     let hasDied = false;
     harita.engeller.forEach(e => { 
-        let ew = 80; let eh = 80; let ey = baseH - eh;
+        let ew = 70; let eh = 70; let ey = baseH - eh;
         
-        // STRICT AIR OBSTACLE HITBOX (Forces sliding)
+        /* 
+          AIR OBSTACLES: 
+          They are positioned explicitly so the player HITS them if standing (h:90), 
+          but PASSES UNDER them if sliding (h:45).
+        */
         if (e.tip.startsWith("hava")) { 
-            ey = baseH - 85; eh = 40; 
+            ey = baseH - 85; // Air object starts high
+            eh = 40;         // Air object extends down to (baseH - 45).
+            ew = 60;
         } 
+        
         let eRect = { x: e.x + 10, y: ey + 10, w: ew - 20, h: eh - 15 }; 
         if (carpisma(oyuncu, eRect)) hasDied = true;
     });
@@ -415,7 +462,7 @@ function oyunDongusu() {
         document.getElementById("tktWorld").innerText = temaAyarlari[secilenTema].isim;
         document.getElementById("tktHero").innerText = baseCharacterName;
         document.getElementById("tktCoins").innerText = `${toplananPara}`;
-        document.getElementById("tktTime").innerText = `${finalTime} SEC`;
+        document.getElementById("tktTime").innerText = `${finalTime}s`;
         let tktImgSrc = gorselYukleyici.karakterler[secilenTema][secilenKarakter].yuru.src;
         document.getElementById("tktCharImg").src = tktImgSrc;
         
@@ -426,26 +473,21 @@ function oyunDongusu() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     let currentStyle = temaAyarlari[secilenTema];
 
-    // SKY
     ctx.fillStyle = currentStyle.gokyuzu; ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // UNIQUE ATMOSPHERIC BACKGROUNDS
+    // BACKGROUNDS
     ctx.save();
     ctx.translate(-cameraX * 0.2, 0); 
     if(secilenTema === 1) { 
-        // Kindergarten: Bright windows, colorful blocks
         ctx.fillStyle = "rgba(255,255,255,0.4)"; for(let i=0; i<30; i++) ctx.fillRect(100+i*300, baseH-300, 120, 120);
         ctx.fillStyle = "rgba(255, 204, 0, 0.5)"; ctx.beginPath(); ctx.arc(400, 150, 60, 0, Math.PI*2); ctx.fill();
     } else if(secilenTema === 2) { 
-        // Uni/Engineering: Draft boards, dark modern buildings
         ctx.fillStyle = "rgba(10,10,20,0.4)"; for(let i=0; i<40; i++) ctx.fillRect(50+i*200, baseH-350+(i%3)*40, 160, 350);
         ctx.fillStyle = "rgba(100,150,255,0.1)"; for(let i=0; i<40; i++) ctx.fillRect(60+i*200, baseH-330+(i%3)*40, 40, 40);
     } else if(secilenTema === 3) { 
-        // Bangkok: Skyline, neon signs
         ctx.fillStyle = "rgba(20,20,30,0.6)"; for(let i=0; i<50; i++) ctx.fillRect(i*150, baseH-250-Math.random()*150, 140, 400);
         ctx.fillStyle = "rgba(255,100,100,0.5)"; ctx.font="bold 40px Arial"; for(let i=0; i<10; i++) ctx.fillText("BANGKOK", 300+i*800, baseH-200);
     } else if(secilenTema === 4) { 
-        // Peach/Glam: Spotlights, dark classy stage
         ctx.fillStyle = "rgba(255,215,0,0.05)"; for(let i=0; i<20; i++) { ctx.beginPath(); ctx.moveTo(200+i*400, baseH); ctx.lineTo(100+i*400, 0); ctx.lineTo(300+i*400, 0); ctx.fill(); }
         ctx.fillStyle = "rgba(255,255,255,0.2)"; for(let i=0; i<30; i++) { ctx.beginPath(); ctx.arc(Math.random()*5000, Math.random()*300, Math.random()*5, 0, Math.PI*2); ctx.fill(); }
     }
@@ -460,26 +502,42 @@ function oyunDongusu() {
         ctx.fillStyle = currentStyle.cizgi; ctx.fillRect(z.x, baseH, z.w, 15); 
     });
 
-    // Drawing Obstacles Contextually
+    // Highly distinct Obstacle drawings
     harita.engeller.forEach(e => { 
-        let ew = 80; let eh = 80; let ey = baseH - eh;
+        let ew = 70; let eh = 70; let ey = baseH - eh;
         ctx.lineWidth = 4; ctx.strokeStyle = "#fff";
 
         if (e.tip.startsWith("hava")) { 
-            ey = baseH - 85; eh = 40; 
-            if(e.tip === "hava_drone") { ctx.fillStyle = "#34495e"; ctx.fillRect(e.x, ey, ew, eh); ctx.fillStyle = "#e74c3c"; ctx.fillRect(e.x+ew/2-15, ey+eh, 30, 10); } // Uni
-            else if(e.tip === "hava_balloon") { ctx.fillStyle = "#e74c3c"; ctx.beginPath(); ctx.arc(e.x+ew/2, ey+eh/2, 25, 0, Math.PI*2); ctx.fill(); ctx.fillStyle="#fff"; ctx.fillRect(e.x+ew/2-2, ey+eh, 4, 30); } // Kinder
-            else if(e.tip === "hava_sign") { ctx.fillStyle = "#2980b9"; ctx.fillRect(e.x, ey, ew, eh); ctx.fillStyle = "#fff"; ctx.font = "bold 16px monospace"; ctx.fillText("STREET", e.x+10, ey+25); } // Bangkok
-            else if(e.tip === "hava_spot") { ctx.fillStyle = "#f1c40f"; ctx.beginPath(); ctx.arc(e.x+ew/2, ey+eh/2, 20, 0, Math.PI*2); ctx.fill(); ctx.fillStyle="rgba(241,196,15,0.3)"; ctx.beginPath(); ctx.moveTo(e.x+ew/2, ey+eh/2); ctx.lineTo(e.x-20, baseH); ctx.lineTo(e.x+ew+20, baseH); ctx.fill(); } // Glam
+            ey = baseH - 85; eh = 40; ew = 60;
+            
+            if(e.tip === "hava_drone") { 
+                ctx.fillStyle = "#34495e"; ctx.fillRect(e.x, ey, ew, eh); 
+                ctx.fillStyle = "#e74c3c"; ctx.fillRect(e.x+ew/2-10, ey+eh-5, 20, 5);
+                ctx.beginPath(); ctx.moveTo(e.x+5, ey-10); ctx.lineTo(e.x+20, ey); ctx.moveTo(e.x+ew-20, ey-10); ctx.lineTo(e.x+ew-5, ey); ctx.stroke();
+            } 
+            else if(e.tip === "hava_balloon") { 
+                ctx.fillStyle = "#e74c3c"; ctx.beginPath(); ctx.arc(e.x+ew/2, ey+eh/2, 25, 0, Math.PI*2); ctx.fill(); 
+                ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(e.x+ew/2, ey+eh/2+25); ctx.lineTo(e.x+ew/2, ey+eh+30); ctx.stroke();
+            } 
+            else if(e.tip === "hava_sign") { 
+                ctx.fillStyle = "#333"; ctx.fillRect(e.x+ew/2-5, 0, 10, ey); 
+                ctx.fillStyle = "#2980b9"; ctx.fillRect(e.x-10, ey, ew+20, eh); 
+                ctx.fillStyle = "#fff"; ctx.font = "bold 14px monospace"; ctx.fillText("SLIDE", e.x-5, ey+25); 
+            } 
+            else if(e.tip === "hava_spot") { 
+                ctx.fillStyle = "#333"; ctx.fillRect(e.x+ew/2-10, 0, 20, ey);
+                ctx.fillStyle = "#f1c40f"; ctx.beginPath(); ctx.arc(e.x+ew/2, ey+eh/2, 20, 0, Math.PI*2); ctx.fill(); 
+                ctx.fillStyle="rgba(241,196,15,0.2)"; ctx.beginPath(); ctx.moveTo(e.x+ew/2, ey+eh/2); ctx.lineTo(e.x-40, baseH); ctx.lineTo(e.x+ew+40, baseH); ctx.fill();
+            }
         } else { 
-            if(e.tip === "desk") { ctx.fillStyle = "#d35400"; ctx.fillRect(e.x, ey, ew, 15); ctx.fillRect(e.x+10, ey+15, 12, eh-15); ctx.fillRect(e.x+ew-22, ey+15, 12, eh-15); } // Kinder
-            else if(e.tip === "lego") { ctx.fillStyle = "#2980b9"; ctx.fillRect(e.x, ey, ew, eh); ctx.fillStyle = "#f1c40f"; ctx.beginPath(); ctx.arc(e.x+20, ey-10, 10, 0, Math.PI*2); ctx.arc(e.x+60, ey-10, 10, 0, Math.PI*2); ctx.fill(); } // Kinder
-            else if(e.tip === "draft_table") { ctx.fillStyle = "#bdc3c7"; ctx.beginPath(); ctx.moveTo(e.x, ey+30); ctx.lineTo(e.x+ew, ey); ctx.lineTo(e.x+ew, ey+15); ctx.lineTo(e.x, ey+45); ctx.fill(); ctx.fillStyle = "#2c3e50"; ctx.fillRect(e.x+15, ey+35, 10, eh-35); ctx.fillRect(e.x+ew-25, ey+15, 10, eh-15); } // Uni
-            else if(e.tip === "gear") { ctx.fillStyle = "#7f8c8d"; ctx.beginPath(); ctx.arc(e.x+ew/2, ey+eh/2, 35, 0, Math.PI*2); ctx.fill(); ctx.fillStyle = "#2c3e50"; ctx.beginPath(); ctx.arc(e.x+ew/2, ey+eh/2, 15, 0, Math.PI*2); ctx.fill(); } // Uni
-            else if(e.tip === "tuktuk") { ctx.fillStyle = "#16a085"; ctx.fillRect(e.x, ey+30, ew, eh-30); ctx.fillStyle = "#222"; ctx.fillRect(e.x+10, ey+eh-20, 20, 20); ctx.fillRect(e.x+ew-30, ey+eh-20, 20, 20); ctx.fillStyle = "#ecf0f1"; ctx.fillRect(e.x+10, ey, ew-20, 10); } // Bangkok
-            else if(e.tip === "cone") { ctx.fillStyle = "#e67e22"; ctx.beginPath(); ctx.moveTo(e.x+ew/2, ey); ctx.lineTo(e.x+ew, ey+eh); ctx.lineTo(e.x, ey+eh); ctx.fill(); ctx.fillStyle = "#fff"; ctx.fillRect(e.x+15, ey+eh-30, ew-30, 15); } // Bangkok
-            else if(e.tip === "mirror") { ctx.fillStyle = "#fdfae6"; ctx.fillRect(e.x+5, ey, ew-10, eh); ctx.fillStyle = "#ff7675"; for(let by=ey+5; by<ey+eh-5; by+=20) { ctx.fillRect(e.x, by, 8, 8); ctx.fillRect(e.x+ew-8, by, 8, 8); } } // Glam
-            else if(e.tip === "rack") { ctx.strokeStyle = "#d4af37"; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(e.x+ew/2, ey); ctx.lineTo(e.x+ew/2, ey+eh); ctx.stroke(); ctx.beginPath(); ctx.moveTo(e.x, ey+15); ctx.lineTo(e.x+ew, ey+15); ctx.stroke(); ctx.fillStyle = "#c0392b"; ctx.fillRect(e.x+20, ey+20, 15, 40); ctx.fillStyle = "#2980b9"; ctx.fillRect(e.x+45, ey+20, 15, 50); } // Glam
+            if(e.tip === "desk") { ctx.fillStyle = "#d35400"; ctx.fillRect(e.x, ey, ew, 15); ctx.fillRect(e.x+10, ey+15, 12, eh-15); ctx.fillRect(e.x+ew-22, ey+15, 12, eh-15); } 
+            else if(e.tip === "lego") { ctx.fillStyle = "#2980b9"; ctx.fillRect(e.x, ey, ew, eh); ctx.fillStyle = "#f1c40f"; ctx.beginPath(); ctx.arc(e.x+15, ey-10, 10, 0, Math.PI*2); ctx.arc(e.x+ew-15, ey-10, 10, 0, Math.PI*2); ctx.fill(); } 
+            else if(e.tip === "draft_table") { ctx.fillStyle = "#bdc3c7"; ctx.beginPath(); ctx.moveTo(e.x, ey+25); ctx.lineTo(e.x+ew, ey); ctx.lineTo(e.x+ew, ey+15); ctx.lineTo(e.x, ey+40); ctx.fill(); ctx.fillStyle = "#2c3e50"; ctx.fillRect(e.x+15, ey+30, 10, eh-30); ctx.fillRect(e.x+ew-25, ey+15, 10, eh-15); } 
+            else if(e.tip === "gear") { ctx.fillStyle = "#7f8c8d"; ctx.beginPath(); ctx.arc(e.x+ew/2, ey+eh/2, 35, 0, Math.PI*2); ctx.fill(); ctx.fillStyle = "#2c3e50"; ctx.beginPath(); ctx.arc(e.x+ew/2, ey+eh/2, 15, 0, Math.PI*2); ctx.fill(); } 
+            else if(e.tip === "tuktuk") { ctx.fillStyle = "#16a085"; ctx.fillRect(e.x, ey+30, ew, eh-30); ctx.fillStyle = "#222"; ctx.fillRect(e.x+5, ey+eh-20, 20, 20); ctx.fillRect(e.x+ew-25, ey+eh-20, 20, 20); ctx.fillStyle = "#ecf0f1"; ctx.fillRect(e.x+5, ey, ew-10, 10); } 
+            else if(e.tip === "cone") { ctx.fillStyle = "#e67e22"; ctx.beginPath(); ctx.moveTo(e.x+ew/2, ey); ctx.lineTo(e.x+ew, ey+eh); ctx.lineTo(e.x, ey+eh); ctx.fill(); ctx.fillStyle = "#fff"; ctx.fillRect(e.x+15, ey+eh-30, ew-30, 15); } 
+            else if(e.tip === "mirror") { ctx.fillStyle = "#fdfae6"; ctx.fillRect(e.x+5, ey, ew-10, eh); ctx.fillStyle = "#ff7675"; for(let by=ey+5; by<ey+eh-5; by+=20) { ctx.fillRect(e.x, by, 8, 8); ctx.fillRect(e.x+ew-8, by, 8, 8); } } 
+            else if(e.tip === "rack") { ctx.strokeStyle = "#d4af37"; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(e.x+ew/2, ey); ctx.lineTo(e.x+ew/2, ey+eh); ctx.stroke(); ctx.beginPath(); ctx.moveTo(e.x, ey+15); ctx.lineTo(e.x+ew, ey+15); ctx.stroke(); ctx.fillStyle = "#c0392b"; ctx.fillRect(e.x+15, ey+20, 15, 40); ctx.fillStyle = "#2980b9"; ctx.fillRect(e.x+40, ey+20, 15, 50); }
         }
     });
     
@@ -497,7 +555,7 @@ function oyunDongusu() {
         }
     }
 
-    // Player Drawer
+    // Player
     let aktifGorsel = oyuncu.yerde ? gorselYukleyici.karakterler[secilenTema][secilenKarakter].yuru : gorselYukleyici.karakterler[secilenTema][secilenKarakter].zipla;
     if (aktifGorsel.complete && aktifGorsel.naturalWidth !== 0) {
         ctx.save();
@@ -516,7 +574,7 @@ function oyunDongusu() {
 // GEN Z / FANDOM TWITTER SHARE
 function shareOnTwitter() {
     let playerName = document.getElementById("playerNameInput").value.trim().toUpperCase() || "GUEST";
-    let challengeText = `just locked in and cleared the "${temaAyarlari[secilenTema].isim}" stage as ${baseCharacterName} in ${finalTime}s! 💅 secured ${toplananPara} coins too.\n\nthink you can beat my time? drop your receipts below 👇🔥\n\n%23PerthSanta %23เพิร์ธแซนต้า`;
+    let challengeText = `Cleared the "${temaAyarlari[secilenTema].isim}" stage as ${baseCharacterName} in ${finalTime}s with ${toplananPara} coins.\n\nCan you beat my time? Drop your receipts below.\n\n#PerthSanta #เพิร์ธแซนต้า`;
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(challengeText)}`, '_blank');
 }
 </script>
