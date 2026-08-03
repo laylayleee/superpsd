@@ -6,107 +6,93 @@
     <title>PERTHSANTA ARCADE</title>
     <style>
         /* FULLSCREEN ZERO MARGIN */
-        body { margin: 0; padding: 0; background: #0a0a0a; overflow: hidden; font-family: 'Courier New', Courier, monospace; font-weight: bold; color: white; touch-action: none; user-select: none; }
+        body { margin: 0; padding: 0; background: #050505; overflow: hidden; font-family: 'Courier New', Courier, monospace; font-weight: bold; color: white; touch-action: none; user-select: none; }
         #game-container { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
 
         /* CHIC PROMO BAR */
-        #promo-bar { position: absolute; top: 0; left: 0; width: 100%; background: linear-gradient(90deg, #111, #2a2a2a); color: #d4af37; padding: 12px 0; font-size: 16px; border-bottom: 2px solid #d4af37; z-index: 150; overflow: hidden; white-space: nowrap; box-shadow: 0 4px 15px rgba(0,0,0,0.9); }
-        .marquee { display: inline-block; padding-left: 100%; animation: scroll-left 25s linear infinite; text-transform: uppercase; letter-spacing: 2px; text-shadow: 1px 1px 0px #000;}
+        #promo-bar { position: absolute; top: 0; left: 0; width: 100%; background: linear-gradient(90deg, #111, #222); color: #d4af37; padding: 10px 0; font-size: 15px; border-bottom: 2px solid #d4af37; z-index: 150; overflow: hidden; white-space: nowrap; box-shadow: 0 4px 15px rgba(0,0,0,0.9); }
+        .marquee { display: inline-block; padding-left: 100%; animation: scroll-left 25s linear infinite; text-transform: uppercase; letter-spacing: 2px; }
         @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
         /* 90s ARCADE VIBE BACKGROUND WITH PIXEL GRID */
         #ui-layer { 
             position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; 
             display: flex; justify-content: center; align-items: center; z-index: 50; flex-direction: column; 
-            background-color: #0f0f13;
+            background-color: #0d0d12;
             background-image: linear-gradient(rgba(100, 100, 255, 0.05) 2px, transparent 2px), linear-gradient(90deg, rgba(100, 100, 255, 0.05) 2px, transparent 2px);
             background-size: 30px 30px;
-            box-shadow: inset 0 0 120px rgba(0,0,0,1);
-            overflow: hidden;
+            box-shadow: inset 0 0 100px rgba(0,0,0,1);
         }
-        
-        /* STATIC BACKGROUND CHARACTERS FOR MENU (Will toggle src via JS) */
-        #bg-characters { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
-        .bg-char { position: absolute; width: 70px; height: 95px; border: 2px solid #6c5ce7; image-rendering: pixelated; object-fit: cover; background: #111; border-radius: 6px; box-shadow: 0 0 15px rgba(108, 92, 231, 0.4); opacity: 0.85; transition: transform 0.2s; }
-        
-        /* Fixed Positions */
-        #char-pos-1 { top: 15%; left: 5%; transform: rotate(-10deg); }
-        #char-pos-2 { top: 20%; right: 5%; transform: rotate(10deg); }
-        #char-pos-3 { bottom: 15%; left: 15%; transform: rotate(5deg); }
-        #char-pos-4 { bottom: 20%; right: 15%; transform: rotate(-5deg); }
+
+        /* 9 SMALL BACKGROUND CHARACTERS JUMPING TOGETHER */
+        #bg-chars-container {
+            position: absolute; bottom: 30px; width: 100%; max-width: 800px;
+            display: flex; justify-content: space-evenly; align-items: flex-end;
+            z-index: 15; pointer-events: none; margin: 0 auto; left: 0; right: 0;
+        }
+        .bg-char-mini {
+            width: 40px; height: 55px; image-rendering: pixelated; object-fit: cover; 
+            border: 2px solid #6c5ce7; background: #111; border-radius: 4px;
+            box-shadow: 0 0 10px rgba(108, 92, 231, 0.5); transition: transform 0.1s;
+        }
 
         /* UI PANELS */
-        .menu-panel { background: rgba(15, 15, 18, 0.95); padding: 25px; border: 3px solid #6c5ce7; width: 90vw; max-width: 550px; border-radius: 12px; box-shadow: 0 0 30px rgba(108, 92, 231, 0.3); text-align: center; position: relative; z-index: 20; overflow-y: auto; max-height: 85vh; }
+        .menu-panel { background: rgba(15, 15, 18, 0.95); padding: 25px; border: 3px solid #6c5ce7; width: 90vw; max-width: 500px; border-radius: 12px; box-shadow: 0 0 30px rgba(108, 92, 231, 0.3); text-align: center; position: relative; z-index: 20; overflow-y: auto; max-height: 80vh; }
         
-        /* END SCREEN (TICKET PANEL) - WIDER! */
-        #endScreen { max-width: 850px; padding: 20px; }
-
-        h1 { margin-top: 0; color: #a29bfe; text-transform: uppercase; letter-spacing: 3px; font-size: 28px; margin-bottom: 15px; text-shadow: 2px 2px 0px #000; position: relative; z-index: 20;}
-        p { font-size: 14px; color: #b2bec3; margin-bottom: 20px; line-height: 1.5; position: relative; z-index: 20;}
+        h1 { margin-top: 0; color: #a29bfe; text-transform: uppercase; letter-spacing: 3px; font-size: 26px; margin-bottom: 15px; text-shadow: 2px 2px 0px #000;}
+        p { font-size: 14px; color: #b2bec3; margin-bottom: 20px; line-height: 1.5; }
         
-        .world-btn { display: inline-block; width: 100%; max-width: 350px; padding: 12px; margin: 8px auto; font-family: inherit; font-size: 15px; font-weight: bold; cursor: pointer; border: 2px solid #6c5ce7; background: #000; color: #fff; transition: 0.2s; text-transform: uppercase; letter-spacing: 1px; border-radius: 6px; position: relative; z-index: 20; }
+        .world-btn { display: inline-block; width: 100%; max-width: 320px; padding: 12px; margin: 6px auto; font-family: inherit; font-size: 15px; font-weight: bold; cursor: pointer; border: 2px solid #6c5ce7; background: #000; color: #fff; transition: 0.2s; text-transform: uppercase; letter-spacing: 1px; border-radius: 6px; }
         .world-btn:hover { background: #6c5ce7; color: #fff; transform: scale(1.02); }
         
         /* CHARACTER SELECTION */
-        .char-select-btn { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; width: 110px; height: 140px; padding: 8px; margin: 8px; border: 2px solid #6c5ce7; color: #fff; background: #050505; font-family: inherit; font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.2s; border-radius: 6px; position: relative; z-index: 20;}
+        .char-select-btn { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; width: 100px; height: 130px; padding: 8px; margin: 6px; border: 2px solid #6c5ce7; color: #fff; background: #050505; font-family: inherit; font-weight: bold; font-size: 13px; cursor: pointer; transition: 0.2s; border-radius: 6px; }
         .char-select-btn:hover { border-color: #a29bfe; color: #a29bfe; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4); }
-        .char-select-btn img { width: 60px; height: 80px; margin-bottom: 10px; border: 2px solid #333; image-rendering: pixelated; object-fit: cover; background: #111; }
+        .char-select-btn img { width: 50px; height: 70px; margin-bottom: 8px; border: 2px solid #333; image-rendering: pixelated; object-fit: cover; background: #111; }
 
         .hidden { display: none !important; }
-        
         canvas { display: none; position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 10; image-rendering: pixelated; }
 
         /* HUD */
-        #game-hud { position: absolute; top: 60px; left: 20px; width: calc(100vw - 40px); z-index: 20; display: none; justify-content: space-between; align-items: flex-start; pointer-events: none; }
-        .hud-text { font-size: 20px; color: #fff; text-shadow: 2px 2px 0px #000; margin-bottom: 8px; font-weight: 900;}
+        #game-hud { position: absolute; top: 50px; left: 20px; width: calc(100vw - 40px); z-index: 20; display: none; justify-content: space-between; align-items: flex-start; pointer-events: none; }
+        .hud-text { font-size: 18px; color: #fff; text-shadow: 2px 2px 0px #000; margin-bottom: 8px; font-weight: 900;}
         .back-btn-ingame { pointer-events: auto; padding: 8px 16px; background: #d63031; border: 2px solid #fff; color: white; font-family: inherit; font-weight: bold; cursor: pointer; border-radius: 6px; display: inline-block; font-size: 14px; transition: 0.1s; text-transform: uppercase; box-shadow: 2px 2px 0px #000; margin-bottom: 15px;}
         .back-btn-ingame:active { transform: translate(2px, 2px); box-shadow: none; }
 
-        /* HORIZONTAL END TICKET */
-        .name-input-box { width: 100%; max-width: 320px; padding: 12px; margin: 5px auto 15px auto; font-family: inherit; font-size: 18px; font-weight: bold; text-align: center; border: 3px solid #6c5ce7; background: #fff; color: #000; text-transform: uppercase; outline: none; border-radius: 6px; position: relative; z-index: 20; display: block;}
+        /* VERTICAL CLASSIC TICKET */
+        .name-input-box { width: 100%; max-width: 280px; padding: 12px; margin: 5px auto 15px auto; font-family: inherit; font-size: 16px; font-weight: bold; text-align: center; border: 2px solid #6c5ce7; background: #fff; color: #000; text-transform: uppercase; outline: none; border-radius: 6px; display: block;}
         
-        .ticket-wrapper { display: flex; justify-content: center; width: 100%; margin-bottom: 15px; }
         .ticket { 
-            display: flex; flex-direction: row; align-items: center; justify-content: space-between;
-            background: #fdfae6; color: #000; padding: 20px; border: 3px dashed #2d3436; 
-            width: 100%; max-width: 750px; box-shadow: 6px 6px 0px rgba(108, 92, 231, 0.4); 
-            border-radius: 8px; position: relative; z-index: 20;
+            background: linear-gradient(180deg, #fdfae6 0%, #f1f2f6 100%); color: #2d3436; 
+            padding: 20px; border: 3px dashed #6c5ce7; width: 90%; max-width: 320px; 
+            margin: 0 auto 15px auto; text-align: left; box-shadow: 0 10px 25px rgba(0,0,0,0.8); 
+            border-radius: 12px; position: relative; 
         }
+        .ticket-header { text-align: center; border-bottom: 3px double #2d3436; padding-bottom: 10px; margin-bottom: 15px;}
+        .ticket-title { font-size: 22px; font-weight: 900; color: #6c5ce7; letter-spacing: 1px;}
+        .ticket-sub { font-size: 12px; color: #636e72; font-weight: bold;}
         
-        .ticket-left { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; border-right: 2px dashed #aaa; padding-right: 20px; }
-        .ticket-middle { flex: 1; padding: 0 20px; text-align: left; }
-        .ticket-right { flex: 0 0 auto; border-left: 2px dashed #aaa; padding-left: 20px; text-align: center; }
-
-        .ticket-row { margin: 8px 0; font-size: 16px; border-bottom: 2px dotted rgba(0,0,0,0.3); padding-bottom: 5px; font-weight: 900;}
-        .barcode { text-align: center; letter-spacing: 5px; font-size: 24px; margin-top: 15px; border-top: 3px solid #000; padding-top: 10px; font-weight: 900;}
+        .ticket-content { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 15px;}
+        .ticket-img { width: 65px; height: 85px; border: 2px solid #000; image-rendering: pixelated; object-fit: cover; background: #fff; border-radius: 4px; }
+        .ticket-details { flex: 1; }
+        .ticket-row { margin: 6px 0; font-size: 13px; border-bottom: 1px dotted rgba(0,0,0,0.3); padding-bottom: 4px; font-weight: bold; display: flex; justify-content: space-between;}
+        .ticket-val { font-weight: 900; color: #000; }
         
-        .screenshot-warning { 
-            font-size: 16px; font-weight: 900; color: #000; background: #fdcb6e; 
-            padding: 12px; margin: 15px auto; border: 3px dashed #d63031; border-radius: 8px; 
-            text-transform: uppercase; text-align: center;
-            animation: pulse-alert 1.2s infinite; width: 95%; max-width: 600px;
-        }
+        .barcode { text-align: center; letter-spacing: 3px; font-size: 26px; border-top: 2px solid #2d3436; padding-top: 10px; font-weight: 900; margin-top: 10px;}
+        
+        .screenshot-warning { font-size: 14px; font-weight: 900; color: #000; background: #fdcb6e; padding: 10px; margin: 10px auto; border: 2px dashed #d63031; border-radius: 6px; text-transform: uppercase; animation: pulse-alert 1s infinite; width: 90%; max-width: 320px;}
         @keyframes pulse-alert { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); background: #ffeaa7; } }
 
         /* BUTTON ROW FOR END SCREEN */
-        .end-buttons { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
-        .end-buttons .world-btn { width: auto; min-width: 200px; margin: 0; }
+        .end-buttons { display: flex; flex-direction: column; gap: 8px; align-items: center; }
 
         /* MOBILE CONTROLS */
         #mobile-controls { position: absolute; bottom: 15px; left: 0; width: 100vw; padding: 0 5vw; display: none; justify-content: space-between; box-sizing: border-box; z-index: 99; pointer-events: none; }
-        .dpad-group { display: flex; gap: 10px; pointer-events: auto; }
-        .touch-btn { width: 60px; height: 60px; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 255, 255, 0.5); color: rgba(255,255,255,0.8); font-size: 24px; display: flex; justify-content: center; align-items: center; border-radius: 50%; pointer-events: auto; cursor: pointer; text-shadow: 1px 1px 0px #000; font-family: inherit; transition: 0.1s; user-select: none; }
-        .touch-btn:active { background: #6c5ce7; color: #fff; border-color: #6c5ce7; text-shadow: none; transform: scale(0.9); }
+        .dpad-group { display: flex; gap: 15px; pointer-events: auto; }
+        .touch-btn { width: 60px; height: 60px; background: rgba(255, 255, 255, 0.15); border: 2px solid rgba(255, 255, 255, 0.5); color: rgba(255,255,255,0.9); font-size: 22px; display: flex; justify-content: center; align-items: center; border-radius: 50%; pointer-events: auto; cursor: pointer; text-shadow: 1px 1px 0px #000; font-family: inherit; transition: 0.1s; user-select: none; }
+        .touch-btn:active { background: #6c5ce7; color: #fff; border-color: #6c5ce7; transform: scale(0.9); }
         
         @media (pointer: coarse) { #mobile-controls.active { display: flex; } }
-        
-        /* Responsive adjustments for ticket */
-        @media (max-width: 650px) {
-            .ticket { flex-direction: column; text-align: center; }
-            .ticket-left { border-right: none; border-bottom: 2px dashed #aaa; padding-right: 0; padding-bottom: 15px; margin-bottom: 15px; }
-            .ticket-middle { padding: 0; margin-bottom: 15px; width: 100%; text-align: center; }
-            .ticket-right { border-left: none; border-top: 2px dashed #aaa; padding-left: 0; padding-top: 15px; width: 100%; }
-        }
     </style>
 </head>
 <body>
@@ -118,18 +104,23 @@
 <div id="game-container">
     <div id="ui-layer">
         
-        <!-- STATIC BACKGROUND CHARACTERS (Toggled by JS) -->
-        <div id="bg-characters">
-            <img src="perth_yuru.jpg" class="bg-char-anim" id="char-pos-1" onerror="this.src='';this.style.background='#6c5ce7'">
-            <img src="santa_zipla.jpg" class="bg-char-anim" id="char-pos-2" onerror="this.src='';this.style.background='#6c5ce7'">
-            <img src="tawan_yuru.jpg" class="bg-char-anim" id="char-pos-3" onerror="this.src='';this.style.background='#6c5ce7'">
-            <img src="yotha_zipla.jpg" class="bg-char-anim" id="char-pos-4" onerror="this.src='';this.style.background='#6c5ce7'">
+        <!-- 9 MINI BACKGROUND CHARACTERS -->
+        <div id="bg-chars-container">
+            <img src="pobmek_yuru.jpg" class="bg-char-mini" id="mini-1" onerror="this.src='';this.style.background='#6c5ce7'">
+            <img src="solar_yuru.jpg" class="bg-char-mini" id="mini-2" onerror="this.src='';this.style.background='#6c5ce7'">
+            <img src="yotha_yuru.jpg" class="bg-char-mini" id="mini-3" onerror="this.src='';this.style.background='#6c5ce7'">
+            <img src="gun_yuru.jpg" class="bg-char-mini" id="mini-4" onerror="this.src='';this.style.background='#6c5ce7'">
+            <img src="perth_yuru.jpg" class="bg-char-mini" id="mini-5" onerror="this.src='';this.style.background='#6c5ce7'">
+            <img src="santa_yuru.jpg" class="bg-char-mini" id="mini-6" onerror="this.src='';this.style.background='#6c5ce7'">
+            <img src="domiia_yuru.jpg" class="bg-char-mini" id="mini-7" onerror="this.src='';this.style.background='#6c5ce7'">
+            <img src="tawan_yuru.jpg" class="bg-char-mini" id="mini-8" onerror="this.src='';this.style.background='#6c5ce7'">
+            <img src="aran_yuru.jpg" class="bg-char-mini" id="mini-9" onerror="this.src='';this.style.background='#6c5ce7'">
         </div>
 
         <!-- MAIN MENU -->
         <div id="girisEkrani" class="menu-panel">
             <h1>PERTHSANTA ARCADE</h1>
-            <p>Use Left/Right to run.<br>UP to jump over ground obstacles.<br>DOWN to slide under flying obstacles.<br>Collect coins and claim your VIP Ticket!</p>
+            <p>Use Left/Right to run. <br>Jump onto floating platforms. <br>UP to jump over ground obstacles. <br>DOWN to slide under flying obstacles.</p>
             <button class="world-btn" onclick="showScreen('temaMenu')">INSERT COIN (START)</button>
         </div>
 
@@ -140,51 +131,46 @@
             <button class="world-btn" onclick="temaSec(2)">2. Perfect 10 Liners</button>
             <button class="world-btn" onclick="temaSec(3)">3. Real Life (Bangkok)</button>
             <button class="world-btn" onclick="temaSec(4)">4. Peach and Me</button>
-            <button onclick="showScreen('girisEkrani')" style="margin-top:15px; padding:10px 20px; background:transparent; border:2px solid #b2bec3; color:#b2bec3; cursor:pointer; font-weight:bold; font-family:inherit; border-radius:6px;">↩ BACK</button>
+            <button onclick="showScreen('girisEkrani')" style="margin-top:10px; padding:8px 16px; background:transparent; border:2px solid #b2bec3; color:#b2bec3; cursor:pointer; font-weight:bold; font-family:inherit; border-radius:6px;">↩ BACK</button>
         </div>
 
         <!-- HERO SELECTION -->
         <div id="karakterMenu" class="menu-panel hidden">
             <h1 id="temaBaslik">CHOOSE HERO</h1>
             <div id="karakterButonlari" style="display:flex; justify-content:center; flex-wrap:wrap;"></div>
-            <button onclick="showScreen('temaMenu')" style="margin-top:15px; padding:10px 20px; background:transparent; border:2px solid #b2bec3; color:#b2bec3; cursor:pointer; font-weight:bold; font-family:inherit; border-radius:6px;">↩ BACK</button>
+            <button onclick="showScreen('temaMenu')" style="margin-top:10px; padding:8px 16px; background:transparent; border:2px solid #b2bec3; color:#b2bec3; cursor:pointer; font-weight:bold; font-family:inherit; border-radius:6px;">↩ BACK</button>
         </div>
 
-        <!-- WIDE HORIZONTAL TICKET / END SCREEN -->
+        <!-- VERTICAL CLASSIC TICKET / END SCREEN -->
         <div id="endScreen" class="menu-panel hidden">
-            <h1 style="color:#00b894; font-size:26px;">STAGE CLEARED!</h1>
+            <h1 style="color:#00b894; font-size:24px; margin-bottom: 5px;">STAGE CLEARED!</h1>
             <input type="text" id="playerNameInput" class="name-input-box" maxlength="15" placeholder="ENTER YOUR NAME" oninput="updateTicketName()">
             
-            <div class="ticket-wrapper">
-                <div class="ticket">
-                    <!-- Left: Image -->
-                    <div class="ticket-left">
-                        <div style="font-size:18px; margin-bottom:10px; font-weight:900;">VIP ADMISSION</div>
-                        <img id="tktCharImg" src="" style="width:70px; height:90px; border:2px solid #000; image-rendering:pixelated; background:#fff; border-radius: 4px;">
-                    </div>
-                    
-                    <!-- Middle: Details -->
-                    <div class="ticket-middle">
-                        <div class="ticket-row" style="color:#6c5ce7; border-bottom-color:#6c5ce7;">NAME: <span id="tktName" style="float:right;">GUEST</span></div>
-                        <div class="ticket-row">HERO: <span id="tktHero" style="float:right;">-</span></div>
-                        <div class="ticket-row">WORLD: <span id="tktWorld" style="float:right; font-size:14px;">-</span></div>
-                        <div class="ticket-row">COINS: <span id="tktCoins" style="float:right; color:#d63031;">0</span></div>
-                        <div class="ticket-row">TIME: <span id="tktTime" style="float:right;">-</span></div>
-                    </div>
-                    
-                    <!-- Right: Barcode -->
-                    <div class="ticket-right">
-                        <div style="font-size:14px; font-weight:bold; color:#555;">VALID FOR 1 ENTRY</div>
-                        <div class="barcode">||| | || |||| | ||| |</div>
+            <div class="ticket">
+                <div class="ticket-header">
+                    <div class="ticket-title">VIP ADMISSION</div>
+                    <div class="ticket-sub">PERTHSANTA UNIVERSE ARCADE</div>
+                </div>
+                
+                <div class="ticket-content">
+                    <img id="tktCharImg" src="" class="ticket-img">
+                    <div class="ticket-details">
+                        <div class="ticket-row" style="color:#6c5ce7;">NAME: <span id="tktName" class="ticket-val" style="color:#6c5ce7;">GUEST</span></div>
+                        <div class="ticket-row">HERO: <span id="tktHero" class="ticket-val">-</span></div>
+                        <div class="ticket-row">WORLD: <span id="tktWorld" class="ticket-val" style="font-size:11px;">-</span></div>
+                        <div class="ticket-row">COINS: <span id="tktCoins" class="ticket-val" style="color:#d63031;">0</span></div>
+                        <div class="ticket-row">TIME: <span id="tktTime" class="ticket-val">-</span></div>
                     </div>
                 </div>
+                
+                <div class="barcode">||| | || |||| | ||| |</div>
             </div>
 
-            <div class="screenshot-warning">DON'T FORGET TO TAKE A SCREENSHOT TO PROVE YOUR SCORE!</div>
+            <div class="screenshot-warning">SAVE YOUR RECEIPT: TAKE A SCREENSHOT!</div>
             
             <div class="end-buttons">
-                <button class="world-btn" style="background:#1da1f2; color:#fff; border-color:#1da1f2;" onclick="shareOnTwitter()">TWEET SCORE</button>
-                <button class="world-btn" onclick="showScreen('temaMenu')">CHOOSE ANOTHER HERO</button>
+                <button class="world-btn" style="background:#1da1f2; color:#fff; border-color:#1da1f2;" onclick="shareOnTwitter()">TWEET YOUR SCORE</button>
+                <button class="world-btn" onclick="showScreen('temaMenu')">PLAY AGAIN (CHOOSE HERO)</button>
             </div>
         </div>
     </div>
@@ -217,20 +203,20 @@
 </div>
 
 <script>
-// BACKGROUND CHARACTERS TOGGLE SCRIPT (Fixed positions, toggling src every 1.5s)
-const bgChars = document.querySelectorAll('.bg-char-anim');
+// BACKGROUND CHARACTERS JUMPING LOGIC (1.2s interval)
+const miniChars = document.querySelectorAll('.bg-char-mini');
 setInterval(() => {
-    bgChars.forEach(img => {
+    miniChars.forEach(img => {
         if (!img.src) return;
         if (img.src.includes('yuru.jpg')) {
             img.src = img.src.replace('yuru.jpg', 'zipla.jpg');
-            img.style.transform = img.style.transform + " translateY(-10px)";
+            img.style.transform = "translateY(-15px)";
         } else if (img.src.includes('zipla.jpg')) {
             img.src = img.src.replace('zipla.jpg', 'yuru.jpg');
-            img.style.transform = img.style.transform.replace(" translateY(-10px)", "");
+            img.style.transform = "translateY(0)";
         }
     });
-}, 1500);
+}, 1200);
 
 function showScreen(screenId) {
     const screens = ["girisEkrani", "temaMenu", "karakterMenu", "endScreen"];
@@ -246,7 +232,6 @@ let secilenTema = 1; let secilenKarakter = 0; let oyunAktif = false;
 let startTime = 0; let finalTime = 0; let cameraX = 0; 
 let oyuncuCan = 3; let toplananPara = 0; let baseCharacterName = "";
 
-/* THEMES DEFINITION (VIBE ADJUSTED) */
 const temaAyarlari = {
     1: { isim: "Love You Teacher", zemin: "#8e44ad", cizgi: "#9b59b6", gokyuzu: "#74b9ff" }, 
     2: { isim: "Perfect 10 Liners", zemin: "#2d3436", cizgi: "#636e72", gokyuzu: "#2c3e50" }, 
@@ -254,7 +239,6 @@ const temaAyarlari = {
     4: { isim: "Peach and Me", zemin: "#111111", cizgi: "#d4af37", gokyuzu: "#1a0b2e" } 
 };
 
-/* CORRECT CHARACTERS */
 const karakterIsimleri = {
     1: ["Pobmek", "Solar"], 
     2: ["Yotha", "Gun"], 
@@ -313,26 +297,75 @@ function temaSec(temaNo) {
 }
 
 /* 
-  UNIQUE MAPS - PERFECTLY BALANCED OBSTACLE SPACING
-  Air obstacles (hava_) REQUIRE sliding. Ground obstacles require jumping.
+  NEW LEVEL DESIGN (9 UNIQUE MAPS)
+  Features:
+  - ust_zeminler: Floating platforms you can jump ON and walk across.
+  - zeminler: Base ground gaps.
+  - engeller: Jump (ground obstacles) and Slide (air obstacles).
+  - Ensured NO impossible obstacle placements over gaps.
 */
 const haritalar = {
-    // 1. Love You Teacher
-    "1_0": { zeminler: [{x:0,w:2000},{x:2200,w:1800},{x:4200,w:2000}], engeller: [{x:800,tip:"desk"},{x:1400,tip:"hava_balloon"},{x:2000,tip:"lego"},{x:2600,tip:"hava_balloon"},{x:3200,tip:"desk"},{x:3800,tip:"hava_balloon"},{x:4500,tip:"lego"}], paralar: [{x:1100},{x:1700},{x:2300},{x:2900},{x:3500}], bitis: {x:5400} },
-    "1_1": { zeminler: [{x:0,w:1800},{x:2000,w:2000},{x:4200,w:2000}], engeller: [{x:900,tip:"hava_balloon"},{x:1500,tip:"lego"},{x:2100,tip:"hava_balloon"},{x:2700,tip:"desk"},{x:3300,tip:"hava_balloon"},{x:3900,tip:"lego"},{x:4600,tip:"hava_balloon"}], paralar: [{x:1200},{x:1800},{x:2400},{x:3000},{x:3600}], bitis: {x:5500} },
+    // TEMA 1: Okul
+    "1_0": { 
+        zeminler: [{x:0,w:2000},{x:2200,w:1800},{x:4200,w:2000}], 
+        ust_zeminler: [{x:1200, y:300, w:300}, {x:3200, y:280, w:400}],
+        engeller: [{x:800,tip:"desk"}, {x:1700,tip:"hava_balloon"}, {x:2500,tip:"lego"}, {x:2900,tip:"desk"}, {x:3800,tip:"hava_balloon"}, {x:4600,tip:"lego"}], 
+        paralar: [{x:1250,y:250},{x:1750,y:0},{x:2700,y:0},{x:3300,y:230},{x:4800,y:0}], bitis: {x:5500} 
+    },
+    "1_1": { 
+        zeminler: [{x:0,w:1800},{x:2100,w:2500},{x:4800,w:2000}], 
+        ust_zeminler: [{x:1800, y:300, w:500}, {x:3600, y:280, w:300}],
+        engeller: [{x:700,tip:"hava_balloon"}, {x:1200,tip:"lego"}, {x:2800,tip:"desk"}, {x:3300,tip:"hava_balloon"}, {x:4100,tip:"lego"}, {x:5100,tip:"desk"}], 
+        paralar: [{x:1000,y:0},{x:1900,y:250},{x:2900,y:0},{x:3700,y:230},{x:5300,y:0}], bitis: {x:5800} 
+    },
     
-    // 2. Perfect 10 Liners
-    "2_0": { zeminler: [{x:0,w:1900},{x:2100,w:1900},{x:4200,w:2000}], engeller: [{x:800,tip:"gear"},{x:1400,tip:"hava_drone"},{x:2000,tip:"draft_table"},{x:2600,tip:"hava_drone"},{x:3200,tip:"gear"},{x:3800,tip:"hava_drone"},{x:4500,tip:"draft_table"}], paralar: [{x:1100},{x:1700},{x:2300},{x:2900},{x:3500}], bitis: {x:5400} },
-    "2_1": { zeminler: [{x:0,w:1700},{x:1900,w:2100},{x:4200,w:2000}], engeller: [{x:900,tip:"hava_drone"},{x:1500,tip:"gear"},{x:2100,tip:"hava_drone"},{x:2700,tip:"draft_table"},{x:3300,tip:"hava_drone"},{x:3900,tip:"gear"},{x:4600,tip:"hava_drone"}], paralar: [{x:1200},{x:1800},{x:2400},{x:3000},{x:3600}], bitis: {x:5500} },
+    // TEMA 2: Kampüs
+    "2_0": { 
+        zeminler: [{x:0,w:1600},{x:1900,w:2000},{x:4200,w:2000}], 
+        ust_zeminler: [{x:1000, y:280, w:400}, {x:2800, y:300, w:300}],
+        engeller: [{x:600,tip:"hava_drone"}, {x:1600,tip:"gear"}, {x:2300,tip:"draft_table"}, {x:3400,tip:"hava_drone"}, {x:3900,tip:"gear"}, {x:4600,tip:"hava_drone"}], 
+        paralar: [{x:1100,y:230},{x:1800,y:0},{x:2500,y:0},{x:2900,y:250},{x:4800,y:0}], bitis: {x:5400} 
+    },
+    "2_1": { 
+        zeminler: [{x:0,w:2200},{x:2500,w:1500},{x:4300,w:2000}], 
+        ust_zeminler: [{x:1500, y:280, w:400}, {x:3600, y:300, w:300}],
+        engeller: [{x:900,tip:"draft_table"}, {x:1900,tip:"hava_drone"}, {x:2800,tip:"gear"}, {x:3300,tip:"hava_drone"}, {x:4100,tip:"gear"}, {x:4700,tip:"draft_table"}], 
+        paralar: [{x:1000,y:0},{x:1600,y:230},{x:3000,y:0},{x:3700,y:250},{x:5000,y:0}], bitis: {x:5600} 
+    },
     
-    // 3. Real Life
-    "3_0": { zeminler: [{x:0,w:2000},{x:2200,w:1800},{x:4200,w:2000}], engeller: [{x:800,tip:"tuktuk"},{x:1400,tip:"hava_sign"},{x:2000,tip:"cone"},{x:2600,tip:"hava_sign"},{x:3200,tip:"tuktuk"},{x:3800,tip:"hava_sign"},{x:4500,tip:"cone"}], paralar: [{x:1100},{x:1700},{x:2300},{x:2900},{x:3500}], bitis: {x:5400} },
-    "3_1": { zeminler: [{x:0,w:1800},{x:2000,w:2000},{x:4200,w:2000}], engeller: [{x:900,tip:"hava_sign"},{x:1500,tip:"cone"},{x:2100,tip:"hava_sign"},{x:2700,tip:"tuktuk"},{x:3300,tip:"hava_sign"},{x:3900,tip:"cone"},{x:4600,tip:"hava_sign"}], paralar: [{x:1200},{x:1800},{x:2400},{x:3000},{x:3600}], bitis: {x:5500} },
-    "3_2": { zeminler: [{x:0,w:2500},{x:2700,w:3500}], engeller: [{x:1000,tip:"cone"},{x:1600,tip:"hava_sign"},{x:2200,tip:"tuktuk"},{x:2800,tip:"hava_sign"},{x:3400,tip:"cone"},{x:4000,tip:"hava_sign"},{x:4700,tip:"tuktuk"}], paralar: [{x:1300},{x:1900},{x:2500},{x:3100},{x:3700}], bitis: {x:5600} },
+    // TEMA 3: Bangkok
+    "3_0": { 
+        zeminler: [{x:0,w:1900},{x:2200,w:2200},{x:4700,w:2000}], 
+        ust_zeminler: [{x:1200, y:280, w:500}, {x:3500, y:290, w:400}],
+        engeller: [{x:800,tip:"tuktuk"}, {x:1800,tip:"hava_sign"}, {x:2500,tip:"cone"}, {x:3000,tip:"hava_sign"}, {x:4200,tip:"tuktuk"}, {x:5100,tip:"cone"}], 
+        paralar: [{x:1300,y:230},{x:2000,y:0},{x:2700,y:0},{x:3700,y:240},{x:5300,y:0}], bitis: {x:5800} 
+    },
+    "3_1": { 
+        zeminler: [{x:0,w:1700},{x:2000,w:1800},{x:4100,w:2000}], 
+        ust_zeminler: [{x:900, y:300, w:400}, {x:2800, y:280, w:300}],
+        engeller: [{x:1500,tip:"hava_sign"}, {x:2300,tip:"tuktuk"}, {x:2900,tip:"hava_sign"}, {x:3500,tip:"cone"}, {x:4400,tip:"hava_sign"}, {x:5000,tip:"tuktuk"}], 
+        paralar: [{x:1000,y:250},{x:1700,y:0},{x:2500,y:0},{x:2900,y:230},{x:5200,y:0}], bitis: {x:5500} 
+    },
+    "3_2": { 
+        zeminler: [{x:0,w:2400},{x:2700,w:2000},{x:5000,w:2000}], 
+        ust_zeminler: [{x:1600, y:280, w:500}, {x:3800, y:300, w:400}],
+        engeller: [{x:1000,tip:"cone"}, {x:2100,tip:"hava_sign"}, {x:3000,tip:"tuktuk"}, {x:3500,tip:"cone"}, {x:4500,tip:"hava_sign"}, {x:5300,tip:"tuktuk"}], 
+        paralar: [{x:1100,y:0},{x:1800,y:230},{x:3200,y:0},{x:3900,y:250},{x:5500,y:0}], bitis: {x:6000} 
+    },
 
-    // 4. Peach and Me
-    "4_0": { zeminler: [{x:0,w:1900},{x:2100,w:1900},{x:4200,w:2000}], engeller: [{x:800,tip:"mirror"},{x:1400,tip:"hava_spot"},{x:2000,tip:"rack"},{x:2600,tip:"hava_spot"},{x:3200,tip:"mirror"},{x:3800,tip:"hava_spot"},{x:4500,tip:"rack"}], paralar: [{x:1100},{x:1700},{x:2300},{x:2900},{x:3500}], bitis: {x:5400} },
-    "4_1": { zeminler: [{x:0,w:1700},{x:1900,w:2100},{x:4200,w:2000}], engeller: [{x:900,tip:"hava_spot"},{x:1500,tip:"rack"},{x:2100,tip:"hava_spot"},{x:2700,tip:"mirror"},{x:3300,tip:"hava_spot"},{x:3900,tip:"rack"},{x:4600,tip:"hava_spot"}], paralar: [{x:1200},{x:1800},{x:2400},{x:3000},{x:3600}], bitis: {x:5500} }
+    // TEMA 4: Peach and Me
+    "4_0": { 
+        zeminler: [{x:0,w:1800},{x:2100,w:2000},{x:4400,w:2000}], 
+        ust_zeminler: [{x:1100, y:280, w:400}, {x:3200, y:290, w:300}],
+        engeller: [{x:700,tip:"mirror"}, {x:1700,tip:"hava_spot"}, {x:2500,tip:"rack"}, {x:3000,tip:"hava_spot"}, {x:3800,tip:"mirror"}, {x:4800,tip:"hava_spot"}], 
+        paralar: [{x:1200,y:230},{x:1900,y:0},{x:2700,y:0},{x:3300,y:240},{x:5000,y:0}], bitis: {x:5500} 
+    },
+    "4_1": { 
+        zeminler: [{x:0,w:2100},{x:2400,w:1800},{x:4500,w:2000}], 
+        ust_zeminler: [{x:1500, y:300, w:500}, {x:3500, y:280, w:400}],
+        engeller: [{x:900,tip:"hava_spot"}, {x:1800,tip:"rack"}, {x:2700,tip:"hava_spot"}, {x:3200,tip:"mirror"}, {x:4200,tip:"rack"}, {x:4900,tip:"hava_spot"}], 
+        paralar: [{x:1100,y:0},{x:1700,y:250},{x:2900,y:0},{x:3700,y:230},{x:5200,y:0}], bitis: {x:5700} 
+    }
 };
 
 function oyunuBaslat(karakterNo) {
@@ -410,6 +443,7 @@ function oyunDongusu() {
 
     oyuncu.vy += yercekimi; oyuncu.y += oyuncu.vy; oyuncu.yerde = false;
 
+    // Ground Collision
     harita.zeminler.forEach(z => {
         let zRect = {x: z.x, y: baseH, w: z.w, h: canvas.height - baseH};
         if (carpisma(oyuncu, zRect) && oyuncu.vy > 0 && (oyuncu.y + oyuncu.h - oyuncu.vy) <= zRect.y + 20) {
@@ -417,8 +451,22 @@ function oyunDongusu() {
         }
     });
 
+    // Floating Platform Collision
+    harita.ust_zeminler.forEach(uz => {
+        let uzRect = {x: uz.x, y: uz.y, w: uz.w, h: 20};
+        if (oyuncu.vy > 0 && 
+            oyuncu.y + oyuncu.h - oyuncu.vy <= uzRect.y + 15 && 
+            oyuncu.x + oyuncu.w > uzRect.x && 
+            oyuncu.x < uzRect.x + uzRect.w && 
+            carpisma(oyuncu, uzRect)) {
+                oyuncu.y = uzRect.y - oyuncu.h; oyuncu.vy = 0; oyuncu.yerde = true;
+        }
+    });
+
+    // Coins (adjusted Y if they are above a floating platform)
     harita.paralar.forEach(p => {
-        let pRect = {x: p.x, y: baseH - 140, w: 30, h: 30};
+        let coinY = p.y === 0 ? baseH - 140 : p.y - 40; 
+        let pRect = {x: p.x, y: coinY, w: 30, h: 30};
         if (!p.collected && carpisma(oyuncu, pRect)) { p.collected = true; toplananPara++; updateHUD(); }
     });
 
@@ -426,17 +474,10 @@ function oyunDongusu() {
     harita.engeller.forEach(e => { 
         let ew = 70; let eh = 70; let ey = baseH - eh;
         
-        /* 
-          AIR OBSTACLES: 
-          They are positioned explicitly so the player HITS them if standing (h:90), 
-          but PASSES UNDER them if sliding (h:45).
-        */
+        // FLYING OBSTACLES: Clearly drawn from top, extending to player head level.
         if (e.tip.startsWith("hava")) { 
-            ey = baseH - 85; // Air object starts high
-            eh = 40;         // Air object extends down to (baseH - 45).
-            ew = 60;
+            ey = baseH - 85; eh = 40; ew = 60;
         } 
-        
         let eRect = { x: e.x + 10, y: ey + 10, w: ew - 20, h: eh - 15 }; 
         if (carpisma(oyuncu, eRect)) hasDied = true;
     });
@@ -502,14 +543,22 @@ function oyunDongusu() {
         ctx.fillStyle = currentStyle.cizgi; ctx.fillRect(z.x, baseH, z.w, 15); 
     });
 
-    // Highly distinct Obstacle drawings
+    // Upper Platforms (Floating Walkways)
+    harita.ust_zeminler.forEach(uz => {
+        ctx.fillStyle = currentStyle.cizgi; ctx.fillRect(uz.x, uz.y, uz.w, 20);
+        ctx.fillStyle = "rgba(0,0,0,0.5)"; ctx.fillRect(uz.x, uz.y+20, uz.w, 5); // Shadow
+    });
+
+    // Obstacles
     harita.engeller.forEach(e => { 
         let ew = 70; let eh = 70; let ey = baseH - eh;
         ctx.lineWidth = 4; ctx.strokeStyle = "#fff";
 
         if (e.tip.startsWith("hava")) { 
             ey = baseH - 85; eh = 40; ew = 60;
-            
+            // Draw visually connected to top of screen so it's CLEARLY floating
+            ctx.fillStyle = "rgba(255,255,255,0.1)"; ctx.fillRect(e.x+ew/2-2, 0, 4, ey);
+
             if(e.tip === "hava_drone") { 
                 ctx.fillStyle = "#34495e"; ctx.fillRect(e.x, ey, ew, eh); 
                 ctx.fillStyle = "#e74c3c"; ctx.fillRect(e.x+ew/2-10, ey+eh-5, 20, 5);
@@ -520,12 +569,10 @@ function oyunDongusu() {
                 ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(e.x+ew/2, ey+eh/2+25); ctx.lineTo(e.x+ew/2, ey+eh+30); ctx.stroke();
             } 
             else if(e.tip === "hava_sign") { 
-                ctx.fillStyle = "#333"; ctx.fillRect(e.x+ew/2-5, 0, 10, ey); 
                 ctx.fillStyle = "#2980b9"; ctx.fillRect(e.x-10, ey, ew+20, eh); 
                 ctx.fillStyle = "#fff"; ctx.font = "bold 14px monospace"; ctx.fillText("SLIDE", e.x-5, ey+25); 
             } 
             else if(e.tip === "hava_spot") { 
-                ctx.fillStyle = "#333"; ctx.fillRect(e.x+ew/2-10, 0, 20, ey);
                 ctx.fillStyle = "#f1c40f"; ctx.beginPath(); ctx.arc(e.x+ew/2, ey+eh/2, 20, 0, Math.PI*2); ctx.fill(); 
                 ctx.fillStyle="rgba(241,196,15,0.2)"; ctx.beginPath(); ctx.moveTo(e.x+ew/2, ey+eh/2); ctx.lineTo(e.x-40, baseH); ctx.lineTo(e.x+ew+40, baseH); ctx.fill();
             }
@@ -543,7 +590,8 @@ function oyunDongusu() {
     
     // Coins
     harita.paralar.forEach(p => {
-        if(!p.collected) { ctx.fillStyle = "#f1c40f"; ctx.beginPath(); ctx.arc(p.x + 15, baseH - 125, 15, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = "#fff"; ctx.fillRect(p.x+12, baseH-135, 6, 20); }
+        let coinY = p.y === 0 ? baseH - 140 : p.y - 40; 
+        if(!p.collected) { ctx.fillStyle = "#f1c40f"; ctx.beginPath(); ctx.arc(p.x + 15, coinY + 15, 15, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = "#fff"; ctx.fillRect(p.x+12, coinY+5, 6, 20); }
     });
 
     // Finish Line
@@ -573,8 +621,7 @@ function oyunDongusu() {
 
 // GEN Z / FANDOM TWITTER SHARE
 function shareOnTwitter() {
-    let playerName = document.getElementById("playerNameInput").value.trim().toUpperCase() || "GUEST";
-    let challengeText = `Cleared the "${temaAyarlari[secilenTema].isim}" stage as ${baseCharacterName} in ${finalTime}s with ${toplananPara} coins.\n\nCan you beat my time? Drop your receipts below.\n\n#PerthSanta #เพิร์ธแซนต้า`;
+    let challengeText = `Cleared the "${temaAyarlari[secilenTema].isim}" stage as ${baseCharacterName} in ${finalTime}s and secured ${toplananPara} coins. \n\nThink you can beat my time? Drop your receipts below 👇\n\n%23PerthSanta %23เพิร์ธแซนต้า`;
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(challengeText)}`, '_blank');
 }
 </script>
